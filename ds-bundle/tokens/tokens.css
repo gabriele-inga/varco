@@ -1,0 +1,74 @@
+:root{
+  /* superfici */
+  --bg:          #ffffff;
+  --bg-alt:      #f7f8fa;   /* sezioni alternate */
+  --surface:     #ffffff;   /* card */
+  --surface-alt: #f7f8fa;   /* avatar, chip bg */
+
+  /* testo */
+  --ink:         #1a1a1a;   /* testo primario (non nero puro) */
+  --bone:        #1a1a1a;   /* alias retro-compatibile: testo primario */
+  --bone-dim:    #5a5a5a;   /* testo secondario */
+  --muted:       #6b7280;   /* testo terziario — regolato da #9CA3AF per contrasto AA (4.8:1 su bianco) */
+  --muted-deco:  #9ca3af;   /* solo uso decorativo: bordi, placeholder, stati disabled non testuali */
+
+  /* bordi */
+  --line:        #e8eaed;
+  --line-strong: #d8dce1;
+
+  /* brand */
+  --traccia:      #01497C;  /* PRIMARIO — CTA, link, accenti, focus */
+  --traccia-hov:  #023254;  /* primario hover/active */
+  --traccia-dim:  var(--primario-light);  /* alias retro-compatibile — bg tint, allineato a --primario-light (era un hex corrotto) */
+  --primario-light:#e6f3f5; /* badge/tag/selected bg */
+
+  /* feedback */
+  --success: #10b981;
+  --error:   #ef4444;
+  --warning: #f59e0b;
+  --danger:  #ef4444;
+
+  --container: 1180px;
+  /* Altezza dell'header sticky. Era ripetuta a mano (84px nell'header,
+     84px nell'inset dell'overlay mobile, e da nessuna parte negli ancoraggi):
+     ora e' un solo valore, cosi' overlay e scroll-margin non possono
+     disallinearsi quando l'header cambia altezza al breakpoint. */
+  --header-h: 84px;
+
+  /* Scala tipografica per ruolo. Prima ogni componente scriveva il proprio
+     font-size a mano: 20 valori letterali, di cui 15 fuori dalla rampa
+     documentata in DESIGN.md (1.02rem, 1.25rem, 1.3rem, 1.35rem, 1.6rem...).
+     Valori vicini che facevano lo stesso lavoro sono stati uniti in un solo
+     gradino: quello che resta e' un ruolo, non un numero. */
+  --fs-data-xs:  11px;      /* etichette mono: badge, colonne footer, caption */
+  --fs-label:    12px;      /* label di campo, eyebrow */
+  --fs-data:     13px;      /* readout mono in linea */
+  --fs-sm:       .9rem;     /* prosa secondaria, stato form, consenso */
+  --fs-control:  15px;      /* testo dei controlli */
+  --fs-body:     17px;      /* corpo */
+  --fs-lede:     1.2rem;    /* occhiello introduttivo */
+  --fs-title-sm: 1.1rem;    /* h4, titoli di riga */
+  --fs-title:    1.4rem;    /* h3, citazioni, valori di contatto */
+  --fs-title-lg: 1.6rem;    /* voci di menu mobile */
+  --fs-num-sm:   1.5rem;    /* indice di processo */
+  --fs-num:      1.75rem;   /* risultato in scheda */
+  --fs-num-lg:   2.1rem;    /* risultato a piena pagina */
+
+  --fs-h1:          clamp(2.4rem, 6vw, 4.25rem);
+  --fs-h2:          clamp(2.1rem, 5vw, 3.4rem);
+  --fs-h2-manifest: clamp(2.3rem, 5.6vw, 4.25rem);
+  --fs-h3-row:      clamp(1.25rem, 2.4vw, 1.7rem);
+  --radius: 32px;
+  --radius-lg: 16px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);      /* entrate, press, hover: transform */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);  /* morph on-screen: accordion, max-height */
+
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-micro: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --shadow-sm: 0 1px 3px rgba(16,24,32,.05);
+  --shadow-md: 0 8px 24px rgba(16,24,32,.08);
+  --shadow-btn: 0 4px 12px rgba(1,73,124,.15);
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- CASI-STUDIO-NASCOSTO — 2026-08-28: le 6 URL di casi-studio/ sono state
+       tolte dalla sitemap e le pagine portano un meta robots noindex. I file
+       restano nel progetto: rimettere qui le righe quando tornano in linea. -->
+  <url><loc>https://[DOMINIO]/index.html</loc><lastmod>2026-07-23</lastmod></url>
+  <url><loc>https://[DOMINIO]/chi-siamo.html</loc><lastmod>2026-07-23</lastmod></url>
+  <url><loc>https://[DOMINIO]/contatti.html</loc><lastmod>2026-07-23</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/web-design.html</loc><lastmod>2026-08-25</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/web-app.html</loc><lastmod>2026-08-25</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/social-media-marketing.html</loc><lastmod>2026-07-23</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/campagne-ads.html</loc><lastmod>2026-07-23</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/seo.html</loc><lastmod>2026-07-23</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/email-marketing.html</loc><lastmod>2026-07-23</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/automazione-email.html</loc><lastmod>2026-07-23</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/agente-vocale.html</loc><lastmod>2026-07-23</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/chatbot.html</loc><lastmod>2026-07-23</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/video-ai.html</loc><lastmod>2026-08-25</lastmod></url>
+  <url><loc>https://[DOMINIO]/servizi/ottimizzazione-sito.html</loc><lastmod>2026-07-23</lastmod></url>
+</urlset>

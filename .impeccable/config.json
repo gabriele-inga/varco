@@ -1,0 +1,80 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-radius",
+        "value": "4px",
+        "createdAt": "2026-08-26T00:20:56.309Z",
+        "reason": "pre-existing :focus-visible outline corner radius, a true one-off unrelated to the pill/flat/card shape scale"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "999px",
+        "createdAt": "2026-08-26T00:20:56.437Z",
+        "reason": "custom scrollbar-thumb full-round radius, browser-chrome styling exception per craft-floor (theme browser surfaces), not part of the component shape scale"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "2px",
+        "createdAt": "2026-08-26T00:20:56.588Z",
+        "reason": "nav-desktop active-link underline bar corner rounding, decorative micro-detail unrelated to the shape scale"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "20px",
+        "createdAt": "2026-08-26T00:20:56.720Z",
+        "reason": "badge/tag small-chrome pill radius — documented in DESIGN.md Shapes as smaller controls achieving the same stadium shape via their own literal radius rather than the --radius token"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "30px",
+        "createdAt": "2026-08-26T00:20:56.877Z",
+        "reason": "filter-btn small-chrome pill radius — same documented smaller-chrome-pill exception as badge/tag (DESIGN.md Shapes)"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "14px",
+        "createdAt": "2026-08-26T00:20:57.028Z",
+        "reason": "lead-magnet icon badge radius, proportional one-off for a small icon tile, part of the soft-card family at icon scale"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "8px",
+        "createdAt": "2026-08-26T00:20:57.172Z",
+        "reason": "skip-link corner radius, a true one-off on an a11y utility element"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#e4e4e4",
+        "createdAt": "2026-08-26T00:20:57.297Z",
+        "reason": "footer-masthead text color — the footer is the Black Stage (see DESIGN.md Colors > The Black Stage Rule) and intentionally uses its own darker neutral scale, not the light-mode palette in the frontmatter"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "css/style.css"
+        ],
+        "createdAt": "2026-08-26T00:20:57.454Z",
+        "reason": "line 570 is blockquote.pull's classic editorial left-rule (not a card side-tab); line 486 is .case-card's documented hover-only accent-bar reveal (DESIGN.md Components), both confirmed intentional"
+      },
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "css/style.css"
+        ],
+        "createdAt": "2026-08-26T00:20:57.588Z",
+        "reason": "FAQ max-height transition is an explicit, documented choice distinct from the accordion's grid-template-rows technique (DESIGN_SYSTEM.md section 5 animazioni), not an oversight"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-08-26T00:22:11.879Z",
+        "reason": "Inter is the project's established, documented brand typeface (DESIGN.md Typography; PRODUCT.md Brand Commitments), not an unreviewed default pick — preserving the incumbent identity per polish scope"
+      }
+    ]
+  }
+}

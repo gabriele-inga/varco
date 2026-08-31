@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-26T00:00:00.000Z",
+  "title": "Design System: Varco",
+  "extensions": {
+    "colorMeta": {
+      "instrument-blue": {
+        "role": "primary",
+        "displayName": "Instrument Blue",
+        "canonical": "#01497C",
+        "tonalRamp": ["oklch(15% 0.07 240)", "oklch(24% 0.09 240)", "oklch(32% 0.10 240)", "oklch(45% 0.10 240)", "oklch(58% 0.09 240)", "oklch(70% 0.07 240)", "oklch(83% 0.05 240)", "oklch(95% 0.02 240)"]
+      },
+      "graphite-ink": {
+        "role": "neutral",
+        "displayName": "Graphite Ink",
+        "canonical": "#1A1A1A",
+        "tonalRamp": ["oklch(8% 0 0)", "oklch(20% 0 0)", "oklch(33% 0 0)", "oklch(46% 0 0)", "oklch(59% 0 0)", "oklch(72% 0 0)", "oklch(85% 0 0)", "oklch(97% 0 0)"]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted (AA-adjusted)",
+        "canonical": "#6B7280",
+        "tonalRamp": ["oklch(20% 0.01 260)", "oklch(33% 0.01 260)", "oklch(46% 0.02 260)", "oklch(56% 0.02 260)", "oklch(66% 0.02 260)", "oklch(76% 0.015 260)", "oklch(87% 0.01 260)", "oklch(95% 0.005 260)"]
+      },
+      "stage-black": {
+        "role": "neutral",
+        "displayName": "Stage Black",
+        "canonical": "#000000",
+        "tonalRamp": ["#000000", "#0a0a0a", "#141414", "#202020", "#3a3a3a", "#5a5a5a", "#8a8a8a", "#d0d0d0"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero H1, responsive/clamped." },
+      "headline": { "displayName": "Headline", "purpose": "Section H2, fixed 4.25rem at desktop (does not clamp like Display)." },
+      "title": { "displayName": "Title", "purpose": "H3 card and sub-section headings." },
+      "subtitle": { "displayName": "Subtitle", "purpose": "H4 minor headings." },
+      "lede": { "displayName": "Lede", "purpose": "The one intro paragraph per section (.lede), larger and narrower than Body." },
+      "control": { "displayName": "Control Label", "purpose": "Button and link-arrow text (15px/500)." },
+      "data": { "displayName": "Data / Readout", "purpose": "Every measured number and short technical label — case-study stats, roadmap/service indices, badges, breadcrumbs. Never used for prose. Normative font is JetBrains Mono; the current build's --font-mono has drifted to Arimo (bug, see DESIGN.md Do's and Don'ts)." }
+    },
+    "shadows": [
+      { "name": "card-hover", "value": "0 8px 24px rgba(16,24,32,.08)", "purpose": "Card :hover, paired with a -2px/-3px lift." },
+      { "name": "button-hover", "value": "0 4px 12px rgba(2,94,113,.15)", "purpose": "Primary button :hover, brand-tinted rather than neutral." },
+      { "name": "focus-ring", "value": "0 0 0 3px rgba(2,94,113,.18)", "purpose": "Global :focus-visible ring; form fields use a softer 0 0 0 3px rgba(2,94,113,.1)." },
+      { "name": "nav-pill-ambient", "value": "0 8px 24px rgba(16,24,32,.1)", "purpose": "The one standing (non-hover) shadow: the floating desktop nav pill." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Entrances, presses, any transform (hover-lift, active press, reveal-on-scroll)." },
+      { "name": "ease-in-out", "value": "cubic-bezier(0.77, 0, 0.175, 1)", "purpose": "On-screen morphs: accordion grid-template-rows, FAQ max-height, nav-toggle line animation." }
+    ],
+    "breakpoints": [
+      { "name": "xs", "value": "480px" },
+      { "name": "sm", "value": "560px" },
+      { "name": "sm-plus", "value": "620px" },
+      { "name": "md", "value": "700px" },
+      { "name": "md-plus", "value": "760px" },
+      { "name": "lg", "value": "900px" },
+      { "name": "lg-plus", "value": "920px" },
+      { "name": "xl", "value": "980px" },
+      { "name": "nav", "value": "981px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The site's single conversion action ('Prenota audit gratuito' etc). Full pill, brand blue, white text.",
+      "html": "<button class=\"ds-btn-primary\">Prenota audit gratuito</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 500; padding: 14px 28px; border-radius: 32px; border: 1.5px solid transparent; background: #01497C; color: #ffffff; cursor: pointer; white-space: nowrap; transition: transform 150ms cubic-bezier(0.23,1,0.32,1), background-color .2s ease, box-shadow .2s ease; } .ds-btn-primary:hover { background: #023254; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(2,94,113,.15); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(2,94,113,.18); } .ds-btn-primary:active { transform: scale(.97); box-shadow: none; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action, transparent with a border ('Guarda i risultati').",
+      "html": "<button class=\"ds-btn-ghost\">Guarda i risultati</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 8px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 500; padding: 14px 28px; border-radius: 32px; border: 1.5px solid #D8DCE1; color: #1A1A1A; background: transparent; cursor: pointer; transition: transform 150ms cubic-bezier(0.23,1,0.32,1), border-color .2s ease, color .2s ease; } .ds-btn-ghost:hover { border-color: #01497C; color: #01497C; transform: translateY(-1px); } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(2,94,113,.18); } .ds-btn-ghost:active { transform: scale(.97); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Contact/lead-magnet form field: pill radius, blue focus glow.",
+      "html": "<input class=\"ds-input\" type=\"email\" placeholder=\"La tua email\">",
+      "css": ".ds-input { background: #FFFFFF; border: 1px solid #E8EAED; color: #1A1A1A; padding: 14px 16px; border-radius: 32px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: .96rem; transition: border-color .2s ease, box-shadow .2s ease; } .ds-input::placeholder { color: #6B7280; } .ds-input:focus { border-color: #01497C; outline: none; box-shadow: 0 0 0 3px rgba(2,94,113,.1); }"
+    },
+    {
+      "name": "Case Study Evidence Card",
+      "kind": "card",
+      "refersTo": "card-evidence",
+      "description": "Squared (0 radius) proof card: client name, sector badge, mono result figure, full-width CTA bar. The system's one deliberate break from pill radius.",
+      "html": "<div class=\"ds-case-card\"><div class=\"ds-cc-top\"><span class=\"ds-client\">Osteria Bramante</span><span class=\"ds-badge\">Ristorazione</span></div><div class=\"ds-cc-result\"><span class=\"ds-r-num\">+340%</span><span class=\"ds-r-lbl\">Prenotazioni online in 3 mesi</span></div><a class=\"ds-cs-btn\" href=\"#\">Leggi il caso studio</a></div>",
+      "css": ".ds-case-card { position: relative; overflow: hidden; border: 1px solid #E8EAED; border-radius: 0; padding: 30px 26px 26px; display: flex; flex-direction: column; gap: 12px; background: #FFFFFF; transition: box-shadow .2s ease, transform 200ms cubic-bezier(0.23,1,0.32,1); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; } .ds-case-card:hover { box-shadow: 0 8px 24px rgba(16,24,32,.08); transform: translateY(-3px); } .ds-cc-top { display: flex; align-items: center; justify-content: space-between; } .ds-client { font-weight: 500; font-size: 1.2rem; color: #1A1A1A; } .ds-badge { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: #01497C; background: #E6F3F5; padding: 4px 10px; border-radius: 20px; font-weight: 500; } .ds-cc-result { display: flex; flex-direction: column; padding-top: 16px; border-top: 1px solid #E8EAED; } .ds-r-num { font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 500; font-size: 1.75rem; letter-spacing: -.01em; color: #01497C; display: block; } .ds-r-lbl { font-size: 11.5px; color: #6B7280; } .ds-cs-btn { display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: #01497C; background: #E6F3F5; padding: 16px 18px; margin: 4px -26px -26px; border-radius: 0; transition: background-color .2s ease, color .2s ease; } .ds-cs-btn:hover { background: #01497C; color: #ffffff; }"
+    },
+    {
+      "name": "Pull Quote",
+      "kind": "custom",
+      "refersTo": "card-soft",
+      "description": "The single quote treatment used everywhere a client's own words appear — case-study pages and the homepage testimonials grid alike. No card, no border, no radius, no avatar, no decorative glyph: a blue rule, italic Inter, mono cite. (Corrected from a bordered 16px-radius card with an oversized quote glyph and a circular avatar — a second, unrelated quote language that used to live only on the homepage.)",
+      "html": "<blockquote class=\"ds-pull\">“Un sistema che finalmente lavora insieme.”<cite>Nome Cognome, ruolo Azienda</cite></blockquote>",
+      "css": ".ds-pull { border-left: 3px solid #01497C; padding: 4px 0 4px 26px; margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-style: italic; font-weight: 400; font-size: 1.05rem; color: #1A1A1A; } .ds-pull cite { display: block; font-family: 'JetBrains Mono', ui-monospace, monospace; font-style: normal; font-size: 12px; color: #6B7280; margin-top: 14px; }"
+    },
+    {
+      "name": "Hero Video Placeholder",
+      "kind": "custom",
+      "description": "Reserved video slot on every service page's hero, replacing the old SVG illustration column. Black Stage frame (16:9), circular blue play button, mono caption. No real video exists yet in this project.",
+      "html": "<div class=\"ds-hero-video\"><button class=\"ds-hero-video-play\" type=\"button\" aria-label=\"Riproduci video\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M8 5v14l11-7z\"/></svg></button><span class=\"ds-hero-video-caption\">Video dimostrativo — in arrivo</span></div>",
+      "css": ".ds-hero-video { position: relative; aspect-ratio: 16/9; border-radius: 16px; background: #000; border: 1px solid #202020; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; } .ds-hero-video-play { width: 64px; height: 64px; border-radius: 50%; border: 0; background: #01497C; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; } .ds-hero-video-play svg { width: 22px; height: 22px; margin-left: 3px; } .ds-hero-video-caption { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #8a8a8a; }"
+    },
+    {
+      "name": "Related Services Ledger",
+      "kind": "custom",
+      "description": "Replaces the old plain .tag pill row for 'Altri servizi' on service pages — a single-border numbered list reusing each service's canonical 01-11 index.",
+      "html": "<div class=\"ds-related-services\"><a class=\"ds-related-service\" href=\"#\"><span class=\"ds-relsvc-index\">02</span><span class=\"ds-relsvc-name\">Web App</span></a></div>",
+      "css": ".ds-related-services { border: 1px solid #E8EAED; } .ds-related-service { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-top: 1px solid #E8EAED; color: inherit; text-decoration: none; } .ds-related-service:first-child { border-top: 0; } .ds-relsvc-index { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: #6B7280; flex: 0 0 24px; } .ds-relsvc-name { flex: 1; font-weight: 500; font-size: .96rem; color: #1A1A1A; }"
+    },
+    {
+      "name": "Tech / Data Pill",
+      "kind": "chip",
+      "refersTo": "input",
+      "description": "Pill-shaped mono label used for tech stacks, badges, and short data tags — the small-scale expression of the same stadium radius as buttons/inputs.",
+      "html": "<span class=\"ds-tech-pill\">WordPress</span>",
+      "css": ".ds-tech-pill { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12.5px; padding: 10px 16px; border: 1px solid #D8DCE1; border-radius: 32px; color: #5A5A5A; background: #F7F8FA; display: inline-block; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Audit Instrument",
+    "overview": "Varco's interface reads like the output of the audit it sells: a single calibrated instrument, not a decorated brochure. One accent — Instrument Blue — runs through every CTA, link, focus ring, and result number; there is no second accent color competing for attention (an earlier orange \"segnale\" accent was tried and explicitly removed). Every measured fact (a case-study result, a service index, a roadmap step) is set in a monospaced data face so it reads as a readout, distinct from the Inter prose around it — the same distinction a dashboard draws between its labels and its live numbers.\n\nThe system runs two corner languages on purpose, not by accident: interactive chrome — buttons, the floating nav pill, inputs, tags — is fully pill-shaped, because it is meant to be pressed, like a switch. Evidence containers — case-study cards, their result blocks, their CTA bars — are perfectly squared, because they are meant to be read, like a printed report line-item. The two languages never mix on the same element.\n\nStructurally, the whole page is a white shell floating on a pure-black stage; the black shows only at the seams and reappears whole as the footer. Depth is otherwise absent at rest: surfaces are flat, and a shadow appears only as a direct response to a hover or focus, never as ambient decoration.",
+    "keyCharacteristics": [
+      "One accent color only (Instrument Blue), used for every CTA, link, focus state, and result figure — no secondary accent.",
+      "Every measured number renders in a monospaced data face; prose never does.",
+      "Pill radius for anything pressable, zero radius for anything that is evidence to be read.",
+      "Flat by default; shadow only on hover/focus, never ambient.",
+      "A black stage shows through the white shell's rounded corners and reappears whole as the footer."
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Instrument Blue is the only chromatic color anywhere in the interface, including for \"good news\" numbers that another system would reach for green. A second accent hue anywhere outside success/error/warning form feedback is a regression, not a variant.", "section": "colors" },
+      { "name": "The Black Stage Rule", "body": "body is always #000. Every foreground surface is a white (or Surface Alt) shape with rounded bottom corners floating on that black; the footer is not a white panel but a continuation of the black stage itself, with its own dimmer neutral scale.", "section": "colors" },
+      { "name": "The Mono Readout Rule", "body": "Any number that represents a measured result is set in the Data face, never in Inter. If a number is decorative or part of a sentence, it stays in Inter; if it is a claim someone could audit, it moves to mono.", "section": "typography" },
+      { "name": "The Response-Only Shadow Rule", "body": "No element carries a shadow at rest except the floating nav pill. Every other shadow in the system exists only for the duration of :hover or :focus-visible.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep Instrument Blue as the only chromatic accent anywhere outside form-validation feedback (success/error/warning).",
+      "Do render every measured number (case-study stats, roadmap/service indices) in the Data (mono) face — never in Inter.",
+      "Do keep the pill/flat corner split scoped exactly as documented: pill for anything pressable, flat for the case-study evidence family only.",
+      "Do let shadows appear only in response to :hover/:focus-visible; the floating nav pill is the one standing exception.",
+      "Do gate all :hover styling behind (hover: hover) and (pointer: fine) so touch never gets a stuck hover state.",
+      "Do keep Muted (#6B7280, not #9CA3AF) on any text that needs to clear AA contrast; Muted Decorative is non-text only.",
+      "Do render every client quote — case-study pull-quote or homepage testimonial alike — with the single Quotes treatment (left rule + italic + mono cite), never as a card.",
+      "Do treat a true circle as reserved for two narrow, near-universally-recognized conventions only: carousel pagination dots (.route-dot, 8px) and the service-page hero video's play button (64px) — not a general exception to the pill/flat/16px/40px shape vocabulary."
+    ],
+    "donts": [
+      "Don't introduce a second accent hue (orange, teal, or otherwise) anywhere in the interface — this exact regression has already happened and been reverted twice in this project's history.",
+      "Don't let the case-study family's squared corners bleed into other cards, or let another component's pill radius creep onto a case-study evidence element.",
+      "Don't add an ambient/resting shadow to a new component; earn it only through interaction.",
+      "Don't treat the footer as a white panel — it is a continuation of the Black Stage and uses its own darker neutral scale, not the light-mode palette.",
+      "Don't give a quote its own card, border, radius, decorative glyph, or avatar — this exact drift happened once already and reads as a second, unrelated quote language next to the case-study pull-quote.",
+      "Don't ship a \"mono\" element in a proportional sans face — JetBrains Mono is the normative target for the Data face."
+    ]
+  }
+}

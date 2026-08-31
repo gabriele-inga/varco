@@ -1,0 +1,9 @@
+/* ==========================================================================
+   Varco — design system entry point
+   Ogni design riceve SOLO la chiusura @import di questo file.
+   Non aggiungere regole qui: i token stanno in tokens/tokens.css,
+   lo stile dei componenti in _ds_bundle.css (copia fedele di css/style.css).
+   ========================================================================== */
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap");
+@import "./tokens/tokens.css";
+@import "./_ds_bundle.css";
