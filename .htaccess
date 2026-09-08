@@ -1,0 +1,102 @@
+# ==========================================================================
+# Varco — configurazione Apache della radice del sito.
+#
+# Presupposto: hosting PHP con Apache (scelta di deploy del 2026-09-08).
+# Su Nginx, Netlify o Cloudflare Pages questo file viene IGNORATO: in quel
+# caso servono le regole equivalenti del pannello dell'host, e la chiave API
+# deve stare in una variabile d'ambiente o in un Worker (vedi README.txt).
+# ==========================================================================
+
+# ---- Pagina 404 -----------------------------------------------------------
+ErrorDocument 404 /404.html
+
+# ---- Intestazioni di sicurezza --------------------------------------------
+<IfModule mod_headers.c>
+  # Impedisce di indovinare il tipo di un file dal contenuto.
+  Header always set X-Content-Type-Options "nosniff"
+  # Il sito non va incorniciato da nessuno: niente clickjacking.
+  Header always set X-Frame-Options "SAMEORIGIN"
+  # Il referrer completo non serve a nessuno: basta l'origine, e solo in HTTPS.
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # API del browser che il sito non usa: negate a monte.
+  Header always set Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()"
+  # HSTS: attivalo SOLO quando HTTPS funziona davvero sul dominio finale,
+  # altrimenti blocchi i visitatori fuori dal sito per un anno.
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  # Content-Security-Policy. Le origini elencate sono esattamente quelle che
+  # il sito usa: i font di Google e il POST del modulo verso Formspree.
+  # 'unsafe-inline' sugli script serve per lo skeleton di caricamento e per i
+  # blocchi JSON-LD, entrambi inline nell'head di ogni pagina.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+</IfModule>
+
+# ---- File che non devono essere serviti ------------------------------------
+# Documentazione, sorgenti e configurazioni finiscono spesso sul server
+# insieme al sito. Qui smettono di essere pagine web.
+<FilesMatch "\.(md|txt|json|log|bak|sql|yml|yaml)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# robots.txt e sitemap.xml sono l'eccezione: devono restare pubblici.
+<FilesMatch "^(robots\.txt|sitemap\.xml)$">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+</FilesMatch>
+
+# File nascosti (.git, .env, .htaccess stesso) e cartelle di lavoro.
+<FilesMatch "^\.">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+RedirectMatch 404 "/\.(git|impeccable|design-sync|vscode|claude)(/|$)"
+RedirectMatch 404 "/(prompts|ds-bundle)(/|$)"
+
+# ---- Niente indice di cartella ---------------------------------------------
+Options -Indexes
+
+# ---- Compressione ----------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+# ---- Cache ------------------------------------------------------------------
+# Gli asset hanno nomi stabili (niente hash nel filename), quindi un anno di
+# cache sarebbe una trappola al primo aggiornamento: un mese e' il compromesso.
+# L'HTML non va mai in cache: e' li' che cambiano testi e prezzi.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html                 "access plus 0 seconds"
+  ExpiresByType text/css                  "access plus 1 month"
+  ExpiresByType application/javascript    "access plus 1 month"
+  ExpiresByType image/svg+xml             "access plus 1 month"
+  ExpiresByType image/webp                "access plus 1 month"
+  ExpiresByType image/png                 "access plus 1 month"
+  ExpiresByType image/jpeg                "access plus 1 month"
+  ExpiresByType video/mp4                 "access plus 1 month"
+  ExpiresByType font/woff2                "access plus 1 year"
+</IfModule>
+
+# ---- HTTPS ------------------------------------------------------------------
+# Da attivare quando il certificato e' installato sul dominio definitivo.
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTPS} off
+#   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>

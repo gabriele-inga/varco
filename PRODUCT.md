@@ -31,10 +31,12 @@ The claim a competing agency could not truthfully copy: Varco doesn't sell isola
 ## Capabilities and Constraints
 
 - Stack: static HTML5 + CSS3 (custom properties, grid/flexbox) + vanilla JS, no framework, no build step. Fonts loaded via Google Fonts `<link>` (Inter + Arimo, per current `index.html`; `README.txt` references Inter + JetBrains Mono — treat as undecided until the design system is reconciled).
-- Contact form (`contatti.html`) currently only shows a client-side confirmation; it is **not wired to a real email/CRM endpoint** yet.
-- "Prenota una call" / Calendly link in `contatti.html` is a placeholder, not a live scheduling account.
-- No analytics (GA4/Meta Pixel) wired in yet; adding any requires updating the cookie policy first.
-- No real cookie-consent banner yet, only static legal text pages.
+- Contact form (`contatti.html`) posts for real to Formspree (`formspree.io/f/mwlkelzr`), with per-field validation, a busy state, and input preserved on failure. What is still unverified is the **destination address in the Formspree dashboard** — no real end-to-end send has been done.
+- The placeholder "Prenota una call" / Calendly link has been removed from `contatti.html`. Calendly survives only as a tech pill on the `agente-vocale` page.
+- No analytics (GA4/Meta Pixel) wired in yet; adding any requires updating the cookie policy and adding a real consent banner first. Absent analytics is why no banner is needed today.
+- Deployment target is decided: **PHP hosting with Apache**. The chatbot proxy (`api/chat.php`) needs PHP + cURL, so a purely static host would serve the config file — API key included — as plain text. See README.txt.
+- The API key is read from `VARCO_API_KEY`, or from `varco-config.php` above the web root, before the legacy `api/config.php`. `api/chat.php` accepts same-origin requests only.
+- Domain and contact email are still placeholders, so every page carries `noindex, nofollow` and `robots.txt` is on `Disallow`. `tools/go-live.mjs` reverses all of it in one command once the real values exist; `tools/check.mjs` fails while any placeholder remains.
 
 ## Brand Commitments
 
@@ -47,7 +49,7 @@ The claim a competing agency could not truthfully copy: Varco doesn't sell isola
 - **Case studies (`casi-studio/`)**: Osteria Bramante, Bianchi & Partners, Rossi Manifattura, Ferraro Immobiliare, Verde Moda — these are demonstrative examples with fictional names/numbers, explicitly flagged in `README.txt` for replacement with real client cases (or relabeling as "typical scenario examples") before public launch.
 - **Team (`chi-siamo.html`)**: Robert Marciuc (Founder & Lead Developer), Elena Conti (Strategist & Project Lead), Davide Salvi (AI & Automazioni) — `README.txt` flags these as example names/roles to be confirmed or replaced with the real team.
 - **Partner logos** shown in the proof strip: Bacco, Extrosa — treat as real client/partner names unless told otherwise; only two logos exist today.
-- **P.IVA** placeholder in the footer — must be replaced with the real VAT number before launch.
+- **Legal identity is unresolved, and it is a contradiction rather than a missing field.** `legal/privacy.html` states there is no VAT number and that projects are delivered free as case studies, while the rest of the site sells eleven services and promises a written quote after the audit. The footer carries no company identification at all (D.Lgs 70/2003 art. 7). `[NOME E COGNOME DEL TITOLARE]`, `[INDIRIZZO]` and `[CODICE FISCALE]` are still placeholders in `legal/privacy.html` and `legal/termini.html`. The owner is deciding this with an accountant; README.txt documents both routes in full. Do not resolve it by editing copy on either side without that decision.
 - Future work must not invent additional testimonials, client names, benchmarks, pricing, or team members beyond what's listed here without new evidence.
 
 ## Product Principles

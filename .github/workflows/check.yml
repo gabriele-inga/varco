@@ -1,0 +1,33 @@
+# Controllo pre-volo del sito.
+#
+# Il progetto non ha npm, bundler ne' test unitari: e' HTML/CSS/JS statico.
+# La CI qui non compila niente, controlla le cose che su questo sito si sono
+# gia' rotte davvero — segnaposto rimasti, chiavi API finite in un file
+# tracciato, link e asset che puntano nel vuoto, media fuori peso.
+#
+# Lo stesso comando gira in locale prima di caricare via FTP:
+#   node tools/check.mjs
+
+name: Controllo pre-volo
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Serve la history per "git ls-files" nel controllo dei segreti.
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Controllo pre-volo
+        run: node tools/check.mjs

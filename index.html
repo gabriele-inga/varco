@@ -6,7 +6,10 @@
 <title>Varco | Agenzia di Trasformazione Digitale 360° per PMI italiane</title>
 <meta name="description" content="Web design, social media, ads, SEO, email marketing, automazioni, agente vocale AI e chatbot. Costruiamo la mappa e il piano d'azione su misura per la tua azienda.">
 <link rel="canonical" href="https://[DOMINIO]/index.html">
-<meta name="robots" content="index, follow">
+<!-- SEGNAPOSTO-DOMINIO: noindex finche' canonical e og:url puntano a
+     https://[DOMINIO]. Lo rimette a "index, follow" lo script
+     tools/go-live.mjs quando gli passi il dominio vero. -->
+<meta name="robots" content="noindex, nofollow">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Varco | Agenzia di Trasformazione Digitale 360° per PMI italiane">
 <meta property="og:description" content="Web design, social media, ads, SEO, email marketing, automazioni, agente vocale AI e chatbot. Costruiamo la mappa e il piano d'azione su misura per la tua azienda.">
@@ -30,7 +33,7 @@
 function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function(){requestAnimationFrame(off)};f&&f.then?f.then(go,go):go()}if(d.readyState!=="loading"){ready()}else{d.addEventListener("DOMContentLoaded",ready)}setTimeout(off,4000)})();</script>
 
 
-<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Organization", "name": "Varco", "url": "https://[DOMINIO]", "logo": "https://[DOMINIO]/assets/logo/logo.svg", "description": "Agenzia italiana di trasformazione digitale: web design, marketing, automazioni AI e ottimizzazione per PMI.", "telephone": "+393888648509", "email": "[EMAIL]", "sameAs": ["https://www.facebook.com/profile.php?id=61586528656504", "https://www.linkedin.com/in/robert-marciuc-a192ab352/"]}, {"@context": "https://schema.org", "@type": "WebSite", "name": "Varco", "url": "https://[DOMINIO]"}]</script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Organization", "name": "Varco", "url": "https://[DOMINIO]", "logo": "https://[DOMINIO]/assets/logo/logo.svg", "description": "Agenzia italiana di trasformazione digitale: web design, marketing, automazioni AI e ottimizzazione per PMI.", "telephone": "+393888648509", "sameAs": ["https://www.facebook.com/profile.php?id=61586528656504", "https://www.linkedin.com/in/robert-marciuc-a192ab352/"]}, {"@context": "https://schema.org", "@type": "WebSite", "name": "Varco", "url": "https://[DOMINIO]"}]</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Vai al contenuto</a>
@@ -56,7 +59,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
     <div class="mobile-sub">
       <a href="contatti.html">Contatti</a>
       <a href="tel:+393888648509">+39 388 864 8509</a>
-      <a href="mailto:[EMAIL]">[EMAIL]</a>
+      <a href="https://wa.me/393888648509" target="_blank" rel="noopener">WhatsApp</a>
     </div>
   </div>
 </div>
@@ -380,7 +383,7 @@ se però non si parlano, restano cinque cose da gestire invece di un sistema che
       <div class="footer-col">
         <h4>Contatti</h4>
         <a href="tel:+393888648509">+39 388 864 8509</a>
-        <a href="mailto:[EMAIL]">[EMAIL]</a>
+        <a href="https://wa.me/393888648509" target="_blank" rel="noopener">WhatsApp</a>
         <a href="contatti.html">Modulo di contatto</a>
       </div>
       <div class="footer-col">

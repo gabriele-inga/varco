@@ -1,102 +1,224 @@
 Varco — SITO WEB — README
 ==========================
 
-NOTA VERSIONE: questa build è la revisione LIGHT MODE (v2) del sito, con palette
-primaria #025E71, secondaria #FF6B35, font Inter + JetBrains Mono e nuovo logo.
-Per tutte le specifiche di palette, tipografia, componenti, spacing e animazioni
-vedi DESIGN_SYSTEM.md nella root del pacchetto.
+Aggiornato: 2026-09-08.
+
+Sito statico in HTML/CSS/JS senza framework e senza build. L'unica parte
+dinamica e' il proxy PHP del chatbot in api/.
+
+Le specifiche di design (palette, tipografia, componenti, regole) stanno in
+DESIGN.md, che e' la fonte autorevole. Se questo README e DESIGN.md dicessero
+cose diverse, vale DESIGN.md.
+
+
+PRIMA DI TUTTO: DUE COMANDI
+----------------------------
+    node tools/check.mjs
+        Controllo pre-volo. Elenca cosa impedisce ancora la pubblicazione:
+        segnaposto rimasti, chiavi API in file tracciati da git, link e
+        immagini che puntano nel vuoto, media fuori peso. Esce con codice 1
+        se trova un errore. Gira anche in CI a ogni push
+        (.github/workflows/check.yml).
+
+    node tools/go-live.mjs --dominio varco.it --email info@varco.it
+        Prova a vuoto: mostra cosa cambierebbe. Aggiungi --scrivi per
+        applicare. Sostituisce dominio ed email in tutti i file, riapre
+        l'indicizzazione e riscrive robots.txt. Vedi "MESSA ONLINE".
+
+
+STATO ATTUALE — COSA MANCA PER PUBBLICARE
+------------------------------------------
+Il sito e' completo e funzionante, ma NON e' pubblicabile finche' non
+arrivano tre cose, tutte dati che solo il titolare puo' fornire:
+
+  1. DOMINIO ed EMAIL.
+     Oggi sono segnaposto. Per questo tutte le pagine portano
+     <meta name="robots" content="noindex, nofollow"> e robots.txt e' in
+     Disallow: farsi indicizzare con canonical e og:url che puntano a
+     https://[DOMINIO] significa entrare negli indici con URL invalidi e poi
+     doverli far rimuovere. Il comando go-live.mjs qui sopra rimette tutto a
+     posto in un colpo solo, noindex compreso.
+
+  2. DATI LEGALI (vedi sezione dedicata piu' sotto).
+
+  3. IMMAGINI delle sette pagine servizio senza video
+     (vedi assets/servizi/LEGGIMI.txt). Queste non bloccano: finche'
+     mancano, la pagina mostra un pannello "Immagine, in arrivo".
+
+
+DATI LEGALI — DA DECIDERE CON UN COMMERCIALISTA
+------------------------------------------------
+In legal/privacy.html e legal/termini.html ci sono quattro segnaposto:
+[NOME E COGNOME DEL TITOLARE], [INDIRIZZO], [CODICE FISCALE], [EMAIL].
+
+C'e' anche una contraddizione aperta, che nessuno script puo' risolvere.
+legal/privacy.html, punto 1, dichiara:
+
+    "Non e' presente una partita IVA: l'attivita' e' attualmente svolta
+     senza carattere professionale abituale e i progetti proposti tramite
+     questo sito sono realizzati a titolo gratuito come casi studio."
+
+Ma il resto del sito vende undici servizi, promette un preventivo scritto
+dopo l'audit e ha una pagina Termini e condizioni che parla di forniture.
+Le due cose non stanno insieme. Ci sono due strade, e vanno percorse per
+intero, non a meta':
+
+  A) C'E' la partita IVA (o si sta aprendo).
+     - Riscrivere il punto 1 della privacy togliendo la frase qui sopra.
+     - Aggiungere nel footer di ogni pagina denominazione, P.IVA e sede,
+       come richiede il D.Lgs 70/2003 art. 7 per un sito che offre servizi.
+     - Il resto del sito resta com'e'.
+
+  B) NON c'e' la partita IVA e i progetti sono davvero gratuiti.
+     - Allineare il sito alla privacy, non il contrario: togliere il
+       linguaggio commerciale (preventivo, forniture, "budget") e riscrivere
+       i Termini come accordo per progetti-vetrina gratuiti.
+     - E' un lavoro sui testi, non sul codice.
+
+Finche' non e' deciso, tools/check.mjs continua a segnalare errore. E' voluto.
+
+
+DOVE VIVE LA CHIAVE API DEL CHATBOT
+------------------------------------
+Scelta di deploy: HOSTING PHP CON APACHE. Il sito NON va su Netlify,
+GitHub Pages o Cloudflare Pages: li' il PHP non gira, il .htaccess viene
+ignorato e api/config.php verrebbe servito in chiaro, chiave compresa.
+(Se un giorno servisse un host statico, l'alternativa e' una Cloudflare
+Worker: vedi README_CHATBOT.md.)
+
+api/chat.php cerca la chiave in tre posti, in quest'ordine:
+
+  1. Variabile d'ambiente VARCO_API_KEY.               <- consigliato
+     Dal pannello dell'hosting, oppure nel .htaccess di root:
+         SetEnv VARCO_API_KEY gsk_la_tua_chiave
+     La chiave non esiste su disco: niente da servire per sbaglio, niente
+     da caricare per sbaglio via FTP.
+
+  2. varco-config.php UN LIVELLO SOPRA la radice del sito.
+     Cioe' accanto a public_html/ o httpdocs/, non dentro. Parti da
+     varco-config.example.php in questa cartella. Nessuna richiesta HTTP
+     puo' raggiungerlo, su qualunque server.
+
+  3. api/config.php — posizione storica, SCONSIGLIATA.
+     Funziona, ma sta dentro la web root: la protegge solo api/.htaccess.
+     Supportata per non rompere installazioni esistenti.
+
+Opzioni utili in configurazione (vedi api/config.example.php):
+  trusted_proxy    attivalo SOLO dietro Cloudflare o un reverse proxy,
+                   altrimenti il limite anti-abuso conta tutti i visitatori
+                   come un IP solo e 30 messaggi all'ora valgono per
+                   l'intero sito invece che per persona.
+  rate_limit_salt  sale per l'hash dell'IP: mettici una stringa tua.
+  allowed_origins  solo se il sito vive su piu' domini. La stessa origine
+                   e' sempre autorizzata.
+
+api/chat.php accetta richieste SOLO dalla stessa origine del sito. Senza
+quel controllo l'endpoint sarebbe un proxy AI gratuito e anonimo per
+chiunque, a spese del budget API.
 
 
 CONTENUTO DEL PACCHETTO
 ------------------------
-index.html                  Home
-chi-siamo.html               Pagina Chi siamo
-contatti.html                 Pagina Contatti (form)
-servizi/                        11 pagine servizio (template coerente)
-casi-studio/               index.html (filtro per settore) + 5 casi studio singoli
-                           NASCOSTI dal 28/08/2026: i casi sono dimostrativi,
-                           con nomi e numeri inventati, e non reggono la promessa
-                           "un numero o un come" finche' non ci sono clienti veri.
-                           I file restano tutti al loro posto. Nascoste anche le tre
-                           testimonianze in home, che firmavano gli stessi clienti,
-                           e il pulsante "Guarda i risultati" dell'hero.
-                           Per rimettere tutto in linea: cercare in tutto il progetto
-                           CASI-STUDIO-NASCOSTO e togliere i commenti che marca
-                           (HTML, sitemap.xml e i meta robots noindex). Il CSS della
-                           famiglia caso studio non e' mai stato toccato.
-legal/                          Privacy, Cookie, Termini (testi dimostrativi — vedi sotto)
-css/style.css               Foglio di stile unico, design system a variabili CSS
-js/chat.js                  Widget chatbot AI (vedi README_CHATBOT.md)
-js/main.js                  JS vanilla: menu mobile, FAQ, reveal on scroll, filtro casi studio, invio form
-assets/                      Logo, favicon, immagine Open Graph, icone SVG dei servizi
-robots.txt, sitemap.xml     SEO tecnica di base
+index.html                Home
+chi-siamo.html            Chi siamo
+contatti.html             Contatti (modulo Formspree, invio reale)
+404.html                  Pagina non trovata (servita da ErrorDocument)
+servizi/                  11 pagine servizio
+                          - 4 con il palco video: email-marketing,
+                            automazione-email, agente-vocale, chatbot
+                          - 7 con la lastra di apertura (frase + immagine):
+                            web-design, web-app, ottimizzazione-sito,
+                            social-media-marketing, campagne-ads, seo,
+                            video-ai
+casi-studio/              NASCOSTI dal 28/08/2026 — nomi e numeri inventati.
+                          I file restano al loro posto, con meta robots
+                          noindex e fuori dalla sitemap. Nascoste anche le
+                          tre testimonianze in home, che firmavano gli
+                          stessi clienti. Per rimetterli in linea: cercare
+                          CASI-STUDIO-NASCOSTO in tutto il progetto.
+legal/                    Privacy, Cookie, Termini
+css/style.css             Foglio di stile unico
+js/main.js                Menu, FAQ, reveal, palco video, invio modulo
+js/chat.js                Widget assistente
+api/                      Proxy PHP del chatbot (richiede PHP con cURL)
+tools/                    check.mjs e go-live.mjs (non vanno caricati online)
+.htaccess                 404, intestazioni di sicurezza, cache, blocco dei
+                          file che non devono essere serviti
+assets/                   Logo, favicon, illustrazioni, video, poster
 
-STACK
------
-HTML5 + CSS3 (variabili custom, grid, flexbox) + JavaScript vanilla.
-Nessuna dipendenza esterna eccetto i Google Fonts (Inter, JetBrains Mono),
-caricati via <link> nell'head di ogni pagina. Se preferisci non dipendere da Google Fonts,
-scarica i file .woff2 e sostituisci il link con una @font-face locale in css/style.css.
 
-COME METTERE ONLINE IL SITO
-----------------------------
-1. Carica l'intera cartella (index.html incluso) nella root del tuo hosting via FTP/SFTP
-   o pannello file manager (Netlify, o qualsiasi hosting statico).
-2. Verifica che i percorsi relativi restino intatti: non spostare i file fuori dalla
-   struttura di cartelle fornita (css/, js/, assets/, servizi/, casi-studio/, legal/).
-3. Imposta il dominio finale al posto del segnaposto https://[DOMINIO] in:
-   - la costante SITE_URL nello script di generazione (se vuoi rigenerare il sito), oppure
-   - cerca e sostituisci manualmente "https://[DOMINIO]" in tutti i file
-     HTML (meta canonical, Open Graph) e in sitemap.xml / robots.txt.
-4. Il form di contatti (contatti.html) invia davvero: fa POST su Formspree
-   (endpoint nell'attributo action del form, gestione in js/main.js). Da fare
-   una volta sola: confermare l'indirizzo di destinazione dalla dashboard
-   Formspree e provare un invio reale end-to-end.
-5. Il link segnaposto "Prenota una call" (Calendly inesistente) è stato rimosso
-   da contatti.html. Se attivi un calendario vero, reinseriscilo come voce di
-   .contact-info-list accanto a telefono/email/WhatsApp.
-6. assets/og-image.png è generata con i colori e le parole del sito, ma con i
-   font di sistema di fallback (Inter e JetBrains Mono non erano disponibili
-   in fase di build). Rigenerala con i font veri, o sostituiscila con
-   un'anteprima fotografica, mantenendo 1200×630.
+MESSA ONLINE
+-------------
+1. Decidere dominio ed email, poi:
+       node tools/go-live.mjs --dominio ilmiodominio.it --email info@...
+       (guarda l'esito, poi rilancia con --scrivi)
 
-CHECKLIST PRE-GO-LIVE
-----------------------
-[ ] Sostituire numero di P.IVA segnaposto nel footer con il dato reale.
-[ ] Far validare privacy policy, cookie policy e termini da un consulente legale.
-[ ] Verificare l'indirizzo di destinazione su Formspree e fare un invio di prova reale.
-[ ] Inserire un vero cookie banner conforme se si attivano cookie di analytics/marketing.
-[ ] Verificare che numero di telefono, email e link social nel footer siano corretti.
-[ ] Aggiungere Google Analytics 4 / Meta Pixel se previsti, rispettando la cookie policy.
-[ ] Testare il form e i filtri casi studio su Chrome, Safari e almeno un browser mobile.
-[ ] Controllare Core Web Vitals con PageSpeed Insights dopo la messa online definitiva.
-[ ] Inviare sitemap.xml a Google Search Console e Bing Webmaster Tools.
-[ ] Verificare che tutte le immagini/icone abbiano testo alternativo pertinente.
-[ ] Rivedere i 5 casi studio: sono contenuti dimostrativi con dati di esempio —
-    sostituire con casi reali (o ottenere il consenso dei clienti citati) prima
-    della pubblicazione pubblica, se non si tratta ancora di clienti reali.
-[ ] Chatbot AI: inserire la API key in api/config.php e aggiornare la privacy
-    policy (vedi README_CHATBOT.md).
-[ ] Impostare redirect 404 personalizzata (non inclusa in questo pacchetto).
+2. Riempire i dati legali a mano (sezione DATI LEGALI qui sopra).
 
-NOTE SUI CONTENUTI
--------------------
-- I 5 casi studio (Osteria Bramante, Bianchi & Partners, Rossi Srl, Ferraro Immobiliare,
-  Verde Moda) sono ESEMPI DIMOSTRATIVI con nomi e numeri fittizi ma realistici, come da
-  richiesta del brief. Vanno sostituiti con casi reali (o resi espliciti come "esempi di
-  scenario tipico") prima della pubblicazione definitiva.
-- Squadra in chi-siamo.html: nomi/ruoli di esempio, da sostituire con il team reale.
-- Il logo utilizzato è quello fornito (assets/logo/logo.svg), invariato.
-- Copy in italiano, tono diretto, senza claim non supportati da un numero o da un "come".
+3. Lanciare  node tools/check.mjs  finche' non da' zero errori.
 
-ACCESSIBILITÀ E PERFORMANCE
------------------------------
-- Markup semantico (header/main/footer/nav), focus visibile su tutti gli elementi
-  interattivi, rispetto di prefers-reduced-motion, contrasto testo/sfondo verificato
-  sulla palette scura del sito.
-- Nessuna libreria JS pesante: solo vanilla JS (~4 KB non minificato).
-- Immagini sostituite da SVG/CSS dove possibile per ridurre peso e tempi di caricamento;
-  se aggiungi fotografie reali, esporta in WebP/AVIF e specifica sempre width/height.
+4. Caricare via FTP la cartella, ESCLUSI:
+       tools/  prompts/  ds-bundle/  .git/  .github/  .impeccable/
+       .design-sync/  .vscode/  *.md  varco-config.example.php
+   Il .htaccess di root blocca comunque .md, .txt e i file nascosti se
+   dovessero finire online per sbaglio.
+
+5. Mettere la chiave API (sezione DOVE VIVE LA CHIAVE qui sopra) e provare
+   il chatbot dal sito vero.
+
+6. Verificare che il modulo contatti arrivi davvero: la destinazione va
+   confermata dalla dashboard Formspree (endpoint nell'attributo action di
+   contatti.html). Fare un invio di prova reale.
+
+7. Attivare HTTPS, poi togliere il commento alle due sezioni in fondo al
+   .htaccess (redirect a https e HSTS). NON attivare HSTS prima che il
+   certificato funzioni: bloccherebbe i visitatori fuori dal sito per un
+   anno.
+
+8. Inviare sitemap.xml a Google Search Console e Bing Webmaster Tools.
+
+9. assets/og-image.png e' generata con font di sistema di fallback.
+   Rigenerarla con Inter e JetBrains Mono, o sostituirla, mantenendo
+   1200x630.
+
+
+COSA RESTA APERTO, MA NON BLOCCA
+---------------------------------
+[ ] Immagini laterali delle 7 pagine servizio (assets/servizi/LEGGIMI.txt).
+[ ] Casi studio: sostituire i 5 esempi con casi reali, oppure lasciarli
+    nascosti. Stessa cosa per i nomi del team in chi-siamo.html.
+[ ] Analytics: non c'e' niente di installato, e va bene cosi'. Se si
+    aggiunge GA4 o Meta Pixel servono PRIMA un banner cookie conforme e
+    l'aggiornamento della cookie policy.
+[ ] Far validare privacy, cookie policy e termini da un consulente.
+
+
+STACK E PRESTAZIONI
+--------------------
+HTML5 + CSS3 (variabili custom, grid, flexbox) + JavaScript vanilla, circa
+1000 righe non minificate in js/main.js. Nessuna dipendenza esterna a parte
+i Google Fonts (Inter + JetBrains Mono) caricati via <link>. Per non
+dipendere da Google: scaricare i .woff2 e sostituire il link con @font-face
+locale in css/style.css (e togliere fonts.googleapis.com dalla CSP nel
+.htaccess).
+
+Peso degli asset, dopo la ripulitura dell'8 settembre 2026:
+  video          25,0 MB -> 2,9 MB   (ricodifica + poster; non partono piu'
+                                      al caricamento della pagina, ma quando
+                                      il foglio-hero comincia a sollevarsi)
+  illustrazioni   6,3 MB -> 2,2 MB   (i raster incorporati negli SVG erano
+                                      PNG: ora sono WebP, il vettore e'
+                                      intatto)
+  file morti      2,4 MB -> 0        (home-hero.svg da 2,1 MB non era usato
+                                      da nessuna pagina: l'hero carica il
+                                      .webp da 98 KB)
+
+Accessibilita': markup semantico, focus visibile, prefers-reduced-motion
+rispettato, contrasto verificato sulla palette chiara (Muted #6B7280 e'
+stato alzato apposta per superare il 4,5:1 su bianco — non abbassarlo).
+Nessuna certificazione formale: e' una base curata, non un livello WCAG
+dichiarato.
+
 
 BUON LAVORO,
 Varco

@@ -21,27 +21,125 @@ function fail($code, $msg) {
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') fail(405, 'Metodo non consentito.');
 
-$configPath = __DIR__ . '/config.php';
-if (!file_exists($configPath)) fail(500, 'Chatbot non configurato: manca api/config.php.');
-$cfg = require $configPath;
+/* ---- Dove vive la chiave ------------------------------------------------
+   In ordine, dalla posizione piu' sicura alla piu' fragile:
+
+   1. Variabile d'ambiente VARCO_API_KEY (SetEnv nel .htaccess, pannello
+      dell'hosting, variabile di sistema). La chiave non esiste su disco:
+      niente da servire per sbaglio, niente da caricare per sbaglio via FTP.
+   2. Un file di configurazione FUORI dalla web root: VARCO_CONFIG, oppure
+      varco-config.php un livello sopra la radice del sito. Nessuna richiesta
+      HTTP puo' raggiungerlo, su qualunque server.
+   3. api/config.php, la posizione storica. Funziona, ma sta dentro la web
+      root ed e' protetta solo da api/.htaccess: vale su Apache, viene
+      ignorato da Nginx, Netlify, Pages e simili, dove il file verrebbe
+      servito in chiaro. Resta supportata per non rompere installazioni
+      esistenti, ma non e' quella consigliata. */
+$cfg = array();
+$cfgCandidates = array();
+if (getenv('VARCO_CONFIG')) $cfgCandidates[] = getenv('VARCO_CONFIG');
+$cfgCandidates[] = dirname(dirname(__DIR__)) . '/varco-config.php';
+$cfgCandidates[] = __DIR__ . '/config.php';
+foreach ($cfgCandidates as $cand) {
+  if ($cand && is_readable($cand)) {
+    $loaded = require $cand;
+    if (is_array($loaded)) { $cfg = $loaded; break; }
+  }
+}
+
+$envKey = getenv('VARCO_API_KEY');
+if ($envKey) $cfg['api_key'] = $envKey;
+
+/* Senza file di configurazione il proxy deve comunque sapere dove chiamare. */
+if (empty($cfg['endpoint'])) $cfg['endpoint'] = 'https://api.groq.com/openai/v1/chat/completions';
+if (empty($cfg['model']))    $cfg['model']    = 'openai/gpt-oss-120b';
+
 if (empty($cfg['api_key']) || strpos($cfg['api_key'], 'INSERISCI') === 0) {
-  fail(500, 'Chatbot non configurato: API key mancante in api/config.php.');
+  fail(500, 'Chatbot non configurato: imposta VARCO_API_KEY oppure crea varco-config.php fuori dalla web root.');
+}
+
+/* ---- Chi puo' chiamare questo endpoint ----------------------------------
+   Senza questo controllo l'endpoint e' un proxy AI gratuito e anonimo: un
+   altro sito puo' farci POST dal browser dei suoi visitatori e consumare il
+   budget API a nome nostro, restando sotto il limite per IP perche' gli IP
+   sono i loro. Il widget chiama sempre api/chat.php sulla stessa origine
+   (js/chat.js), quindi la regola e' semplice: stessa origine, o niente.
+   'allowed_origins' serve solo se un giorno il sito vivesse su piu' domini. */
+$selfHost = isset($_SERVER['HTTP_HOST']) ? strtolower($_SERVER['HTTP_HOST']) : '';
+$allowed  = array();
+if (!empty($cfg['allowed_origins']) && is_array($cfg['allowed_origins'])) {
+  foreach ($cfg['allowed_origins'] as $o) {
+    $h = parse_url($o, PHP_URL_HOST);
+    if ($h) $allowed[] = strtolower($h);
+  }
+}
+if ($selfHost !== '') $allowed[] = preg_replace('/:\d+$/', '', $selfHost);
+
+$originHeader = '';
+if (!empty($_SERVER['HTTP_ORIGIN']))      $originHeader = $_SERVER['HTTP_ORIGIN'];
+elseif (!empty($_SERVER['HTTP_REFERER'])) $originHeader = $_SERVER['HTTP_REFERER'];
+$originHost = $originHeader ? strtolower((string)parse_url($originHeader, PHP_URL_HOST)) : '';
+
+/* Un fetch POST dal browser manda sempre Origin; uno script a riga di comando
+   no. L'assenza di entrambe le intestazioni e' gia' un segnale, non un caso
+   limite da tollerare. */
+if ($originHost === '' || !in_array($originHost, $allowed, true)) {
+  fail(403, 'Richiesta non consentita.');
 }
 
 /* ---- Rate limit per IP, su file. Niente database. ------------------------ */
-$ip     = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
+/* Dietro Cloudflare o un qualsiasi reverse proxy REMOTE_ADDR e' l'IP del
+   proxy, uguale per tutti i visitatori: con quello come chiave il limite
+   diventa 30 messaggi all'ora per l'INTERO sito invece che per persona, e il
+   primo che chiacchiera zittisce tutti gli altri. Ci fidiamo
+   dell'intestazione del proxy solo se 'trusted_proxy' e' attivo in
+   configurazione: un'intestazione che il client puo' scriversi da solo non e'
+   una difesa se la si crede sempre. */
+$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
+if (!empty($cfg['trusted_proxy'])) {
+  if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+    $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+  } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+    $parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+    $ip = trim($parts[0]);
+  }
+}
+if (!filter_var($ip, FILTER_VALIDATE_IP)) $ip = '0.0.0.0';
+
 $window = isset($cfg['rate_limit_window']) ? (int)$cfg['rate_limit_window'] : 3600;
 $max    = isset($cfg['rate_limit_max']) ? (int)$cfg['rate_limit_max'] : 30;
-$rlFile = sys_get_temp_dir() . '/varco_chat_' . md5($ip) . '.txt';
-$hits   = array();
+$now    = time();
+
+/* L'IP non viene mai scritto in chiaro: il nome del file e' un hash con sale
+   e il contenuto sono solo marche temporali. */
+$salt   = isset($cfg['rate_limit_salt']) ? (string)$cfg['rate_limit_salt'] : 'varco';
+$rlDir  = sys_get_temp_dir();
+$rlFile = $rlDir . '/varco_chat_' . md5($salt . '|' . $ip) . '.txt';
+
+$hits = array();
 if (is_readable($rlFile)) {
-  $raw  = explode(',', (string)file_get_contents($rlFile));
-  $now  = time();
+  $raw = explode(',', (string)file_get_contents($rlFile));
   foreach ($raw as $t) { $t = (int)$t; if ($t && $now - $t < $window) $hits[] = $t; }
 }
 if (count($hits) >= $max) fail(429, 'Troppi messaggi. Riprova tra qualche minuto, oppure scrivici su WhatsApp.');
-$hits[] = time();
+$hits[] = $now;
 @file_put_contents($rlFile, implode(',', $hits), LOCK_EX);
+
+/* La privacy policy promette che il dato usato per l'anti-abuso sparisce
+   entro 24 ore. Senza questa raccolta i file restavano nella cartella
+   temporanea finche' non ci pensava l'host, cioe' potenzialmente mai: una
+   promessa scritta che il codice non manteneva. Gira di rado (una volta su
+   venti) perche' e' manutenzione, non parte della risposta. */
+if (mt_rand(1, 20) === 1) {
+  $ttl = max($window, 86400);
+  $old = glob($rlDir . '/varco_chat_*.txt');
+  if (is_array($old)) {
+    foreach ($old as $f) {
+      $mt = @filemtime($f);
+      if ($mt && ($now - $mt) > $ttl) @unlink($f);
+    }
+  }
+}
 
 /* ---- Input -------------------------------------------------------------- */
 $body = json_decode(file_get_contents('php://input'), true);

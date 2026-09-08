@@ -1,4 +1,9 @@
+# SEGNAPOSTO-DOMINIO — il sito non ha ancora un dominio definitivo.
+# Finche' canonical, og:url e sitemap puntano a https://[DOMINIO], farsi
+# indicizzare significa entrare negli indici con URL invalidi e doverli poi
+# far rimuovere. Lo script tools/go-live.mjs riscrive questo file con il
+# dominio vero e riapre la scansione.
 User-agent: *
-Allow: /
+Disallow: /
 
-Sitemap: https://[DOMINIO]/sitemap.xml
+# Sitemap: https://[DOMINIO]/sitemap.xml

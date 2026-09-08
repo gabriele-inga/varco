@@ -622,6 +622,11 @@
     var velocity = 0;
     var revealed = false;
     var lifting = false;
+    /* Finche' e' false il filmato non viene nemmeno richiesto al server.
+       Nome esplicito: `armed` da solo collideva con l'omonima variabile del
+       bottone "Pulisci il modulo", che vive nella stessa IIFE ed e' quindi
+       la stessa variabile per via dello scope di `var`. */
+    var videoArmed = false;
     var stillTimer = null;
 
     var clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; };
@@ -674,13 +679,30 @@
       fadeAudio(should ? 1 : 0);
     }
 
-    /* Decodificare 7 MB di video mentre è fuori schermo non serve a nessuno
-       e su mobile costa batteria. */
+    /* Decodificare il video mentre è fuori schermo non serve a nessuno e su
+       mobile costa batteria. */
     function syncPlayback(near) {
+      /* Con preload="none" il file non parte finché non lo si chiede: il
+         primo play() È il download. Il palco è in cima alla pagina, quindi
+         "vicino allo schermo" è vero già al primo paint — bastava quello per
+         far scaricare il filmato a chiunque aprisse la pagina, anche a chi
+         non scorreva mai fin lì. Finché il foglio-hero non comincia a
+         sollevarsi si guarda il poster, che pesa meno di 2 KB. */
+      if (!videoArmed) return;
       if (document.hidden || !near) { if (!media.paused) media.pause(); }
       /* L'automatismo lavora in una direzione sola: può fermare il video
          fuori schermo, non può annullare una pausa chiesta a mano. */
       else if (media.paused && !userPaused) { var pr = media.play(); if (pr && pr.catch) pr.catch(function () {}); }
+    }
+
+    /* Il video si arma alla prima intenzione reale di guardarlo: il foglio
+       che inizia a sollevarsi, o — dove il palco non impila — l'inquadratura
+       che entra per davvero nello schermo. Un tocco sul frame lo arma comunque
+       (vedi il gestore di .stage-play più sotto). */
+    function armVideo() {
+      if (videoArmed) return;
+      videoArmed = true;
+      if (media.preload === "none") media.preload = "auto";
     }
 
     function frame() {
@@ -704,6 +726,7 @@
            fra i due piani a leggersi come profondità. */
         videoLayer.style.transform = "translate3d(0," + ((1 - lifted) * 48).toFixed(2) + "px,0) scale(" + (0.98 + 0.02 * lifted).toFixed(4) + ")";
 
+        if (lifted > 0.02) armVideo();
         stageSeq.classList.toggle("is-revealing", lifted > 0.5);
 
         var nowLifting = lifted > 0.001 && lifted < 0.999;
@@ -720,6 +743,7 @@
            del media è effettivamente visibile. */
         var mr = media.getBoundingClientRect();
         var shown = Math.max(0, Math.min(mr.bottom, vh) - Math.max(mr.top, 0));
+        if (mr.height > 0 && shown / mr.height > 0.25) armVideo();
         var nowRevealed2 = mr.height > 0 && shown / mr.height > 0.6;
         if (nowRevealed2 !== revealed) { revealed = nowRevealed2; syncAudio(); }
         syncPlayback(mr.top < vh * 1.5 && mr.bottom > -vh * 0.5);
@@ -771,6 +795,9 @@
     if (playBtn) {
       playBtn.addEventListener("click", function () {
         gestured = true;
+        /* Toccare l'inquadratura è la richiesta più esplicita che esista:
+           se il file non è ancora stato chiesto al server, si parte da qui. */
+        armVideo();
         if (media.paused) {
           userPaused = false;
           var pr = media.play();
@@ -822,6 +849,20 @@
     paintPlayBtn();
     requestAnimationFrame(frame);
   }
+
+
+  /* ---------- Lastra di apertura: immagine non ancora fornita ----------
+     Le sette pagine servizio senza video dichiarano gia'
+     ../assets/servizi/<slug>.jpg. Finche' il file non c'e', il browser
+     disegnerebbe l'icona di immagine rotta sopra il pannello "in arrivo"
+     che sta sotto: l'<img> che fallisce viene tolta e resta la sola
+     dicitura mono. Nella direzione che conta il degrado e' corretto — con
+     il file al suo posto la pagina funziona anche senza questo script. */
+  document.querySelectorAll(".claim-figure img").forEach(function (img) {
+    var drop = function () { if (img.parentNode) img.parentNode.removeChild(img); };
+    img.addEventListener("error", drop);
+    if (img.complete && img.naturalWidth === 0) drop();
+  });
 
 
   /* ---------- Mappa topografica interattiva ----------

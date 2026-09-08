@@ -1,0 +1,40 @@
+IMMAGINI DELLE PAGINE SERVIZIO
+==============================
+
+Sette pagine servizio non hanno un video: al posto del palco video hanno
+una "lastra di apertura" (frase a sinistra, immagine a destra). L'immagine
+va messa qui dentro. Finche' il file manca, il riquadro resta un pannello
+grigio con la scritta "Immagine, in arrivo" — non si rompe niente.
+
+FILE ATTESI (nome esatto, tutto minuscolo)
+------------------------------------------
+  01  web-design.jpg
+  02  web-app.jpg
+  03  ottimizzazione-sito.jpg
+  04  social-media-marketing.jpg
+  05  campagne-ads.jpg
+  06  seo.jpg
+  07  video-ai.jpg
+
+Le altre quattro pagine (email-marketing, automazione-email,
+agente-vocale, chatbot) tengono il video e non vogliono immagine.
+
+FORMATO
+-------
+- Proporzione: 4:3 orizzontale (es. 1600x1200 px). Il riquadro ritaglia
+  al centro, quindi tieni il soggetto centrato e lascia un po' d'aria sui
+  bordi. Su telefono stretto il taglio passa a 3:2.
+- Dimensione minima consigliata: 1200 px di lato lungo.
+- Peso: sotto i 250 KB. Salva in JPG qualita' 78-82.
+- Vuoi usare .webp o .png? Si puo': cambia l'estensione anche nel
+  <img src="..."> dentro la pagina corrispondente (servizi/<slug>.html,
+  cerca "claim-figure").
+
+TESTO ALTERNATIVO (obbligatorio)
+--------------------------------
+Nel file HTML della pagina, l'immagine ha alt="" vuoto perche' nessuno
+sapeva ancora cosa ci sarebbe finito dentro. Quando metti la foto,
+scrivi dentro alt="..." cosa si vede, in una frase
+(es. alt="La home di un ristorante aperta su uno smartphone").
+Un alt vuoto dice allo screen reader di ignorare l'immagine: va bene
+solo se e' puramente decorativa.
