@@ -773,6 +773,77 @@ hr.rule{ border:0; border-top:1px solid var(--line); margin: 0; }
   .service-tile:hover .st-desc, .service-tile:focus-visible .st-desc{ opacity:1; transition-delay: .1s; }
 }
 
+
+/* ---------- Cursore a disco sui quadrati servizi ----------
+   Il disco non accompagna il puntatore: e' l'inchiostro che riempie il
+   quadrato. Entra blu sul fondo ancora bianco, poi vira a bianco mentre il
+   quadrato si allaga di --traccia (regola qui sopra, .3s) — i due si
+   scambiano il colore invece di sovrapporsi. Senza questo scambio il disco
+   sparirebbe: dopo ~150ms sarebbe blu su blu.
+
+   Due elementi e non uno. .tile-puck porta solo la posizione, riscritta a
+   ogni frame da js/main.js senza transizione: un cursore che arranca su un
+   bersaglio da cliccare si legge come rotto, non come morbido (diverso
+   dall'inseguitore inerziale di [data-topo], che e' una maschera
+   decorativa — li' il ritardo e' il punto). .tile-puck-dot porta il
+   visuale, ed e' li' che vivono le transizioni: se scala e colore stessero
+   sullo stesso transform della posizione, la transizione CSS
+   combatterebbe contro la scrittura per frame.
+
+   Sta in body, non dentro il quadrato: il quadrato in hover ha
+   scale(1.08) e un figlio erediterebbe la trasformazione, scivolando via
+   dal puntatore. z-index 40: sopra i quadrati (che in hover salgono a 2),
+   sotto l'header sticky (60) e il launcher della chat (50). */
+/* Fuori dal cancello qui sotto l'elemento resta nel DOM (un resize non lo
+   rimuove) ma senza un solo stile: dichiararlo inerte qui evita che un div
+   senza regole finisca nel flusso in fondo al body. */
+.tile-puck{ position: fixed; top: 0; left: 0; pointer-events: none; }
+
+@media (hover: hover) and (pointer: fine) and (min-width: 981px){
+  /* Il puntatore di sistema sparisce solo dentro il quadrato: fuori torna
+     sempre, nessuno stato in cui si resta senza cursore. */
+  .service-tile, .service-tile *{ cursor: none; }
+
+  .tile-puck{
+    position: fixed; top: 0; left: 0; z-index: 40;
+    width: 40px; height: 40px; margin: -20px 0 0 -20px;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .tile-puck-dot{
+    display: block; width: 100%; height: 100%;
+    border-radius: 999px;
+    background: var(--traccia);
+    transform: scale(0);
+    /* Il ritardo sul colore vale solo al ritorno: in uscita il disco
+       rientra (.2s) prima di ridiventare blu, altrimenti per un istante
+       sarebbe blu su un quadrato ancora blu. In entrata la regola :has()
+       qui sotto lo azzera. */
+    transition: transform .2s var(--ease-out),
+                background-color .18s ease .2s;
+  }
+  .tile-puck.is-on .tile-puck-dot{ transform: scale(1); }
+  /* Una sola fonte di verita' per lo scambio di colore: il bianco del disco
+     e' condizionato al :hover vero del quadrato, non a una classe che JS
+     applica per conto suo. Se i due stati divergessero — e divergono, per
+     esempio quando il contenuto scorre sotto un puntatore fermo — resterebbe
+     un disco bianco fermo su un quadrato ancora bianco, cioe' invisibile.
+     Legati cosi', il caso peggiore e' un disco blu su fondo bianco (9,2:1),
+     mai un disco che sparisce.
+     .18s contro i .3s del riempimento del quadrato: a meta' transizione il
+     disco e' gia' bianco su un fondo gia' abbastanza scuro. A durate pari,
+     per un istante disco e fondo sarebbero lo stesso azzurro slavato. */
+  body:has(.service-tile:hover) .tile-puck-dot{
+    background: #ffffff;
+    transition-delay: 0s, 0s;
+  }
+
+  /* Il disco resta: e' affordance, non movimento decorativo. Cade solo
+     l'animazione — appare e commuta netto. */
+  @media (prefers-reduced-motion: reduce){
+    .tile-puck-dot{ transition: none; }
+  }
+}
 /* ---------- servizi: adattamento mobile ----------
    Sotto i 980px il quadrato smette di avere senso: non e' solo una
    questione di spazio, e' che l'intera interazione desktop (sfondo blu +

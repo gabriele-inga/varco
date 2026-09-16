@@ -1076,4 +1076,87 @@
     }
   }
 
+
+  /* ---------- Cursore a disco sui quadrati servizi ----------
+     Gemello del blocco .tile-puck in css/style.css. Qui vive solo la
+     posizione: colore, scala e transizioni restano CSS.
+
+     Delega su .services-table invece di undici coppie di listener, e un
+     solo rAF, vivo soltanto mentre il puntatore e' dentro un quadrato. Il
+     gate media viene riletto a ogni evento invece che all'avvio: cosi' un
+     resize sotto i 980px — dove il quadrato ridiventa una riga di lista e
+     l'hover non esiste piu' — spegne il disco da solo. */
+  var servicesTable = document.querySelector(".services-table");
+  if (servicesTable) initTilePuck(servicesTable);
+
+  function initTilePuck(root) {
+    var mql = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 981px)");
+    var puck = null, active = null;
+    var x = 0, y = 0, raf = null;
+
+    /* Creato da JS e non scritto in index.html: senza questo script
+       l'elemento non esiste affatto, invece di restare un disco morto nel
+       markup di una pagina che non puo' muoverlo. */
+    function ensure() {
+      if (puck) return;
+      puck = document.createElement("div");
+      puck.className = "tile-puck";
+      puck.setAttribute("aria-hidden", "true");
+      var dot = document.createElement("span");
+      dot.className = "tile-puck-dot";
+      puck.appendChild(dot);
+      document.body.appendChild(puck);
+    }
+
+    function draw() {
+      raf = null;
+      puck.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+    }
+
+    function tileOf(node) {
+      return node && node.closest ? node.closest(".service-tile") : null;
+    }
+
+    root.addEventListener("pointerover", function (e) {
+      if (e.pointerType !== "mouse" || !mql.matches) return;
+      if (!tileOf(e.target)) return;
+      active = tileOf(e.target);
+      ensure();
+      /* Posizionato prima di comparire: senza, il primo frame lo
+         disegnerebbe nell'angolo in alto a sinistra e lo si vedrebbe
+         volare fin sotto il puntatore. */
+      x = e.clientX; y = e.clientY;
+      draw();
+      puck.classList.add("is-on");
+    });
+
+    root.addEventListener("pointerout", function (e) {
+      if (!active || !tileOf(e.target)) return;
+      /* Da un quadrato al successivo non si spegne niente: pointerout sul
+         primo e pointerover sul secondo arrivano senza un passo di
+         rendering in mezzo, ma uscire davvero dallo stato costerebbe un
+         rientro e una riapertura di scala a vuoto. Anche il movimento tra
+         figli dello stesso quadrato passa di qui. */
+      if (tileOf(e.relatedTarget)) return;
+      active = null;
+      puck.classList.remove("is-on");
+    });
+
+    root.addEventListener("pointermove", function (e) {
+      if (!active) return;
+      x = e.clientX; y = e.clientY;
+      if (!raf) raf = requestAnimationFrame(draw);
+    }, { passive: true });
+
+    /* Resize oltre la soglia con il disco acceso: nessun pointerout
+       arriverebbe mai, e resterebbe un cerchio orfano sulla lista mobile. */
+    var onMq = function () {
+      if (!mql.matches && puck) {
+        active = null;
+        puck.classList.remove("is-on");
+      }
+    };
+    if (mql.addEventListener) mql.addEventListener("change", onMq);
+    else if (mql.addListener) mql.addListener(onMq);
+  }
 })();
