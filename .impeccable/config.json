@@ -74,6 +74,114 @@
         "value": "inter",
         "createdAt": "2026-08-26T00:22:11.879Z",
         "reason": "Inter is the project's established, documented brand typeface (DESIGN.md Typography; PRODUCT.md Brand Commitments), not an unreviewed default pick — preserving the incumbent identity per polish scope"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-14T20:32:44.523Z",
+        "reason": "DESIGN.md documents this deliberately: Black Stage Rule (body #000) + sanctioned blue-tinted shadows (button-hover 0 4px 12px rgba(2,94,113,.15), focus ring 0 0 0 3px rgba(2,94,113,.18), floating nav pill). Pre-existing, not introduced by this edit (no box-shadow added in this change); detector's heuristic can't see the shadow sits on a white surface floating over the dark stage, not on the dark background itself."
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "2.6rem",
+        "files": [
+          "css/style.css"
+        ],
+        "createdAt": "2026-09-14T21:28:47.243Z",
+        "reason": "user asked explicitly for testo veramente grande stile editoriale for .problem-help-label (one word per line); clamp(2.6rem,6.5vw,6rem) is a deliberate one-off display treatment respecting the system's own 6rem display ceiling, not a new reusable token"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "2.2rem",
+        "files": [
+          "css/style.css"
+        ],
+        "createdAt": "2026-09-14T21:28:57.291Z",
+        "reason": "same .problem-help-label editorial treatment, mobile breakpoint variant clamp(2.2rem,11vw,4rem); user asked explicitly for testo veramente grande stile editoriale"
+      },
+      {
+        "rule": "numbered-section-labels",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-14T21:45:38.079Z",
+        "reason": "DESIGN.md explicitly documents roadmap/service indices in the mono Data face as an intentional Do (rendered numbers convention), not AI editorial scaffolding — pre-existing pattern, unrelated to this session's roadmap-line animation edit"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "chi-siamo.html"
+        ],
+        "createdAt": "2026-09-15T06:46:40.826Z",
+        "reason": "work::before mirrors the pre-existing .case-card::before top-accent pattern already used sitewide; content sourced verbatim from user-provided aggiornamentosito update"
+      },
+      {
+        "rule": "all-caps-body",
+        "value": "*",
+        "files": [
+          "chi-siamo.html"
+        ],
+        "createdAt": "2026-09-15T06:46:41.017Z",
+        "reason": "work-note text/style copied verbatim from user-provided aggiornamentosito update, matching site's existing mono-uppercase micro-label language (footer-col h4, field label, proof-label)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "4rem",
+        "createdAt": "2026-09-15T20:35:16.870Z",
+        "reason": "pre-existing fluid clamp() display number on 404 page, not a stray literal — predates this session's chatbot work"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "1.5rem",
+        "createdAt": "2026-09-15T20:35:36.565Z",
+        "reason": "pre-existing fluid clamp() heading size (.claim-line), not a stray literal — predates this session's chatbot work"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "16px",
+        "createdAt": "2026-09-15T20:35:57.150Z",
+        "reason": "documented iOS Safari zoom-prevention floor on .chat-field, must stay exactly 16px per inline comment — predates this session's chatbot work"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "6px",
+        "createdAt": "2026-09-15T20:36:23.471Z",
+        "reason": "proportional half-height pill radius on skeleton loader placeholder bars (page-skel), not on token ramp by design — predates this session's chatbot work"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "10px",
+        "createdAt": "2026-09-15T20:36:29.711Z",
+        "reason": "proportional radius on skeleton loader title placeholder bars (page-skel) — predates this session's chatbot work"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "7px",
+        "createdAt": "2026-09-15T20:36:35.501Z",
+        "reason": "proportional half-height pill radius on skeleton loader lede placeholder bars (page-skel) — predates this session's chatbot work"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-16T07:39:00.919Z",
+        "reason": "false positive: detector checks .st-title/.st-icon hover color against the tile's resting background, not against .service-tile:hover's own background:var(--traccia) set on the ancestor in the same rule group — actual rendered pair is white text on #01497C (~8.7:1), not white-on-white"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-16T08:03:37.560Z",
+        "reason": "false positive x2, verified by reading the CSS: .services-table's border and .services-group's near-zero horizontal padding are declared in mutually exclusive media queries (desktop border vs mobile padding:32px 0), never simultaneously true; .footer-col a uses a documented negative-margin+matching-padding trick (margin:0 -32px 12px; padding:9px 32px) so its hover-highlight box reaches the column border while the actual text stays inset — the detector can't see the cancellation"
       }
     ]
   }

@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chi siamo | Varco — Agenzia di trasformazione digitale</title>
-<meta name="description" content="Varco è un team italiano di sviluppatori e strateghi digitali: missione, metodologia, valori e le persone che seguono il tuo progetto.">
+<meta name="description" content="Varco è un team italiano di sviluppatori e strateghi digitali: missione, metodologia, valori e i lavori che abbiamo costruito.">
 <link rel="canonical" href="https://[DOMINIO]/chi-siamo.html">
 <!-- SEGNAPOSTO-DOMINIO: noindex finche' canonical e og:url puntano a
      https://[DOMINIO]. Lo rimette a "index, follow" lo script
@@ -12,13 +12,13 @@
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Chi siamo | Varco — Agenzia di trasformazione digitale">
-<meta property="og:description" content="Varco è un team italiano di sviluppatori e strateghi digitali: missione, metodologia, valori e le persone che seguono il tuo progetto.">
+<meta property="og:description" content="Varco è un team italiano di sviluppatori e strateghi digitali: missione, metodologia, valori e i lavori che abbiamo costruito.">
 <meta property="og:image" content="https://[DOMINIO]/assets/og-image.png">
 <meta property="og:image:alt" content="Varco — Agenzia di trasformazione digitale">
 <meta property="og:url" content="https://[DOMINIO]/chi-siamo.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Chi siamo | Varco — Agenzia di trasformazione digitale">
-<meta name="twitter:description" content="Varco è un team italiano di sviluppatori e strateghi digitali: missione, metodologia, valori e le persone che seguono il tuo progetto.">
+<meta name="twitter:description" content="Varco è un team italiano di sviluppatori e strateghi digitali: missione, metodologia, valori e i lavori che abbiamo costruito.">
 <meta name="twitter:image" content="https://[DOMINIO]/assets/og-image.png">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="icon" type="image/png" href="assets/favicon.png">
@@ -44,7 +44,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
     </a>
     <div class="nav-cta">
       <nav class="nav-desktop" aria-label="Navigazione principale">
-        <a href="index.html#servizi" class="">Servizi</a><a href="index.html#trasformazione" class="">Trasformazione 360°</a><!-- CASI-STUDIO-NASCOSTO: <a href="casi-studio/index.html" class="">Casi studio</a> --><a href="chi-siamo.html" class="active">Chi siamo</a>
+        <a href="index.html#servizi" class="">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="casi-studio/index.html" class="">Casi studio</a> --><a href="chi-siamo.html" class="active">Chi siamo</a>
       </nav>
       <a href="contatti.html" class="btn btn-primary">Prenota audit gratuito</a>
       <button class="nav-toggle" aria-label="Apri il menu" aria-expanded="false">
@@ -55,7 +55,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
 </header>
 <div class="mobile-nav" id="mobile-nav" inert>
   <div class="container">
-    <a href="contatti.html" class="mobile-nav-cta">Prenota audit gratuito</a><a href="index.html#servizi">Servizi</a><a href="index.html#trasformazione">Trasformazione 360°</a><!-- CASI-STUDIO-NASCOSTO: <a href="casi-studio/index.html">Casi studio</a> --><a href="chi-siamo.html">Chi siamo</a>
+    <a href="contatti.html" class="mobile-nav-cta">Prenota audit gratuito</a><a href="index.html#servizi">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="casi-studio/index.html">Casi studio</a> --><a href="chi-siamo.html">Chi siamo</a>
     <div class="mobile-sub">
       <a href="contatti.html">Contatti</a>
       <a href="tel:+393888648509">+39 388 864 8509</a>
@@ -110,22 +110,49 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
 <section class="section">
   <div class="container">
     <div class="section-head reveal">
-      <div class="eyebrow">Il team</div>
-      <h2>Chi lavora sul tuo progetto</h2>
+      <div class="eyebrow">Portfolio</div>
+      <h2>Quello che abbiamo costruito</h2>
+      <p class="lede">Una selezione: non tutto quello che abbiamo fatto, ma i lavori che puoi andare a vedere online.</p>
     </div>
-    <div class="team-grid"><div class="team-card reveal">
-      <div class="t-photo">RM</div>
-      <h3>Robert Marciuc</h3>
-      <p class="meta-mono">Founder & Lead Developer</p>
-    </div><div class="team-card reveal">
-      <div class="t-photo">EC</div>
-      <h3>Elena Conti</h3>
-      <p class="meta-mono">Strategist & Project Lead</p>
-    </div><div class="team-card reveal">
-      <div class="t-photo">DS</div>
-      <h3>Davide Salvi</h3>
-      <p class="meta-mono">AI & Automazioni</p>
-    </div></div>
+    <!-- Registro dei lavori. Per aggiungerne uno: duplica un blocco <a class="work">,
+         cambia href, immagine, nome, categorie e anno. Con lo screenshot vero al posto
+         del logo aggiungi class="work-shot" all'<img>: riempie il telaio invece di
+         starci dentro centrato. Quando le voci copriranno piu' di un anno, raggruppale
+         per anno invece di lasciare la data solo sulla riga. -->
+    <div class="work-ledger reveal">
+      <a class="work" href="https://www.baccocanale.it/" target="_blank" rel="noopener"
+         aria-label="Bacco — sito web, 2026. Apre baccocanale.it in una nuova scheda">
+        <span class="work-well">
+          <img src="assets/partners/bacco.svg" alt="" width="810" height="305" loading="lazy" decoding="async">
+        </span>
+        <span class="work-line">
+          <span class="work-id">
+            <span class="work-client">Bacco</span>
+            <span class="work-tags">Sito web</span>
+          </span>
+          <span class="work-meta">
+            <span class="work-year">2026</span>
+            <svg class="work-out" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 11.5 11.5 4.5m0 0H6.75m4.75 0v4.75"/></svg>
+          </span>
+        </span>
+      </a><a class="work" href="https://extrosabeauty.it/" target="_blank" rel="noopener"
+         aria-label="Extrosa — sito web, 2026. Apre extrosabeauty.it in una nuova scheda">
+        <span class="work-well">
+          <img src="assets/partners/extrosa.svg" alt="" width="750" height="159" loading="lazy" decoding="async">
+        </span>
+        <span class="work-line">
+          <span class="work-id">
+            <span class="work-client">Extrosa</span>
+            <span class="work-tags">Sito web</span>
+          </span>
+          <span class="work-meta">
+            <span class="work-year">2026</span>
+            <svg class="work-out" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 11.5 11.5 4.5m0 0H6.75m4.75 0v4.75"/></svg>
+          </span>
+        </span>
+      </a>
+      <p class="work-note">Selezione parziale — nuovi lavori in pubblicazione</p>
+    </div>
   </div>
 </section>
 

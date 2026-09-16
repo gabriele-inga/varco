@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -44,7 +44,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
     </a>
     <div class="nav-cta">
       <nav class="nav-desktop" aria-label="Navigazione principale">
-        <a href="../index.html#servizi" class="active">Servizi</a><a href="../index.html#trasformazione" class="">Trasformazione 360°</a><!-- CASI-STUDIO-NASCOSTO: <a href="../casi-studio/index.html" class="">Casi studio</a> --><a href="../chi-siamo.html" class="">Chi siamo</a>
+        <a href="../index.html#servizi" class="active">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="../casi-studio/index.html" class="">Casi studio</a> --><a href="../chi-siamo.html" class="">Chi siamo</a>
       </nav>
       <a href="../contatti.html" class="btn btn-primary">Prenota audit gratuito</a>
       <button class="nav-toggle" aria-label="Apri il menu" aria-expanded="false">
@@ -55,7 +55,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
 </header>
 <div class="mobile-nav" id="mobile-nav" inert>
   <div class="container">
-    <a href="../contatti.html" class="mobile-nav-cta">Prenota audit gratuito</a><a href="../index.html#servizi">Servizi</a><a href="../index.html#trasformazione">Trasformazione 360°</a><!-- CASI-STUDIO-NASCOSTO: <a href="../casi-studio/index.html">Casi studio</a> --><a href="../chi-siamo.html">Chi siamo</a>
+    <a href="../contatti.html" class="mobile-nav-cta">Prenota audit gratuito</a><a href="../index.html#servizi">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="../casi-studio/index.html">Casi studio</a> --><a href="../chi-siamo.html">Chi siamo</a>
     <div class="mobile-sub">
       <a href="../contatti.html">Contatti</a>
       <a href="tel:+393888648509">+39 388 864 8509</a>
@@ -66,6 +66,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
 <main id="main">
 
 <section class="service-hero service-hero--solo">
+  <canvas class="hero-shader" data-hero-shader aria-hidden="true"></canvas>
   <div class="container">
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="../index.html">Home</a>
@@ -98,13 +99,8 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
         <p class="claim-line">Lo strumento che vi serve non è in vendita: è il vostro modo di lavorare, scritto in software.</p>
         <p class="claim-sub">Partiamo dal processo che avete già in testa e nei fogli di calcolo, e lo trasformiamo in qualcosa che regge il carico di ogni giorno.</p>
       </div>
-      <!-- Immagine laterale da fornire: mettere il file in
-           assets/servizi/web-app.jpg (vedi assets/servizi/LEGGIMI.txt) e
-           scrivere in alt="" la descrizione di cio' che si vede. Finche' il
-           file manca resta il pannello "Immagine, in arrivo". -->
       <figure class="claim-figure reveal">
-        <img src="../assets/servizi/web-app.jpg" alt="" width="1200" height="900" loading="lazy" decoding="async">
-        <span class="claim-soon">Immagine, in arrivo</span>
+        <img src="../assets/servizi/web-app.jpg" alt="Illustrazione di una finestra del browser con il simbolo del codice" width="916" height="651" loading="lazy" decoding="async">
       </figure>
     </div>
   </div>
@@ -252,6 +248,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
   </div>
 </footer>
 <script src="../js/main.js"></script>
+<script src="../js/hero-shader.js" defer></script>
 <script src="../js/chat.js" defer></script>
 </body>
 </html>

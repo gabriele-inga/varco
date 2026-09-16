@@ -167,15 +167,19 @@ h1,h2,h3,h4{
    aveva un titolo primario visibilmente primario, e l'h2 non aveva clamp —
    68px fissi a ogni viewport, telefono compreso. Ora h1 > h2 a ogni
    larghezza e nessuno dei due supera la larghezza del contenitore. */
-h1{ font-size: var(--fs-h1); line-height: .92; letter-spacing: -.02em; }
+h1{ font-size: clamp(2.2rem, 11vw, 4rem); line-height: .92; letter-spacing: -.02em; }
 h2{ font-size: var(--fs-h2); line-height: .95; letter-spacing: -.025em; }
 h3{ font-size: var(--fs-title); font-weight: 500; line-height: 1.2; }
 h4{ font-size: var(--fs-title-sm); font-weight: 500; line-height: 1.25; }
 /* Questi titoli erano h4 sotto un h2, saltando l'h3: l'outline si spezzava
-   proprio nelle sezioni narrative (processo, valori, team, elenco problemi).
-   Sono stati promossi a h3 per l'outline; qui restano alla dimensione che
-   avevano, perche' e' il livello semantico a essere sbagliato, non la scala. */
-.value-card h3, .team-card h3, .process-item h3, .problem-item h3{
+   proprio nelle sezioni narrative (processo, valori, team). Sono stati
+   promossi a h3 per l'outline; qui restano alla dimensione che avevano,
+   perche' e' il livello semantico a essere sbagliato, non la scala.
+   .problem-item non e' in questo elenco: e' anche lui un h3 legittimo (sotto
+   l'h2 "In cosa possiamo aiutarti", .problem-help-label — la sezione ora
+   apre con quel blocco, non piu' con il titolo-manifesto), ma la sua
+   dimensione esplicita vive vicino a .problem-list piu' sotto, non qui. */
+.value-card h3, .team-card h3, .process-item h3{
   font-size: var(--fs-title-sm);
 }
 
@@ -466,6 +470,27 @@ hr.rule{ border:0; border-top:1px solid var(--line); margin: 0; }
 }
 [data-topo] > .container{ position:relative; z-index:1; }
 
+/* ---------- campo shader delle hero (js/hero-shader.js) ----------
+   Stesso impilamento della mappa qui sopra: canvas primo figlio, contenuto un
+   livello sopra. Niente `overflow:hidden` sui contenitori delle pagine
+   servizio — `inset:0` tiene gia' il canvas dentro il padding box, e
+   ritagliare l'hero rischierebbe di tagliare l'anello di focus delle CTA.
+   L'hero della home (.hero) fa eccezione: mantiene il suo `overflow:hidden`
+   preesistente, necessario a ritagliare il canvas sugli angoli arrotondati
+   da 40px dello shell bianco — al suo interno il CTA non e' mai cosi'
+   vicino al bordo da perdere l'anello di focus.
+   La deroga al "flat by default" e' registrata in DESIGN.md e
+   MOTION_SYSTEM.md: prima di rimuoverla, leggere quelle note. */
+[data-hero-shader]{
+  position:absolute; inset:0; width:100%; height:100%;
+  display:block; z-index:0; pointer-events:none;
+}
+.service-hero--solo,
+.stage-layer--hero{ position:relative; }
+.service-hero--solo > .container,
+.stage-layer--hero > .container,
+.hero > .container{ position:relative; z-index:1; }
+
 /* ---------- hero ---------- */
 .hero-reveal{ position:relative; }
 .hero{
@@ -521,25 +546,30 @@ hr.rule{ border:0; border-top:1px solid var(--line); margin: 0; }
   .partner-logo-card:hover .partner-logo{ filter:grayscale(1) brightness(.55); }
 }
 /* ---------- map / route signature (Trasformazione 360) ---------- */
-.route-wrap{ margin: 56px 0 8px; overflow-x:auto; }
+/* Margine sopra ridotto (8px, non più 88px): quando le due righe del
+   titolo-manifesto spariscono (vedi js/problem-motion.js), la roadmap deve
+   già essere lì.
+   Linea: tracciato curvo tratteggiato (stroke-dasharray), disegnato una
+   volta via CSS/SVG statico — niente più clip-path né JS che la segua in
+   tempo reale (il vecchio blocco in main.js che ridisegnava il confine
+   sull'hover è stato rimosso insieme alla linea dritta/progress che
+   serviva). Card: gap tra le 5 colonne tolto (restano a contatto, come
+   un'unica griglia); l'hover non disegna più un bordo (rimosso su
+   richiesta esplicita), solo lift, sfondo e reveal della descrizione. */
+.route-wrap{ margin: 8px 0 8px; overflow-x:auto; }
 .route{ min-width: 760px; }
 .route svg{ width:100%; height:auto; display:block; }
-.route-steps{ display:grid; grid-template-columns: repeat(5,1fr); gap: 18px; margin-top: 18px; min-width:760px; }
-.route-step .rs-num{ font-family: var(--font-mono); color: var(--traccia); font-size:12px; letter-spacing:.05em; font-weight:500; font-variant-numeric: tabular-nums; }
-.route-step h3{ margin: 8px 0 8px; font-size: var(--fs-title-sm); font-weight: 500; }
+.route-steps{ display:grid; grid-template-columns: repeat(5,1fr); margin-top: 18px; min-width:760px; }
+.route-step h3{ margin: 8px 0 8px; font-size: var(--fs-title-sm); font-weight: 500; transition: color .25s ease; }
 .route-step p{ font-size: .92rem; max-width: none; }
 
 /* Roadmap su mobile: scroll orizzontale nativo con scroll-snap, un passaggio
-   pieno alla volta, più pallini di posizione — non più una simulazione via
-   scroll-jacking verticale (position:sticky + translateX sincronizzato allo
-   scroll della pagina). Quel meccanismo toglieva il controllo dello scroll
-   all'utente due volte sulla stessa pagina (qui e nell'accordion servizi) ed
-   è stato segnalato in /impeccable critique come problema P1. La linea/pallini
-   decorativa (.route) non è più sincronizzabile con uno scroll nativo (nessun
-   JS che la traduca in tempo reale), quindi è nascosta su mobile e sostituita
-   dai pallini funzionali (.route-dots) sotto le card, che riflettono la
-   posizione reale via IntersectionObserver e permettono di saltare a un
-   passaggio col tap. */
+   pieno alla volta, più pallini di posizione (navigazione invariata). La
+   linea/indicatore decorativo (.route) non è sincronizzabile con uno scroll
+   nativo (nessun JS che lo traduca in tempo reale), quindi resta nascosto su
+   mobile e sostituito dai pallini funzionali (.route-dots) sotto le card,
+   che riflettono la posizione reale via IntersectionObserver e permettono
+   di saltare a un passaggio col tap. */
 .route-dots{ display: none; }
 .route-dot{
   width: 8px; height: 8px; padding: 0; margin: 0; border: 0; border-radius: 50%;
@@ -555,25 +585,56 @@ hr.rule{ border:0; border-top:1px solid var(--line); margin: 0; }
     margin: 0; padding: 40px 0 8px;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
+  .route-wrap::-webkit-scrollbar{ display: none; }
   .route{ display: none; }
   .route-steps{ width: 500%; min-width: 0; gap: 0; }
   .route-step{ scroll-snap-align: center; }
   .route-dots{ display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 18px; }
 }
 
-.transform-block{ display:grid; grid-template-columns: .95fr 1.05fr; gap: 64px; align-items:start; }
-/* Unico h2 che puo' salire sopra la scala globale: e' il titolo-manifesto
-   della sezione e occupa una colonna intera. Clamp, non 4.25rem fissi —
-   erano proprio i due override responsive di questo blocco a mascherare il
-   fatto che l'h2 globale non ne avesse nessuno. */
-.transform-block > .reveal:first-child h2{
-  font-size: var(--fs-h2-manifest);
-  line-height:.92;
-  letter-spacing:-.025em;
+/* Reveal della descrizione al passaggio del mouse: solo su dispositivi con
+   hover affidabile — su touch il passaggio resta a contenuto pieno, niente
+   da "rivelare" col dito. L'illustrazione resta sempre a piena taglia (non
+   più scale(.34) a riposo): solo il paragrafo si nasconde/rivela. */
+@media (hover: hover) and (pointer: fine){
+  .route-step{
+    border-radius: 0;
+    padding: 18px 14px;
+    align-self: start;
+    transition: transform .3s var(--ease-out);
+  }
+  .route-step p{ opacity: 0; transition: opacity .25s ease; }
+  .route-step:hover{
+    background: var(--bg);
+    transform: translateY(-3px);
+  }
+  .route-step:hover h3{ color: var(--traccia); }
+  .route-step:hover p{ opacity: 1; }
 }
-/* ---------- problem list (Trasformazione 360) ---------- */
-.problem-list{ display:flex; flex-direction:column; margin-top: 26px; }
+
+/* ---------- problem help (Trasformazione 360) ---------- */
+/* Prima cosa dopo l'hero: etichetta in stile editoriale — una parola (o
+   "In cosa" insieme) per riga, dimensione da titolo (fino a 6rem, il tetto
+   del sistema) invece che una didascalia — + le 4 card in colonna singola
+   (il "ledger" originale: un bordo condiviso in alto tra le righe, non una
+   griglia 2x2) a destra. Al posto del paragrafo lede che stava qui in
+   origine: il testo lungo era il primo indiziato del "troppo testo" della
+   sezione.
+   Non e' piu' alto quanto lo schermo (era min-height:100svh con contenuto
+   centrato: sull'hero sopra, alto quanto o piu' di uno schermo, quel
+   centering spingeva l'etichetta a meta' del secondo schermo, staccandola
+   troppo dall'hero). */
+#trasformazione{ padding-top: 40px; }
+.problem-help{
+  display:grid; grid-template-columns: .9fr 1.1fr; gap:56px; align-items:center;
+  padding: 8px 0 72px;
+}
+.problem-help-label{ margin:0; font-weight:500; line-height:.9; letter-spacing:-.03em; color: var(--ink); }
+.problem-help-label span{ display:block; font-size: clamp(2.6rem, 6.5vw, 6rem); }
+.problem-list{ display:flex; flex-direction:column; }
 .problem-item{
   display:flex; align-items:stretch; gap:0;
   border-top: 1px solid var(--line);
@@ -587,20 +648,13 @@ hr.rule{ border:0; border-top:1px solid var(--line); margin: 0; }
 .problem-item > div{ flex:1; min-width:0; padding: 20px 0 20px 22px; }
 .problem-item h3{ margin: 0 0 4px; font-size: .95rem; font-weight: 500; color: var(--ink); }
 .problem-item p{ margin:0; font-size: var(--fs-sm); color: var(--bone-dim); max-width:48ch; }
+@media (max-width: 980px){
+  .problem-help{ grid-template-columns: 1fr; gap:40px; }
+  .problem-help-label span{ font-size: clamp(2.2rem, 11vw, 4rem); }
+}
 @media (max-width: 480px){
   .problem-item .pc-icon{ width:76px; }
   .problem-item > div{ padding-left:16px; }
-}
-.problem-list .reveal:nth-child(1){ transition-delay: 0ms; }
-.problem-list .reveal:nth-child(2){ transition-delay: 60ms; }
-.problem-list .reveal:nth-child(3){ transition-delay: 120ms; }
-.problem-list .reveal:nth-child(4){ transition-delay: 180ms; }
-@media (max-width: 980px){
-  .transform-block{ grid-template-columns: 1fr; }
-
-}
-@media (max-width: 620px){
-
 }
 /* ---------- illustrazioni roadmap ---------- */
 /* Altezza fissa (non height:auto + max-height): le 5 SVG hanno proporzioni
@@ -620,96 +674,209 @@ hr.rule{ border:0; border-top:1px solid var(--line); margin: 0; }
 }
 
 
-/* ---------- services accordion ----------
-   Un servizio si apre al tap/click sull'intestazione (.sr-head è un <button>,
-   non più l'intera riga come <a>) — stesso pattern single-open della FAQ più
-   sotto, gestito in main.js. Il link "Scopri il servizio" (.sr-cta) è ora
-   un vero <a> indipendente: aprire la descrizione e andare alla pagina del
-   servizio sono due azioni distinte, invece di una riga che sembrava avere
-   un'area cliccabile interna ma navigava comunque al primo tap ovunque.
-   Su desktop l'hover continua a fare l'anteprima come prima (CSS puro,
-   nessun JS); il tap/click aggiunge lo stesso risultato via .is-open, utile
-   anche a mouse/trackpad e non solo su touch. */
-.services-hint{ display:none; font-family: var(--font-mono); font-size:12px; letter-spacing:.04em; text-transform:uppercase; color: var(--muted); margin-bottom: 18px; }
-/* Gli undici servizi erano una lista piatta di undici righe equivalenti: il
-   punto decisionale piu' pesante del sito, in una sezione che sostiene che il
-   problema NON e' avere piu' strumenti. Ora sono tre gruppi da 3-4 voci, e le
-   tre etichette sono gli stessi titoli dei problemi elencati poco sopra
-   (.problem-item h3): la sezione risponde a quella lista invece di ripartire
-   da zero. Separazione tra gruppi molto piu' generosa della distanza tra righe
-   dello stesso gruppo — e' la prossimita' a fare il raggruppamento, non un
-   contenitore in piu'. */
-.services-group + .services-group{ margin-top: 46px; }
+/* ---------- services table ----------
+   Tabella a 3 colonne, una per gruppo-problema — le stesse tre etichette
+   della sezione .problem-item poco sopra. Le colonne condividono un unico
+   bordo esterno e si toccano (nessun gap orizzontale, solo un hairline tra
+   l'una e l'altra): e' una sola griglia, non tre torri di card separate.
+   Tutte e tre le colonne restano sullo stesso Surface bianco (niente piu'
+   sfondo diverso sulla centrale — tolto su richiesta). display:grid con un
+   solo binario di riga stira di default ogni colonna all'altezza della
+   piu' alta (qui 4 voci): la colonna da 3 resta piu' vuota in fondo invece
+   di essere piu' corta — l'intero blocco legge come un rettangolo unico,
+   non tre a gradini. Quel vuoto nella prima colonna ospita la mascotte
+   (vedi .services-mascot piu' sotto).
+   I quadrati riempiono la colonna: icona + nome, con la descrizione
+   rivelata in hover (vedi piu' sotto). Deroga dichiarata al linguaggio
+   pill/flat del sistema: qui uno squadrato e' anche l'elemento premibile,
+   non solo quello da leggere. */
+.services-table{
+  display:grid; grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--line);
+}
+.services-group{
+  padding: 28px 24px 32px;
+  border-left: 1px solid var(--line);
+}
+.services-group:first-child{ border-left: 0; position: relative; }
 .sg-label{
-  margin: 0; padding: 0 4px 12px;
-  font-family: var(--font-mono); font-size: var(--fs-data); font-weight: 500;
-  letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+  margin: 0 0 20px; padding: 0 0 14px;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-mono); font-size: var(--fs-control); font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink);
   line-height: 1.3;
 }
-.services-group > .service-row:first-of-type{ border-top: 1px solid var(--line-strong); }
-.service-row{
-  display:block; border-bottom: 1px solid var(--line); color: inherit;
+/* Quadrati incollati l'uno all'altro (gap:0) invece che separati: ognuno
+   porta solo un bordo inferiore (var(--line-strong), stesso peso della riga
+   sotto il titolo colonna), il primo aggiunge anche quello superiore — la
+   colonna legge come un'unica colonna divisa da righe, non come card
+   sparse. border-top:0 sugli altri evita la doppia linea nel punto di
+   contatto tra un quadrato e il successivo. Larghezza 100%: il quadrato
+   riempie la colonna fino al margine interno di .services-group (il suo
+   padding), non una misura fissa piu' stretta della colonna stessa. */
+.service-tiles{ display:flex; flex-direction:column; align-items:stretch; }
+.service-tile{
+  position: relative; z-index: 1;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; gap: 14px;
+  width: 100%; aspect-ratio: 1 / 1;
+  padding: 28px;
+  border: 1px solid var(--line-strong); border-top: 0;
+  background: var(--surface);
+  color: inherit; text-decoration:none;
+  transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out),
+              background-color .3s ease, border-color .3s ease;
 }
-.sr-head{
-  display:flex; align-items:center; gap:20px; width:100%;
-  padding: 20px 4px; margin:0; border:0; background:none;
-  font:inherit; text-align:left; color:inherit; cursor:pointer;
+.service-tiles .service-tile:first-child{ border-top: 1px solid var(--line-strong); }
+.st-icon{ flex:0 0 auto; width:44px; height:44px; color: var(--traccia); transition: color .3s ease; }
+.st-icon svg{ width:100%; height:100%; display:block; }
+.st-title{
+  margin:0; font-size: var(--fs-h3-row); font-weight:500; line-height:1.25;
+  transition: color .3s ease;
 }
-.sr-index{ font-family: var(--font-mono); font-size:13px; color: var(--muted); flex:0 0 30px; font-variant-numeric: tabular-nums; }
-.sr-head h4{ margin:0; font-size: var(--fs-h3-row); flex:1; transition: color .2s ease; }
-.sr-chevron{ flex:0 0 auto; width:20px; height:20px; color: var(--traccia); opacity:.45; transition: transform 200ms var(--ease-out), opacity .2s ease; }
-.sr-body-wrap{ display:grid; grid-template-rows: 0fr; transition: grid-template-rows .3s var(--ease-in-out); }
-.sr-body-inner{ overflow:hidden; }
-.sr-body{ padding: 0 4px 20px 50px; }
-.sr-body-inner .sr-body-content{ display:flex; align-items:flex-start; gap:16px; padding-top: 16px; padding-bottom: 16px; }
-.sr-icon{ flex:0 0 auto; width:36px; height:36px; color: var(--traccia); }
-.sr-text{ flex:1 1 auto; min-width:0; }
-.sr-body p{ margin: 0; color: var(--bone-dim); font-size: .95rem; max-width: 50ch; }
+/* Descrizione rivelata in hover riusando la stessa tecnica a griglia gia'
+   presente nel foglio per l'ex-accordion (grid-template-rows: 0fr -> 1fr,
+   overflow:hidden sull'inner): a riposo la riga e' alta zero e non conta
+   nel centraggio verticale, quindi icona+titolo occupano il centro del
+   quadrato; in hover la riga cresce alla sua altezza naturale e
+   justify-content:center sul quadrato sposta icona+titolo verso l'alto per
+   fare posto, invece di spostare o ritagliare il testo. */
+.st-desc-wrap{
+  display:grid; grid-template-rows: 0fr; width:100%;
+  transition: grid-template-rows .35s var(--ease-in-out);
+}
+.st-desc-inner{ overflow:hidden; }
+.st-desc{
+  margin:0; padding-top:2px; font-size: var(--fs-control); line-height:1.5;
+  color: rgba(255,255,255,.85);
+  opacity:0; transition: opacity .2s ease;
+}
+.service-tile:focus-visible{
+  outline: none; box-shadow: 0 0 0 3px rgba(1,73,124,.18); z-index:2;
+}
+/* Freccia di riga: invisibile sui quadrati desktop (l'affordance li' e'
+   tutto il trattamento hover), diventa l'indizio "e' un link" nella riga
+   compatta sotto i 980px, dove l'hover non esiste. */
+.st-arrow{ display:none; }
 
-/* "Scopri il servizio" e "Leggi il caso studio" fanno lo stesso mestiere —
-   uscire dal blocco e andare a leggere la pagina intera — ma erano due
-   componenti diversi: uno un link mono nudo sotto al paragrafo, l'altro un
-   blocco tinto che si inverte. Ora e' uno solo. Squadrato come .cs-btn:
-   l'accordion e' gia' un ledger a filetti come la griglia casi studio, quindi
-   raggio zero e' la lingua della riga, non un'eccezione.
-   Differenza voluta da .cs-btn: quella barra sborda fino ai bordi della card
-   perche' la chiude; questa vive dentro una riga, quindi ha il suo padding. */
-.sr-cta{
-  flex: 0 0 auto; align-self: center; margin-inline-start: auto;
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  font-family: var(--font-mono); font-size:12px; font-weight:500;
-  letter-spacing:.04em; text-transform:uppercase;
-  color: var(--traccia); background: var(--primario-light);
-  padding: 14px 18px; border-radius: 0;
-  transition: background-color .2s ease, color .2s ease;
-}
-.sr-cta .arrow-icon{ width:14px; height:14px; transition: transform 150ms var(--ease-out); }
 @media (hover: hover) and (pointer: fine){
-  .sr-cta:hover{ background: var(--traccia); color:#ffffff; }
-  .sr-cta:hover .arrow-icon{ transform: translateX(3px); }
+  .service-tile:hover, .service-tile:focus-visible{
+    background: var(--traccia);
+    border-color: var(--traccia);
+    transform: translateY(-6px) scale(1.08);
+    box-shadow: var(--shadow-md);
+    z-index: 2;
+  }
+  .service-tile:hover .st-icon, .service-tile:focus-visible .st-icon{ color:#fff; }
+  .service-tile:hover .st-title, .service-tile:focus-visible .st-title{ color:#fff; }
+  .service-tile:hover .st-desc-wrap, .service-tile:focus-visible .st-desc-wrap{ grid-template-rows: 1fr; }
+  .service-tile:hover .st-desc, .service-tile:focus-visible .st-desc{ opacity:1; transition-delay: .1s; }
 }
-.sr-cta:active{ transform: scale(.98); }
 
-.service-row.is-open .sr-head h4{ color: var(--traccia); }
-.service-row.is-open .sr-chevron{ transform: rotate(90deg); opacity:1; }
-.service-row.is-open .sr-body-wrap{ grid-template-rows: 1fr; }
+/* ---------- servizi: adattamento mobile ----------
+   Sotto i 980px il quadrato smette di avere senso: non e' solo una
+   questione di spazio, e' che l'intera interazione desktop (sfondo blu +
+   scatto + descrizione) e' agganciata a :hover, che su touch non esiste
+   (vedi il gate (hover:hover) and (pointer:fine) sopra — su touch quel
+   blocco e' semplicemente inerte). Un quadrato enorme con solo icona+nome
+   e una descrizione irraggiungibile sarebbe undici scroll vuoti col dito.
+   Diventa quindi una lista compatta — riga orizzontale icona+nome+freccia,
+   stesso principio "registro unito" (bordo condiviso, nessun gap) gia'
+   usato per "Altri servizi" e per i quadrati stessi in verticale, qui in
+   orizzontale. La freccia (stesso .arrow-icon dei link a fondo pagina)
+   sostituisce l'hover come indizio "e' cliccabile"; :active da' il
+   feedback al tocco che l'hover darebbe col mouse. */
+@media (max-width: 980px){
+  .services-table{ display:block; border:0; }
+  .services-group{ border-left:0; border-top: 1px solid var(--line); padding: 32px 0; }
+  .services-group:first-child{ border-top:0; }
+  .sg-label{ padding: 0 4px 14px; }
 
-@media (hover: hover) and (pointer: fine){
-  .services-hint-hover{ display:block; }
-  .service-row:hover .sr-head h4{ color: var(--traccia); }
-  .service-row:hover .sr-chevron{ transform: rotate(90deg); opacity:1; }
-  .service-row:hover .sr-body-wrap{ grid-template-rows: 1fr; }
+  .service-tile{
+    flex-direction: row; align-items:center; justify-content:flex-start;
+    text-align:left; gap: 16px;
+    width:auto; aspect-ratio:unset; height:auto;
+    padding: 16px 4px;
+    border-left: 0; border-right: 0;
+  }
+  .st-icon{ width:32px; height:32px; }
+  .st-title{ flex:1 1 auto; font-size: var(--fs-control); }
+  .st-desc-wrap{ display:none; }
+  .st-arrow{ display:block; flex:0 0 auto; color: var(--muted); opacity:.6; }
+
+  .service-tile:active{
+    background: var(--primario-light);
+    border-color: var(--traccia);
+  }
+  .service-tile:active .st-icon{ color: var(--traccia); }
+  .service-tile:active .st-title{ color: var(--traccia); }
+  .service-tile:active .st-arrow{ color: var(--traccia); opacity:1; }
+  /* !important necessario qui: <sprite-mate> imposta display:inline-block
+     come stile inline nel proprio connectedCallback (js/chat.js), e uno
+     stile inline batte sempre una regola in foglio esterno a parita' di
+     tutto il resto — senza, questa riga non ha mai effetto e la mascotte
+     resta visibile (posizionata secondo le regole sopra, non piu' valide
+     in questo layout) invece di sparire. */
+  .services-mascot{ display:none !important; }
 }
-@media (hover: none), (pointer: coarse){
-  .services-hint-touch{ display:block; }
+
+/* ---------- mascotte nel buco della prima colonna ----------
+   La colonna "Sito che non converte" ha solo 3 servizi contro i 4 delle
+   altre due; siccome .services-table stira ogni colonna all'altezza della
+   piu' alta (vedi sopra), le resta un vuoto in fondo — un intero quadrato
+   di spazio libero. <sprite-mate> e' il custom element gia' registrato da
+   js/chat.js per la mascotte in pixel-art della testata dell'assistente
+   (stessi stati "idle"/"walk" gia' disegnati li'): qui e' una seconda
+   istanza dello stesso elemento, non un asset nuovo. bottom:0 sull'assoluto
+   la appoggia esattamente sulla riga dove finisce anche l'ultimo quadrato
+   delle altre due colonne (il padding-bottom di .services-group, uguale in
+   tutte e tre) — la "linea orizzontale finale" richiesta. State di default
+   "walk" (cammina sempre); main.js la porta a "idle" e ferma la passeggiata
+   al passaggio del cursore — la reazione al tocco, non un click che apre
+   altro: e' un dettaglio, non un secondo lanciatore della chat. Solo
+   desktop (vedi display:none nel breakpoint mobile sopra): sotto i 980px
+   il "buco" stesso sparisce insieme ai quadrati.*/
+.services-mascot{
+  position:absolute; left:50%; bottom:0;
+  transform: translateX(calc(-50% - 70px));
+  animation: services-mascot-patrol 7s ease-in-out infinite;
 }
-@media (max-width: 620px){
-  .sr-head{ gap:14px; }
-  .sr-body{ padding-left: 44px; }
-  /* icona e testo restano affiancati; solo la CTA va a capo, a piena
-     larghezza — la stessa forma a barra che ha .cs-btn nella card */
-  .sr-body-inner .sr-body-content{ flex-wrap: wrap; row-gap: 14px; }
-  .sr-cta{ flex: 1 1 100%; align-self: stretch; margin-inline-start: 0; }
+.services-mascot.is-noticing{ animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce){
+  .services-mascot{ animation:none; transform: translateX(-50%); }
+}
+@keyframes services-mascot-patrol{
+  0%, 100%{ transform: translateX(calc(-50% - 70px)); }
+  50%{ transform: translateX(calc(-50% + 70px)); }
+}
+/* Sotto i 980px il quadrato con il buco sparisce (vedi .services-mascot
+   sopra), quindi la mascotte si sposta: non piu' sotto "Sito che non
+   converte", ma sulla riga che #servizi condivide con .cta-band subito
+   dopo — il border-top di .cta-band (gia' presente, non nuovo). Vive
+   dentro #servizi (.section, position:relative, senza overflow:hidden)
+   e non dentro .cta-band, che invece taglia con overflow:hidden qualunque
+   figlio posizionato fuori dal proprio bordo: da qui bottom:0 la appoggia
+   esattamente sul bordo inferiore della sezione, che e' la stessa riga.
+   Scala piu' piccola (3 invece di 5) e passeggiata piu' corta, coerenti
+   con uno schermo stretto. */
+/* !important qui e sotto per lo stesso motivo del commento su
+   .services-mascot nel breakpoint mobile: <sprite-mate> imposta
+   display:inline-block come stile inline, che senza !important batte
+   sempre questa riga in foglio esterno. */
+.services-mascot-mobile{ display:none !important; }
+@media (max-width: 980px){
+  .services-mascot-mobile{
+    display:block !important; position:absolute; left:50%; bottom:0; z-index:1;
+    transform: translateX(calc(-50% - 32px));
+    animation: services-mascot-mobile-patrol 6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .services-mascot-mobile{ animation:none; transform: translateX(-50%); }
+  }
+}
+@keyframes services-mascot-mobile-patrol{
+  0%, 100%{ transform: translateX(calc(-50% - 32px)); }
+  50%{ transform: translateX(calc(-50% + 32px)); }
 }
 
 /* ---------- case studies ---------- */
@@ -850,6 +1017,46 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
 .cta-band .lede{ margin: 0 auto 10px; text-align: center; }
 .cta-row-centered{ margin-top: 50px; justify-content: center; }
 
+/* ---------- "Chiedi all'AI" (roadmap, index.html) ----------
+   Tre card sempre visibili, non un menu a comparsa: stesso linguaggio
+   delle soft card (raggio 16px, bordo Line, hover lift + shadow-md) usato
+   da testimonial/lead-magnet, mai gli angoli squadrati della famiglia
+   case-study. I link sono href statici nel markup. */
+.ask-ai{ text-align: center; }
+.ask-ai-eyebrow{
+  margin: 0 0 16px; font-family: var(--font-display); font-size: var(--fs-h2);
+  font-weight: 500; line-height: .95; letter-spacing: -.025em; color: var(--traccia);
+}
+.ask-ai-title{
+  margin: 0 0 28px; font-family: var(--font-display); font-size: var(--fs-title);
+  font-weight: 500; line-height: 1.2; letter-spacing: -.01em; color: var(--ink);
+}
+.ask-ai-cards{ display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+.ask-ai-card{
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  width: 168px; padding: 38px 30px 30px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  color: var(--ink-dim); text-decoration: none;
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease, color .15s ease;
+}
+.ask-ai-card:focus-visible{ border-radius: var(--radius-lg); }
+.ask-ai-icon{ display: flex; width: 32px; height: 32px; }
+.ask-ai-icon svg{ display: block; width: 100%; height: 100%; }
+.ask-ai-name{ font-family: var(--font-body); font-size: var(--fs-control); font-weight: 500; }
+@media (hover: hover) and (pointer: fine){
+  .ask-ai-card:hover{
+    border-color: var(--traccia); color: var(--traccia);
+    box-shadow: var(--shadow-md); transform: translateY(-2px);
+  }
+}
+@media (max-width: 560px){
+  .ask-ai-cards{ flex-direction: column; align-items: stretch; }
+  .ask-ai-card{
+    width: 100%; max-width: 320px; margin: 0 auto;
+    flex-direction: row; justify-content: flex-start; padding: 16px 20px;
+  }
+}
+
 /* ---------- montagne decorative CTA ---------- */
 .cta-band .container{ position: relative; z-index: 1; }
 .mountain{
@@ -902,13 +1109,31 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
 .footer-col:first-child{ padding-left:0; }
 .footer-col:last-child{ padding-right:0; }
 .footer-col h4{ font-family: var(--font-mono); font-size: var(--fs-data-xs); letter-spacing:.08em; text-transform:uppercase; color: #8a8a8a; font-weight:500; margin-bottom: 20px; }
-.footer-col a, .footer-col p{ display:block; font-size: .93rem; color: #d0d0d0; margin-bottom: 12px; }
-.footer-col a{ transition: color .2s ease; }
+/* le icone della prima colonna sono più "piene" del testo nudo delle
+   altre colonne: testo e icona partono con un piccolo rientro (in linea
+   con l'etichetta SOCIAL) mentre il rettangolo di hover resta a filo
+   bordo, cosi' resta un margine visibile tra il bordo dell'evidenziazione
+   e l'inizio di icona/testo — non e' un rientro della colonna stessa. */
+.footer-col:first-child h4{ padding-left:8px; }
+.footer-col p{ display:block; font-size: .93rem; color: #d0d0d0; margin-bottom: 12px; }
+/* I link diventano "pulsanti" a tutta larghezza: il rettangolo di hover
+   deve arrivare esattamente ai bordi divisori tra le colonne, quindi il
+   link sconfina nel padding della colonna (margine negativo) e lo
+   ricompensa con un padding identico, cosi' il testo resta fermo. */
+.footer-col a{
+  display:block; font-size: .93rem; color: #d0d0d0;
+  margin: 0 -32px 12px; padding: 9px 32px;
+  border-radius:0; transition: background-color .2s ease, color .2s ease;
+}
+.footer-col:first-child a{ margin-left:0; padding-left:8px; }
+.footer-col:last-child a{ margin-right:0; padding-right:0; }
 .footer-col-social a{ display:flex; align-items:center; gap:10px; }
 .footer-col-social svg{ width:15px; height:15px; flex:none; }
 .footer-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top: 26px; flex-wrap:wrap; gap:20px; }
 @media (hover: hover) and (pointer: fine){
-  .footer-col a:hover{ color: #ffffff; }
+  /* velo chiaro sopra il nero di sfondo invece di un riempimento blu:
+     resta un grigio scuro in tono con lo sfondo e il bordo #202020. */
+  .footer-col a:hover{ background: rgba(255,255,255,.08); color: #ffffff; }
 }
 @media (max-width: 700px){
   /* Sotto i 700px il footer impila su 2 poi 1 colonna e diventa più alto
@@ -924,6 +1149,9 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
   .footer-col{ border-right:0; border-top:1px solid #202020; padding:28px 0; }
   .footer-col:nth-child(1), .footer-col:nth-child(2){ border-top:0; }
   .footer-col:nth-child(odd){ padding-right:20px; }
+  /* niente più divisori verticali da raggiungere qui sotto: il link torna
+     a bordo colonna invece di sconfinare nei 32px che non esistono più. */
+  .footer-col a{ margin:0 0 12px; padding:9px 0; }
 }
 @media (max-width: 480px){
   .footer-grid{ grid-template-columns: 1fr; }
@@ -1132,14 +1360,112 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
 @media (max-width: 900px){ .values-grid{ grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 560px){ .values-grid{ grid-template-columns: 1fr; } }
 
-.team-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 30px; }
-.team-card .t-photo{
-  width:100%; aspect-ratio: 4/5; background: var(--surface-alt); border:1px solid var(--line);
-  display:flex; align-items:center; justify-content:center; font-family: var(--font-display); font-weight:500; font-size: 2.4rem; color: var(--traccia);
-  margin-bottom: 18px; border-radius: var(--radius-lg);
+/* ---------- portfolio: il registro dei lavori ----------
+   Sostituisce la griglia del team (nomi d'esempio, rimossa) ed e' la superficie
+   di prova unica del sito al posto dei casi studio nascosti.
+
+   Registro unito, non una griglia di schede: un solo bordo esterno e divisori
+   interni a filo, gap zero — la stessa forma di #casi-studio .cases-grid e di
+   .related-services. Gli angoli squadrati sono EREDITATI dalla famiglia
+   "evidence" dei casi studio che questo blocco rimpiazza: l'ambito si sposta,
+   non si allarga (vedi DESIGN.md → Shapes). */
+/* I divisori sono il gap stesso: la griglia fa da fondo colore e le voci ci
+   poggiano sopra in bianco. Un border-right sulla prima colonna le toglierebbe
+   1px di larghezza, il suo pozzetto sarebbe piu' basso e le due righe dati non
+   sarebbero piu' allineate — in un registro unito l'allineamento e' tutto il
+   punto. Cosi' le tracce restano identiche e non servono regole di parita'. */
+.work-ledger{
+  display:grid; grid-template-columns: repeat(2,1fr); gap:1px;
+  border:1px solid var(--line); background: var(--line);
 }
-@media (max-width: 900px){ .team-grid{ grid-template-columns: repeat(2,1fr); } }
-@media (max-width: 560px){ .team-grid{ grid-template-columns: 1fr; } }
+.work{
+  position:relative; display:flex; flex-direction:column;
+  padding: 26px; color: var(--ink); text-decoration:none;
+  background: var(--surface);
+}
+/* Barra d'accento: stessa meccanica di .case-card::before. Dentro un bordo
+   condiviso e' l'unico segnale di hover possibile — un lift proietterebbe
+   l'ombra sulle voci vicine e sfalderebbe il registro (lezione gia' imparata
+   su #casi-studio .case-card:hover). */
+.work::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:3px;
+  background: var(--traccia); transform: scaleX(0); transform-origin:left;
+  transition: transform 200ms var(--ease-out);
+}
+.work:focus-visible::before{ transform: scaleX(1); }
+/* La :focus-visible globale porta con se' un border-radius di 4px. Su una
+   voce squadrata incassata a filo nella griglia l'angolo tondo si vede, e
+   contraddice la lingua "evidence". Il ring resta, la forma no. */
+.work:focus-visible{ border-radius: 0; }
+
+/* Il pozzetto: un logo non e' lo screenshot di un progetto, e stirarlo a
+   pieno telaio sarebbe una bugia sul contenuto. Finche' e' un logo sta
+   centrato alla sua taglia; con .work-shot l'immagine vera riempie lo stesso
+   telaio. Stessa cornice, riempimento diverso. */
+.work-well{
+  display:grid; place-items:center; aspect-ratio: 16/10; overflow:hidden;
+  background: var(--surface-alt); padding: 34px;
+  transition: background-color .25s ease;
+}
+.work-well img{
+  max-width: min(70%, 320px); max-height: 44%;
+  width:auto; height:auto; object-fit: contain;
+  transition: transform 300ms var(--ease-out);
+}
+.work-well img.work-shot{
+  max-width:none; max-height:none; width:100%; height:100%; object-fit: cover;
+}
+
+.work-line{ display:flex; align-items:flex-end; gap:16px; padding-top: 20px; }
+.work-id{ display:flex; flex-direction:column; gap:6px; min-width:0; }
+.work-client{
+  font-family: var(--font-display); font-weight:500; font-size: var(--fs-title);
+  line-height:1.2; letter-spacing:-.01em; color: var(--ink);
+  transition: color .2s ease;
+}
+.work-tags{
+  font-family: var(--font-micro); font-size: var(--fs-label); font-weight:500;
+  letter-spacing:.05em; text-transform:uppercase; color: var(--muted);
+}
+.work-meta{ margin-left:auto; display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+/* L'anno e' un fatto verificabile, quindi mono (Mono Readout Rule); il nome
+   del cliente non lo e' e resta in Inter. */
+.work-year{
+  font-family: var(--font-mono); font-weight:500; font-size: var(--fs-data);
+  letter-spacing:.02em; color: var(--traccia); font-variant-numeric: tabular-nums;
+}
+/* Freccia diagonale, non orizzontale: questi link escono dal sito. A riposo
+   .6 e non .5 come .related-service: li' la freccia e' decorativa dentro una
+   riga gia' ovviamente cliccabile, qui e' l'unico segnale visivo che il link
+   porta fuori, quindi deve reggere il 3:1 degli elementi non testuali. */
+.work-out{
+  width:14px; height:14px; flex:0 0 auto; color: var(--traccia); opacity:.6;
+  transition: transform 150ms var(--ease-out), opacity .2s ease;
+}
+@media (hover: hover) and (pointer: fine){
+  .work:hover::before{ transform: scaleX(1); }
+  .work:hover .work-well{ background: var(--primario-light); }
+  .work:hover .work-well img{ transform: translate3d(0, var(--drift-y, 0px), 0) scale(1.03); }
+  .work:hover .work-client{ color: var(--traccia); }
+  .work:hover .work-out{ opacity:1; transform: translate(3px,-3px); }
+}
+/* Unico stato vuoto del registro: dichiara che la selezione e' parziale senza
+   inventare un conteggio. Niente CTA — la cta-band arriva subito sotto. */
+.work-note{
+  grid-column: 1 / -1; margin:0; max-width:none;
+  padding: 18px 26px; background: var(--bg-alt);
+  font-family: var(--font-mono); font-size: var(--fs-data);
+  letter-spacing:.04em; text-transform:uppercase; color: var(--muted);
+}
+@media (max-width: 620px){
+  .work-ledger{ grid-template-columns: 1fr; }
+  .work, .work-note{ padding-inline: 20px; }
+  /* A colonna singola il pozzetto si stringe a ~280px: con i margini e i tetti
+     del desktop il logo scendeva a 127px e spariva dentro il grigio. Qui il
+     margine si accorcia e il logo puo' prendere piu' spazio. */
+  .work-well{ padding: 24px; }
+  .work-well img{ max-width: 74%; max-height: 52%; }
+}
 
 .method-list{ display:flex; flex-direction:column; }
 /* Voce di metodo a piena larghezza: nessuna colonna per il numero, solo una
@@ -1444,24 +1770,8 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
 }
 .claim-sub{ max-width: 46ch; margin: 0; }
 
-.claim-figure{
-  position: relative; margin: 0;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--line);
-  background: var(--surface-alt);
-  overflow: hidden;
-}
-.claim-figure img{
-  position: relative; z-index: 1;
-  width: 100%; height: 100%; object-fit: cover;
-}
-.claim-soon{
-  position: absolute; inset: 0; z-index: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-mono); font-size: var(--fs-data-xs);
-  letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
-}
+.claim-figure{ margin: 0; max-width: 240px; justify-self: center; }
+.claim-figure img{ display: block; width: 100%; height: auto; }
 
 @media (max-width: 900px){
   .service-claim{ padding: 64px 0; }
@@ -1470,7 +1780,6 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
 }
 @media (max-width: 480px){
   .service-claim{ padding: 52px 0; }
-  .claim-figure{ aspect-ratio: 3 / 2; }
 }
 
 
@@ -1841,7 +2150,7 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
   box-shadow: 0 8px 24px rgba(16, 24, 32, .1);
   transition: background .2s var(--ease-out), transform .2s var(--ease-out),
               box-shadow .2s var(--ease-out), width 260ms var(--ease-out),
-              padding 260ms var(--ease-out);
+              padding 260ms var(--ease-out), gap 260ms var(--ease-out);
 }
 .chat-launcher-icon{ width: 20px; height: 20px; flex: none; }
 /* L'etichetta si ritira invece di sparire di colpo: e' l'unico punto in cui
@@ -1863,8 +2172,10 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
 .chat-launcher:active{ transform: scale(.97); box-shadow: none; }
 
 /* Aperto il pannello l'etichetta sparisce: non si ripete un invito gia'
-   accettato, e su mobile non ruba larghezza. Il quadrato minimo resta 48px. */
-.chat--open .chat-launcher{ padding: 0; width: 48px; justify-content: center; }
+   accettato, e su mobile non ruba larghezza. Il quadrato minimo resta 48px.
+   Il gap va a 0 insieme alla larghezza: altrimenti resta riservato lo spazio
+   tra icona ed etichetta, e l'icona finisce spostata a sinistra del centro. */
+.chat--open .chat-launcher{ padding: 0; width: 48px; gap: 0; justify-content: center; }
 .chat--open .chat-launcher-label{ max-width: 0; opacity: 0; }
 
 /* --- Pannello ------------------------------------------------------------ */
@@ -1922,63 +2233,43 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
    stesso ritardo, e la risposta sembrerebbe lenta ad arrivare. */
 .chat-panel.is-opening .chat-head,
 .chat-panel.is-opening .chat-turn,
-.chat-panel.is-opening .chat-suggest-title,
-.chat-panel.is-opening .chat-suggest-row,
 .chat-panel.is-opening .chat-form{
   animation: chat-rule-in 380ms var(--ease-out) both;
 }
 .chat-panel.is-opening .chat-head{ animation-delay: 80ms; }
 .chat-panel.is-opening .chat-turn{ animation-delay: 140ms; }
-.chat-panel.is-opening .chat-suggest-title{ animation-delay: 190ms; }
-/* --i lo assegna JS sull'indice della riga: il ritardo e' della riga, non del
-   selettore, e resta corretto se l'elenco dei problemi cambia lunghezza. */
-.chat-panel.is-opening .chat-suggest-row{
-  animation-delay: calc(230ms + var(--i, 0) * 38ms);
-}
 .chat-panel.is-opening .chat-form{ animation-delay: 170ms; }
 
+/* Testata a colonna, come il banner di un CLI: la mascotte sta sopra il
+   nome, il pulsante di chiusura si affianca in alto a destra. */
 .chat-head{
+  position: relative;
   flex: none;   /* la testata non si comprime mai: e' l'ancora del pannello */
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 18px 18px 15px;
+  padding: 20px 18px 16px;
   border-bottom: 1px solid var(--line);
 }
 .chat-head-id{
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
-/* La coda della nuvoletta scende sotto il corpo del glifo: centrata in modo
-   matematico l'icona sembra bassa di un pelo rispetto alla parola. */
-.chat-head-mark{
-  flex: none;
-  width: 18px;
-  height: 18px;
-  color: var(--traccia);
-  transform: translateY(-1px);
-}
+.chat-head-mate{ display: block; }
 .chat-head-name{
   margin: 0;
   font-size: var(--fs-control);
   font-weight: 500;
   color: var(--ink);
 }
-.chat-head-note{
-  margin: 4px 0 0;
-  font-size: var(--fs-sm);
-  color: var(--muted);
-  line-height: 1.45;
-}
 .chat-close{
+  position: absolute;
+  top: 10px;
+  right: 10px;
   flex: none;
   width: 32px;
   height: 32px;
   display: grid;
   place-items: center;
-  margin: -4px -6px 0 0;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -1993,9 +2284,9 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
 .chat-close svg{ width: 16px; height: 16px; }
 
 /* --- Verbale -------------------------------------------------------------- */
-/* A scorrere e' il corpo intero (verbale + problemi frequenti): testata e campo
-   restano ancorati. La barra e' piu' sottile e neutra di quella globale del
-   sito: dentro un pannello di 390px il pollice blu da 10px urlava. */
+/* A scorrere e' solo il verbale: testata e campo restano ancorati. La barra
+   e' piu' sottile e neutra di quella globale del sito: dentro un pannello di
+   390px il pollice blu da 10px urlava. */
 .chat-body{
   flex: 1 1 auto;
   min-height: 0;
@@ -2058,51 +2349,6 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
 @keyframes chat-wait{
   from{ width: 0; }
   to  { width: 1.2em; }
-}
-
-/* --- Problemi frequenti (registro, non pillole) --------------------------- */
-.chat-suggest{ border-top: 1px solid var(--line); }
-/* Il filetto della prima riga e' gia' quello del blocco: non raddoppiarlo. */
-.chat-suggest .chat-suggest-title + .chat-suggest-row{ border-top: 1px solid var(--line); }
-.chat-suggest[hidden]{ display: none; }
-.chat-suggest-title{
-  margin: 0;
-  padding: 14px 18px 8px;
-  font-size: var(--fs-label);
-  font-weight: 500;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.chat-suggest-row{
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  min-height: 48px;
-  padding: 12px 18px;
-  border: 0;
-  border-top: 1px solid var(--line);
-  background: transparent;
-  color: var(--bone-dim);
-  font-family: var(--font-body);
-  font-size: var(--fs-sm);
-  line-height: 1.45;
-  text-align: left;
-  cursor: pointer;
-  transition: background .15s var(--ease-out), color .15s var(--ease-out);
-}
-.chat-suggest-row svg{
-  flex: none;
-  width: 15px;
-  height: 15px;
-  margin-left: auto;
-  color: var(--muted-deco);
-  transition: transform .2s var(--ease-out), color .15s var(--ease-out);
-}
-@media (hover: hover) and (pointer: fine){
-  .chat-suggest-row:hover{ background: var(--surface-alt); color: var(--traccia); }
-  .chat-suggest-row:hover svg{ transform: translateX(4px); color: var(--traccia); }
 }
 
 /* --- Campo ---------------------------------------------------------------- */
@@ -2181,9 +2427,8 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .chat-head{ padding: 15px 16px 13px; }
+  .chat-head{ padding: 16px 16px 13px; }
   .chat-turn{ padding: 14px 16px; }
-  .chat-suggest-title{ padding: 12px 16px 7px; }
   .chat-form{ padding: 10px; gap: 6px; }
   /* 16px esatti, non var(--fs-control): sotto i 16px Safari iOS ingrandisce
      da solo la pagina al tocco sul campo, e il widget si ritrova fuori
@@ -2195,16 +2440,15 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
 
 /* Telefono in orizzontale: l'altezza utile scende sotto i 400px e il
    pannello, alla misura verticale, coprirebbe tutto lo schermo lasciando
-   fuori il campo. Il blocco dei problemi suggeriti e' la prima cosa a
-   cedere: e' un aiuto, non il contenuto. */
+   fuori il campo. La testata si comprime, non sparisce: e' l'unica identita'
+   che resta visibile una volta chiuso il verbale. */
 @media (max-height: 520px) and (orientation: landscape){
   .chat-panel{
     max-height: calc(100vh - 72px);
     max-height: calc(100dvh - 72px);
   }
-  .chat-suggest-title{ display: none; }
-  .chat-head-note{ display: none; }
-  .chat-head-mark{ width: 17px; height: 17px; }
+  .chat-head{ padding: 10px 18px 8px; }
+  .chat-head-id{ flex-direction: row; gap: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -2215,14 +2459,11 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
   .chat-panel.is-closing{ animation: none; }
   .chat-panel.is-opening .chat-head,
   .chat-panel.is-opening .chat-turn,
-  .chat-panel.is-opening .chat-suggest-title,
-  .chat-panel.is-opening .chat-suggest-row,
   .chat-panel.is-opening .chat-form{ animation: none; animation-delay: 0s; }
   .chat-launcher-label{ transition: none; }
   .chat-launcher:hover{ transform: none; }
   .chat-launcher:active,
   .chat-send:not(:disabled):active{ transform: none; }
-  .chat-suggest-row:hover svg{ transform: none; }
   .chat-turn--wait .chat-turn-body::after{ animation: none; width: auto; }
 }
 

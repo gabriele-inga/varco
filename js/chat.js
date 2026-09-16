@@ -14,29 +14,153 @@
   var ENDPOINT = BASE + "api/chat.php";
 
   var OPENER =
-    "Descrivi un problema che sta rallentando la tua attività, " +
-    "oppure scegline uno qui sotto.";
-
-  /* I problemi sono scritti come li direbbe un titolare, non come si chiamano
-     i servizi: il collegamento al servizio lo fa l'assistente nella risposta. */
-  var PROBLEMS = [
-    "Il sito riceve visite ma quasi nessuna richiesta",
-    "Su Google non mi trova nessuno",
-    "Spendo in pubblicità senza capire cosa rende",
-    "Perdo chiamate quando non c'è nessuno a rispondere",
-    "Rispondo sempre alle stesse domande",
-    "Ho una lista di contatti che non sto usando"
-  ];
-
-  var ARROW =
-    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" ' +
-    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-    '<path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg>';
+    "Ciao, sono l'assistente di Varco. Scrivimi pure cosa ti serve: " +
+    "ti rispondo io, subito.";
 
   var history = [];   /* solo user/assistant: il system prompt sta sul server */
   var busy = false;
   var opened = false;
-  var root, panel, scroller, log, suggest, form, field, sendBtn, launcher;
+  var root, panel, scroller, log, form, field, sendBtn, launcher, mate;
+
+  /* <sprite-mate> — la mascotte in pixel art dell'header, disegnata su canvas
+     dalla griglia 14×21 originale (nessuna immagine da caricare). Due stati:
+     "idle" (antenne che oscillano, battito di ciglia) mentre aspetta chi
+     scrive, "walk" (passi alternati) mentre elabora una risposta. */
+  (function registerSpriteMate() {
+    if (customElements.get("sprite-mate")) return;
+
+    var BASE_ROWS = [
+      '..aaa...aaa...',
+      '.aaaa...aaaa..',
+      '.aa.......aa..',
+      '.aa.......aa..',
+      '.aaaa...aaaa..',
+      '..aaa...aaa...',
+      'aaaaaaaaaaaaaa',
+      'aaaaaaaaaaaaaa',
+      'aaaaaaaaaaaaaa',
+      'aa..aaaaa..aaa',
+      'aa..aaaaa..aaa',
+      'aa..aaaaa..aaa',
+      'aa..aaaaa..aaa',
+      'aaaaaaaaaaaaaa',
+      'aaaaaaaaaaaaaa',
+      'aaaaaaaaaaaaaa',
+      'aaaaaaaaaaaaaa',
+      '...aa.....aa..',
+      'aaaaa..aaaaa..',
+      'aaaaa..aaaaa..',
+      'aaaaa..aaaaa..'
+    ];
+    var W = 14, H = 23, TOP = 1;
+    var ANT = [0, 5], TORSO = [6, 16], STEM = 17, FEET = [18, 20];
+    var EYE_COLS = [2, 3, 9, 10], LID_ROWS = [9, 10, 12];
+
+    function buildFrame(o) {
+      var g = [];
+      for (var y = 0; y < H; y++) g.push(new Array(W).fill(false));
+      var put = function (x, y) { if (y >= 0 && y < H && x >= 0 && x < W) g[y][x] = true; };
+      var dy = o.bodyDy || 0;
+      var r, x;
+      for (r = ANT[0]; r <= ANT[1]; r++)
+        for (x = 0; x < W; x++)
+          if (BASE_ROWS[r][x] === 'a') put(x, r + TOP + dy + (x < 7 ? (o.antL || 0) : (o.antR || 0)));
+      for (r = TORSO[0]; r <= TORSO[1]; r++)
+        for (x = 0; x < W; x++)
+          if (BASE_ROWS[r][x] === 'a') put(x, r + TOP + dy);
+      if (o.blink)
+        for (r = 0; r < LID_ROWS.length; r++)
+          for (x = 0; x < EYE_COLS.length; x++) put(EYE_COLS[x], LID_ROWS[r] + TOP + dy);
+      for (x = 0; x < W; x++) {
+        if (BASE_ROWS[STEM][x] !== 'a') continue;
+        var fdy = x < 6 ? (o.footL || 0) : (o.footR || 0);
+        for (y = STEM + TOP + dy; y <= FEET[0] + TOP + fdy - 1; y++) put(x, y);
+      }
+      for (r = FEET[0]; r <= FEET[1]; r++)
+        for (x = 0; x < W; x++)
+          if (BASE_ROWS[r][x] === 'a') put(x, r + TOP + (x < 6 ? (o.footL || 0) : (o.footR || 0)));
+      return g;
+    }
+
+    var F = {
+      stand: buildFrame({}),
+      antL: buildFrame({ antL: 1 }),
+      antR: buildFrame({ antR: 1 }),
+      blink: buildFrame({ blink: true }),
+      stepL: buildFrame({ bodyDy: -1, footL: -1 }),
+      stepR: buildFrame({ bodyDy: -1, footR: -1 })
+    };
+    var STATES = {
+      idle: [
+        { g: F.stand, d: 1200 }, { g: F.antL, d: 520 }, { g: F.blink, d: 110 },
+        { g: F.stand, d: 700 }, { g: F.antR, d: 520 }, { g: F.blink, d: 100 }
+      ],
+      walk: [
+        { g: F.stepL, d: 120 }, { g: F.stand, d: 120 },
+        { g: F.stepR, d: 120 }, { g: F.stand, d: 120 }
+      ]
+    };
+
+    function SpriteMate() { return Reflect.construct(HTMLElement, [], SpriteMate); }
+    SpriteMate.prototype = Object.create(HTMLElement.prototype);
+    SpriteMate.prototype.constructor = SpriteMate;
+    Object.setPrototypeOf(SpriteMate, HTMLElement);
+
+    SpriteMate.prototype.connectedCallback = function () {
+      if (this._built) return;
+      this._built = true;
+      this.style.display = "inline-block";
+      this.style.lineHeight = "0";
+      this._c = document.createElement("canvas");
+      this._c.style.imageRendering = "pixelated";
+      this._c.style.display = "block";
+      this._ctx = this._c.getContext("2d");
+      this.appendChild(this._c);
+      this._i = 0; this._t = 0;
+      this._sync();
+      this._loop = this._loop.bind(this);
+      this._last = performance.now();
+      this._raf = requestAnimationFrame(this._loop);
+    };
+    SpriteMate.prototype.disconnectedCallback = function () {
+      cancelAnimationFrame(this._raf); this._built = false;
+    };
+    SpriteMate.prototype.attributeChangedCallback = function () {
+      if (this._built) { this._i = 0; this._t = 0; this._sync(); }
+    };
+    Object.defineProperty(SpriteMate.prototype, "state", {
+      get: function () { return this.getAttribute("state") || "idle"; },
+      set: function (v) { this.setAttribute("state", v); }
+    });
+    SpriteMate.prototype._sync = function () {
+      var s = Math.max(1, parseInt(this.getAttribute("scale") || "3", 10));
+      this._s = s;
+      this._c.width = W * s; this._c.height = H * s;
+      this._col = this.getAttribute("color") || "#01497C";
+      this._draw();
+    };
+    SpriteMate.prototype._seq = function () { return STATES[this.state] || STATES.idle; };
+    SpriteMate.prototype._draw = function () {
+      var seq = this._seq(), g = seq[this._i % seq.length].g;
+      var ctx = this._ctx, s = this._s;
+      ctx.clearRect(0, 0, this._c.width, this._c.height);
+      ctx.fillStyle = this._col;
+      for (var y = 0; y < H; y++)
+        for (var x = 0; x < W; x++)
+          if (g[y][x]) ctx.fillRect(x * s, y * s, s, s);
+    };
+    SpriteMate.prototype._loop = function (now) {
+      var dt = Math.min(64, now - this._last);
+      this._last = now;
+      var seq = this._seq();
+      this._t += dt;
+      var d = seq[this._i % seq.length].d;
+      if (this._t >= d) { this._t -= d; this._i = (this._i + 1) % seq.length; this._draw(); }
+      this._raf = requestAnimationFrame(this._loop);
+    };
+    SpriteMate.observedAttributes = ["state", "scale", "color"];
+    customElements.define("sprite-mate", SpriteMate);
+  })();
 
   function el(tag, cls, text) {
     var n = document.createElement(tag);
@@ -64,48 +188,29 @@
     panel.hidden = true;
 
     var head = el("div", "chat-head");
-    var headText = el("div");
-    /* Stesso glifo del launcher: la forma che ha aperto l'assistente e' la
-       forma che lo nomina. Nessun contenitore tondo — il sistema tiene il
-       cerchio per i soli indicatori di posizione. */
+    /* Testata ridotta all'osso: la mascotte in cima, il nome sotto. Niente
+       nota, niente icona separata — e' lei stessa a dire chi risponde. */
     var headId = el("div", "chat-head-id");
-    headId.innerHTML =
-      '<svg class="chat-head-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
-      'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.3 8.8 8.8 0 0 1-3.9-.9L3 20.5l1.7-4.9a8.2 8.2 0 0 1-1.1-4.1A8.4 8.4 0 0 1 12.1 3 8.4 8.4 0 0 1 21 11.5z"/></svg>';
+    mate = document.createElement("sprite-mate");
+    mate.className = "chat-head-mate";
+    mate.setAttribute("scale", "3");
+    mate.setAttribute("state", "idle");
+    mate.setAttribute("aria-hidden", "true");
+    headId.appendChild(mate);
     headId.appendChild(el("p", "chat-head-name", "Assistente Varco"));
-    headText.appendChild(headId);
-    headText.appendChild(el("p", "chat-head-note", "Risposte generate dall'AI. Il preventivo arriva dopo l'audit."));
     var close = el("button", "chat-close");
     close.type = "button";
     close.setAttribute("aria-label", "Chiudi l'assistente");
     close.innerHTML =
       '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" ' +
       'stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>';
-    head.appendChild(headText);
+    head.appendChild(headId);
     head.appendChild(close);
 
     log = el("div", "chat-log");
     log.setAttribute("role", "log");
     log.setAttribute("aria-live", "polite");
     log.setAttribute("aria-label", "Conversazione con l'assistente");
-
-    suggest = el("div", "chat-suggest");
-    var sTitle = el("p", "chat-suggest-title", "Problemi frequenti");
-    sTitle.id = "chat-suggest-title";
-    suggest.setAttribute("aria-labelledby", sTitle.id);
-    suggest.appendChild(sTitle);
-    PROBLEMS.forEach(function (p, i) {
-      var b = el("button", "chat-suggest-row");
-      b.type = "button";
-      /* Indice della riga: il CSS ne ricava il ritardo d'entrata, cosi' la
-         cascata resta corretta se l'elenco cambia lunghezza. */
-      b.style.setProperty("--i", String(i));
-      b.appendChild(document.createTextNode(p));
-      b.insertAdjacentHTML("beforeend", ARROW);
-      b.addEventListener("click", function () { send(p); });
-      suggest.appendChild(b);
-    });
 
     form = el("form", "chat-form");
     field = el("input", "chat-field");
@@ -125,12 +230,11 @@
     form.appendChild(field);
     form.appendChild(sendBtn);
 
-    /* Testata e campo restano fissi; a scorrere e' solo il corpo (verbale +
-       problemi frequenti). Senza questo strato, con il registro aperto la
-       testata veniva compressa fuori dal pannello. */
+    /* Testata e campo restano fissi; a scorrere e' solo il corpo (verbale).
+       Senza questo strato, con il registro aperto la testata veniva
+       compressa fuori dal pannello. */
     scroller = el("div", "chat-body");
     scroller.appendChild(log);
-    scroller.appendChild(suggest);
 
     panel.appendChild(head);
     panel.appendChild(scroller);
@@ -259,12 +363,13 @@
     busy = state;
     field.disabled = state;
     sendBtn.disabled = state || field.value.trim() === "";
+    /* Idle mentre aspetta chi scrive, cammina mentre elabora la risposta. */
+    mate.state = state ? "walk" : "idle";
   }
 
   function send(text) {
     if (busy) return;
     if (!opened) { opened = true; addTurn("bot", OPENER); }
-    suggest.hidden = true;
     field.value = "";
     addTurn("user", text);
     history.push({ role: "user", content: text });

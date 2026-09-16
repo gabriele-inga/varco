@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -44,7 +44,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
     </a>
     <div class="nav-cta">
       <nav class="nav-desktop" aria-label="Navigazione principale">
-        <a href="index.html#servizi" class="">Servizi</a><a href="index.html#trasformazione" class="">Trasformazione 360°</a><!-- CASI-STUDIO-NASCOSTO: <a href="casi-studio/index.html" class="">Casi studio</a> --><a href="chi-siamo.html" class="">Chi siamo</a>
+        <a href="index.html#servizi" class="">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="casi-studio/index.html" class="">Casi studio</a> --><a href="chi-siamo.html" class="">Chi siamo</a>
       </nav>
       <a href="contatti.html" class="btn btn-primary">Prenota audit gratuito</a>
       <button class="nav-toggle" aria-label="Apri il menu" aria-expanded="false">
@@ -55,7 +55,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
 </header>
 <div class="mobile-nav" id="mobile-nav" inert>
   <div class="container">
-    <a href="contatti.html" class="mobile-nav-cta">Prenota audit gratuito</a><a href="index.html#servizi">Servizi</a><a href="index.html#trasformazione">Trasformazione 360°</a><!-- CASI-STUDIO-NASCOSTO: <a href="casi-studio/index.html">Casi studio</a> --><a href="chi-siamo.html">Chi siamo</a>
+    <a href="contatti.html" class="mobile-nav-cta">Prenota audit gratuito</a><a href="index.html#servizi">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="casi-studio/index.html">Casi studio</a> --><a href="chi-siamo.html">Chi siamo</a>
     <div class="mobile-sub">
       <a href="contatti.html">Contatti</a>
       <a href="tel:+393888648509">+39 388 864 8509</a>
@@ -66,7 +66,8 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
 <main id="main">
 
 <div class="hero-reveal">
-<section class="hero" data-topo>
+<section class="hero">
+  <canvas class="hero-shader" data-hero-shader aria-hidden="true"></canvas>
   <div class="container hero-grid">
     <div class="reveal">
       <h1>Alla tua impresa <br>
@@ -93,7 +94,7 @@ Quello che manca è farli lavorare nella stessa direzione.
       </div>
     </div>
     <div class="hero-visual hero-home-visual reveal">
-      <img src="assets/illustrazioni/home-hero.webp" alt="Illustrazione astratta per la trasformazione digitale" width="1043" height="1043" fetchpriority="high" decoding="async">
+      <img src="assets/illustrazioni/home-hero.svg" alt="Illustrazione astratta per la trasformazione digitale" width="1043" height="1043" fetchpriority="high" decoding="async">
     </div>
   </div>
 </section>
@@ -111,31 +112,24 @@ Quello che manca è farli lavorare nella stessa direzione.
 
 <section class="section" id="trasformazione">
   <div class="container">
-    <div class="transform-block">
-      <div class="reveal">
-        <h2>Il problema non è essere online. <br> <span><br>
-<span class="italic">È che ogni pezzo tira da una parte diversa.</span></h2>
-      </div>
-      <div class="reveal">
-        <p class="lede">Sito, social, pubblicità, email e automazioni funzionano anche presi uno alla volta:
-se però non si parlano, restano cinque cose da gestire invece di un sistema che porta clienti.</p>
-        <div class="problem-list">
-          <div class="problem-item reveal">
-            <span class="pc-icon"><img src="assets/illustrazioni/trasformazione/1.svg" alt="" loading="lazy" width="226" height="263" decoding="async"></span>
-            <div><h3>Sito che non converte</h3><p>Un sito che non rende giustizia all'azienda e trasforma in richieste troppe poche visite.</p></div>
-          </div>
-          <div class="problem-item reveal">
-            <span class="pc-icon"><img src="assets/illustrazioni/trasformazione/2.svg" alt="" loading="lazy" width="238" height="179" decoding="async"></span>
-            <div><h3>Budget senza risultati</h3><p>Pubblicità che porta visite e qualche clic, ma quasi mai una richiesta di preventivo.</p></div>
-          </div>
-          <div class="problem-item reveal">
-            <span class="pc-icon"><img src="assets/illustrazioni/trasformazione/3.svg" alt="" loading="lazy" width="299" height="238" decoding="async"></span>
-            <div><h3>Richieste senza risposta</h3><p>Messaggi e moduli che arrivano davvero, e restano fermi finché qualcuno non trova il tempo.</p></div>
-          </div>
-          <div class="problem-item reveal">
-            <span class="pc-icon"><img src="assets/illustrazioni/trasformazione/4.svg" alt="" loading="lazy" width="259" height="183" decoding="async"></span>
-            <div><h3>Chiamate perse</h3><p>Il telefono che squilla mentre si lavora, fuori orario o nell'ora di punta, quando nessuno può rispondere.</p></div>
-          </div>
+    <div class="problem-help">
+      <h2 class="problem-help-label"><span>In cosa</span><span>possiamo</span><span>aiutarti</span></h2>
+      <div class="problem-list">
+        <div class="problem-item">
+          <span class="pc-icon"><img src="assets/illustrazioni/trasformazione/1.svg" alt="" loading="lazy" width="226" height="263" decoding="async"></span>
+          <div><h3>Sito che non converte</h3><p>Un sito che non rende giustizia all'azienda e trasforma in richieste troppe poche visite.</p></div>
+        </div>
+        <div class="problem-item">
+          <span class="pc-icon"><img src="assets/illustrazioni/trasformazione/2.svg" alt="" loading="lazy" width="238" height="179" decoding="async"></span>
+          <div><h3>Budget senza risultati</h3><p>Pubblicità che porta visite e qualche clic, ma quasi mai una richiesta di preventivo.</p></div>
+        </div>
+        <div class="problem-item">
+          <span class="pc-icon"><img src="assets/illustrazioni/trasformazione/3.svg" alt="" loading="lazy" width="299" height="238" decoding="async"></span>
+          <div><h3>Richieste senza risposta</h3><p>Messaggi e moduli che arrivano davvero, e restano fermi finché qualcuno non trova il tempo.</p></div>
+        </div>
+        <div class="problem-item">
+          <span class="pc-icon"><img src="assets/illustrazioni/trasformazione/4.svg" alt="" loading="lazy" width="259" height="183" decoding="async"></span>
+          <div><h3>Chiamate perse</h3><p>Il telefono che squilla mentre si lavora, fuori orario o nell'ora di punta, quando nessuno può rispondere.</p></div>
         </div>
       </div>
     </div>
@@ -154,22 +148,39 @@ se però non si parlano, restano cinque cose da gestire invece di un sistema che
     </svg>
   </div>
   <div class="route-steps">
-    <div class="route-step"><img class="roadmap-illustration" src="assets/illustrazioni/roadmap/01-audit.svg" alt="" aria-hidden="true" width="117" height="82" loading="lazy" decoding="async"><span class="rs-num">01 · AUDIT</span><h3>Cosa c'è, davvero</h3><p>Sito, social, campagne attive e strumenti già pagati: cosa funziona, cosa manca, cosa sta consumando budget in silenzio.</p></div>
-    <div class="route-step"><img class="roadmap-illustration" src="assets/illustrazioni/roadmap/02-strategia.svg" alt="" aria-hidden="true" width="85" height="84" loading="lazy" decoding="async"><span class="rs-num">02 · STRATEGIA</span><h3>Solo ciò che serve</h3><p>Tra gli undici servizi scegliamo quelli che risolvono i problemi che hai adesso, non quelli che vanno di moda.</p></div>
-    <div class="route-step"><img class="roadmap-illustration" src="assets/illustrazioni/roadmap/03-roadmap.svg" alt="" aria-hidden="true" width="236" height="324" loading="lazy" decoding="async"><span class="rs-num">03 · ROADMAP</span><h3>Priorità e tempi</h3><p>Cosa parte nella prima settimana e cosa nel primo trimestre, con i numeri attesi accanto a ogni voce.</p></div>
-    <div class="route-step"><img class="roadmap-illustration" src="assets/illustrazioni/roadmap/04-implementazione.svg" alt="" aria-hidden="true" width="114" height="61" loading="lazy" decoding="async"><span class="rs-num">04 · IMPLEMENTAZIONE</span><h3>Si costruisce, si vede</h3><p>Sito, contenuti, campagne e automazioni realizzati secondo la roadmap, con aggiornamenti a scadenza fissa.</p></div>
-    <div class="route-step"><img class="roadmap-illustration" src="assets/illustrazioni/roadmap/05-ottimizzazione.svg" alt="" aria-hidden="true" width="122" height="97" loading="lazy" decoding="async"><span class="rs-num">05 · OTTIMIZZAZIONE</span><h3>La mappa si aggiorna</h3><p>Ogni mese misuriamo i risultati e correggiamo la rotta: non un report a fine progetto, ma un metodo che non si ferma.</p></div>
-  </div>
-  <div class="route-dots" role="group" aria-label="Passaggi della roadmap">
-    <button class="route-dot is-active" type="button" data-step="0" aria-label="Vai al passaggio 1, Audit" aria-current="true"></button>
-    <button class="route-dot" type="button" data-step="1" aria-label="Vai al passaggio 2, Strategia" aria-current="false"></button>
-    <button class="route-dot" type="button" data-step="2" aria-label="Vai al passaggio 3, Roadmap" aria-current="false"></button>
-    <button class="route-dot" type="button" data-step="3" aria-label="Vai al passaggio 4, Implementazione" aria-current="false"></button>
-    <button class="route-dot" type="button" data-step="4" aria-label="Vai al passaggio 5, Ottimizzazione" aria-current="false"></button>
+    <div class="route-step"><img class="roadmap-illustration" src="assets/illustrazioni/roadmap/01-audit.svg" alt="" aria-hidden="true" width="117" height="82" loading="lazy" decoding="async"><h3>Cosa c'è, davvero</h3><p>Sito, social, campagne attive e strumenti già pagati: cosa funziona, cosa manca, cosa sta consumando budget in silenzio.</p></div>
+    <div class="route-step"><img class="roadmap-illustration" src="assets/illustrazioni/roadmap/02-strategia.svg" alt="" aria-hidden="true" width="85" height="84" loading="lazy" decoding="async"><h3>Solo ciò che serve</h3><p>Tra gli undici servizi scegliamo quelli che risolvono i problemi che hai adesso, non quelli che vanno di moda.</p></div>
+    <div class="route-step"><img class="roadmap-illustration" src="assets/illustrazioni/roadmap/03-roadmap.svg" alt="" aria-hidden="true" width="236" height="324" loading="lazy" decoding="async"><h3>Priorità e tempi</h3><p>Cosa parte nella prima settimana e cosa nel primo trimestre, con i numeri attesi accanto a ogni voce.</p></div>
+    <div class="route-step"><img class="roadmap-illustration" src="assets/illustrazioni/roadmap/04-implementazione.svg" alt="" aria-hidden="true" width="114" height="61" loading="lazy" decoding="async"><h3>Si costruisce, si vede</h3><p>Sito, contenuti, campagne e automazioni realizzati secondo la roadmap, con aggiornamenti a scadenza fissa.</p></div>
+    <div class="route-step"><img class="roadmap-illustration" src="assets/illustrazioni/roadmap/05-ottimizzazione.svg" alt="" aria-hidden="true" width="122" height="97" loading="lazy" decoding="async"><h3>La mappa si aggiorna</h3><p>Ogni mese misuriamo i risultati e correggiamo la rotta: non un report a fine progetto, ma un metodo che non si ferma.</p></div>
   </div>
 </div>
-    <div class="cta-row reveal cta-row-centered">
-      <a href="contatti.html" class="btn btn-primary btn-arrow btn-roadmap">Prenota un audit gratuito di 30 minuti</a>
+<div class="route-dots reveal" role="group" aria-label="Passaggi della roadmap">
+  <button class="route-dot is-active" type="button" data-step="0" aria-label="Vai al passaggio 1, Audit" aria-current="true"></button>
+  <button class="route-dot" type="button" data-step="1" aria-label="Vai al passaggio 2, Strategia" aria-current="false"></button>
+  <button class="route-dot" type="button" data-step="2" aria-label="Vai al passaggio 3, Roadmap" aria-current="false"></button>
+  <button class="route-dot" type="button" data-step="3" aria-label="Vai al passaggio 4, Implementazione" aria-current="false"></button>
+  <button class="route-dot" type="button" data-step="4" aria-label="Vai al passaggio 5, Ottimizzazione" aria-current="false"></button>
+</div>
+  </div>
+  <div class="cta-row reveal cta-row-centered">
+    <div class="ask-ai">
+      <p class="ask-ai-eyebrow">Sei indeciso?</p>
+      <h3 class="ask-ai-title">Chiedi all'AI come possiamo aiutarti</h3>
+      <div class="ask-ai-cards">
+        <a class="ask-ai-card" target="_blank" rel="noopener" href="https://www.perplexity.ai/search?q=Spiegami%20come%20Varco%20%28varcoagency.it%29%20pu%C3%B2%20aiutare%20la%20mia%20attivit%C3%A0%20con%20i%20suoi%20servizi">
+          <span class="ask-ai-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M22.3977 7.0896h-2.3106V.0676l-7.5094 6.3542V.1577h-1.1554v6.1966L4.4904 0v7.0896H1.6023v10.3976h2.8882V24l6.932-6.3591v6.2005h1.1554v-6.0469l6.9318 6.1807v-6.4879h2.8882V7.0896zm-3.4657-4.531v4.531h-5.355l5.355-4.531zm-13.2862.0676 4.8691 4.4634H5.6458V2.6262zM2.7576 16.332V8.245h7.8476l-6.1149 6.1147v1.9723H2.7576zm2.8882 5.0404v-3.8852h.0001v-2.6488l5.7763-5.7764v7.0111l-5.7764 5.2993zm12.7086.0248-5.7766-5.1509V9.0618l5.7766 5.7766v6.5588zm2.8882-5.0652h-1.733v-1.9723L13.3948 8.245h7.8478v8.087z"/></svg></span>
+          <span class="ask-ai-name">Perplexity</span>
+        </a>
+        <a class="ask-ai-card" target="_blank" rel="noopener" href="https://chatgpt.com/?q=Spiegami%20come%20Varco%20%28varcoagency.it%29%20pu%C3%B2%20aiutare%20la%20mia%20attivit%C3%A0%20con%20i%20suoi%20servizi">
+          <span class="ask-ai-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg></span>
+          <span class="ask-ai-name">ChatGPT</span>
+        </a>
+        <a class="ask-ai-card" target="_blank" rel="noopener" href="https://claude.ai/new?q=Spiegami%20come%20Varco%20%28varcoagency.it%29%20pu%C3%B2%20aiutare%20la%20mia%20attivit%C3%A0%20con%20i%20suoi%20servizi">
+          <span class="ask-ai-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg></span>
+          <span class="ask-ai-name">Claude</span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -180,98 +191,95 @@ se però non si parlano, restano cinque cose da gestire invece di un sistema che
   <div class="container">
     <div class="section-head reveal">
       <div class="eyebrow">Undici servizi, una sola regia</div>
-      <h2>Presi uno alla volta funzionano. <br> Insieme, costruiscono il tuo ecosistema di rendita online.</h2>
-      <p>Puoi partire da uno solo o da tutti e undici: è la roadmap a decidere l'ordine, in base a cosa porta risultati prima nel tuo caso.</p>
+      <h2>Tanti servizi, un solo percorso su misura.</h2>
+      <p>Ognuno funziona da solo. Ma insieme danno risultati migliori.<br>Guardiamo la tua situazione e decidiamo insieme da dove partire.</p>
     </div>
-    <div class="services-accordion reveal">
+    <div class="services-table reveal">
       <div class="services-group">
         <h3 class="sg-label">Sito che non converte</h3>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">01</span><h4>Web Design</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="7" width="32" height="26" rx="2"/><line x1="4" y1="14" x2="36" y2="14"/><circle cx="8.5" cy="10.5" r="0.9" fill="currentColor" stroke="none"/><circle cx="12" cy="10.5" r="0.9" fill="currentColor" stroke="none"/><line x1="10" y1="20" x2="30" y2="20"/><line x1="10" y1="25" x2="24" y2="25"/></svg></span>
-            <div class="sr-text"><p>Un sito che racconta l'azienda come la racconteresti tu, e trasforma le visite in richieste.</p></div><a class="sr-cta" href="servizi/web-design.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
+        <div class="service-tiles">
+          <a class="service-tile" href="servizi/web-design.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="7" width="32" height="26" rx="2"/><line x1="4" y1="14" x2="36" y2="14"/><circle cx="8.5" cy="10.5" r="0.9" fill="currentColor" stroke="none"/><circle cx="12" cy="10.5" r="0.9" fill="currentColor" stroke="none"/><line x1="10" y1="20" x2="30" y2="20"/><line x1="10" y1="25" x2="24" y2="25"/></svg></span>
+            <h4 class="st-title">Web Design</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">Un sito che racconta l'azienda come la racconteresti tu, e trasforma le visite in richieste.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="service-tile" href="servizi/web-app.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="6" width="30" height="24" rx="3"/><line x1="5" y1="13" x2="35" y2="13"/><rect x="10" y="18" width="8" height="8" rx="1"/><line x1="22" y1="19" x2="30" y2="19"/><line x1="22" y1="24" x2="27" y2="24"/></svg></span>
+            <h4 class="st-title">Web App</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">Gestionali, prenotazioni e portali costruiti sul processo che hai già, invece che adattati a forza.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="service-tile" href="servizi/ottimizzazione-sito.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="21" r="14"/><path d="M20 21l6-8"/><path d="M11 21a9 9 0 0118 0"/><line x1="20" y1="7" x2="20" y2="10"/></svg></span>
+            <h4 class="st-title">Ottimizzazione Sito Web</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">Pagine più rapide e meno attrito lungo il percorso, così chi arriva non se ne va prima di leggere.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">02</span><h4>Web App</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="6" width="30" height="24" rx="3"/><line x1="5" y1="13" x2="35" y2="13"/><rect x="10" y="18" width="8" height="8" rx="1"/><line x1="22" y1="19" x2="30" y2="19"/><line x1="22" y1="24" x2="27" y2="24"/></svg></span>
-            <div class="sr-text"><p>Gestionali, prenotazioni e portali costruiti sul processo che hai già, invece che adattati a forza.</p></div><a class="sr-cta" href="servizi/web-app.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
-        </div>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">03</span><h4>Ottimizzazione Sito Web</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="21" r="14"/><path d="M20 21l6-8"/><path d="M11 21a9 9 0 0118 0"/><line x1="20" y1="7" x2="20" y2="10"/></svg></span>
-            <div class="sr-text"><p>Pagine più rapide e meno attrito lungo il percorso, così chi arriva non se ne va prima di leggere.</p></div><a class="sr-cta" href="servizi/ottimizzazione-sito.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
-        </div>
-        </div>
+        <sprite-mate class="services-mascot" state="walk" scale="5" aria-hidden="true"></sprite-mate>
+      </div>
       <div class="services-group">
         <h3 class="sg-label">Budget senza risultati</h3>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">04</span><h4>Social Media Marketing</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="20" r="4.5"/><circle cx="28" cy="10" r="4"/><circle cx="28" cy="30" r="4"/><line x1="14.8" y1="18" x2="24.5" y2="12"/><line x1="14.8" y1="22" x2="24.5" y2="28"/></svg></span>
-            <div class="sr-text"><p>Una presenza costante e riconoscibile, pensata per parlare ai clienti giusti e non a tutti.</p></div><a class="sr-cta" href="servizi/social-media-marketing.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
+        <div class="service-tiles">
+          <a class="service-tile" href="servizi/social-media-marketing.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="20" r="4.5"/><circle cx="28" cy="10" r="4"/><circle cx="28" cy="30" r="4"/><line x1="14.8" y1="18" x2="24.5" y2="12"/><line x1="14.8" y1="22" x2="24.5" y2="28"/></svg></span>
+            <h4 class="st-title">Social Media Marketing</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">Una presenza costante e riconoscibile, pensata per parlare ai clienti giusti e non a tutti.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="service-tile" href="servizi/campagne-ads.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="19" cy="21" r="12"/><circle cx="19" cy="21" r="6.5"/><circle cx="19" cy="21" r="1.2" fill="currentColor" stroke="none"/><line x1="28" y1="8" x2="35" y2="4"/><path d="M35 4l-1.6 6.2L29 8z" fill="currentColor" stroke="none"/></svg></span>
+            <h4 class="st-title">Campagne Ads</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">Il budget pubblicitario diventa campagne misurabili, corrette ogni settimana sui dati veri.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="service-tile" href="servizi/seo.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="17" cy="17" r="10"/><line x1="24.2" y1="24.2" x2="35" y2="35"/><path d="M12 19l3.5-5 3 3.5L23 11" /></svg></span>
+            <h4 class="st-title">Ottimizzazione SEO</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">Farsi trovare quando qualcuno sta già cercando quello che vendi, senza pagare il clic.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="service-tile" href="servizi/video-ai.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="9" width="26" height="22" rx="3"/><path d="M14 15l9 5-9 5V15Z" fill="currentColor" stroke="none"/><path d="M33 8l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2L33 8Z" fill="currentColor" stroke="none"/></svg></span>
+            <h4 class="st-title">Video Promozionali con AI</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">Video per le campagne generati e guidati dall'AI: pronti in giorni, senza set né spedizioni.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">05</span><h4>Campagne Ads</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="19" cy="21" r="12"/><circle cx="19" cy="21" r="6.5"/><circle cx="19" cy="21" r="1.2" fill="currentColor" stroke="none"/><line x1="28" y1="8" x2="35" y2="4"/><path d="M35 4l-1.6 6.2L29 8z" fill="currentColor" stroke="none"/></svg></span>
-            <div class="sr-text"><p>Il budget pubblicitario diventa campagne misurabili, corrette ogni settimana sui dati veri.</p></div><a class="sr-cta" href="servizi/campagne-ads.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
-        </div>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">06</span><h4>Ottimizzazione SEO</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="17" cy="17" r="10"/><line x1="24.2" y1="24.2" x2="35" y2="35"/><path d="M12 19l3.5-5 3 3.5L23 11" /></svg></span>
-            <div class="sr-text"><p>Farsi trovare quando qualcuno sta già cercando quello che vendi, senza pagare il clic.</p></div><a class="sr-cta" href="servizi/seo.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
-        </div>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">07</span><h4>Video Promozionali con AI</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="9" width="26" height="22" rx="3"/><path d="M14 15l9 5-9 5V15Z" fill="currentColor" stroke="none"/><path d="M33 8l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2L33 8Z" fill="currentColor" stroke="none"/></svg></span>
-            <div class="sr-text"><p>Video per le campagne generati e guidati dall'AI: pronti in giorni, senza set né spedizioni.</p></div><a class="sr-cta" href="servizi/video-ai.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
-        </div>
-        </div>
+      </div>
       <div class="services-group">
         <h3 class="sg-label">Richieste senza risposta</h3>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">08</span><h4>Email Marketing</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="9" width="32" height="22" rx="2"/><path d="M5 10.5L20 22 35 10.5"/><line x1="24" y1="34" x2="34" y2="34"/><path d="M31 31l3 3-3 3"/></svg></span>
-            <div class="sr-text"><p>I contatti che hai già diventano un canale di vendita che continua a lavorare da solo.</p></div><a class="sr-cta" href="servizi/email-marketing.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
+        <div class="service-tiles">
+          <a class="service-tile" href="servizi/email-marketing.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="9" width="32" height="22" rx="2"/><path d="M5 10.5L20 22 35 10.5"/><line x1="24" y1="34" x2="34" y2="34"/><path d="M31 31l3 3-3 3"/></svg></span>
+            <h4 class="st-title">Email Marketing</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">I contatti che hai già diventano un canale di vendita che continua a lavorare da solo.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="service-tile" href="servizi/automazione-email.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="12" width="20" height="15" rx="2"/><path d="M4 13l9 7 9-7"/><circle cx="30" cy="13" r="6.5"/><path d="M30 9v2.2M30 16.8V19M26.4 13h2.2M31.4 13h2.2M27.6 10.1l1.5 1.5M31 14.4l1.5 1.5M27.6 15.9l1.5-1.5M31 11.6l1.5-1.5"/></svg></span>
+            <h4 class="st-title">Automazione E-Mail</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">Risposte e solleciti che partono nel momento giusto, anche di domenica sera.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="service-tile" href="servizi/agente-vocale.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 25V15c0-6 4.5-10 11-10s11 4 11 10v10"/><rect x="4" y="24" width="7" height="9" rx="2"/><rect x="29" y="24" width="7" height="9" rx="2"/><path d="M30 33c0 2.2-2 4-6 4"/></svg></span>
+            <h4 class="st-title">Agente Vocale per Chiamate</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">Nessuna chiamata persa quando nessuno può rispondere, con una demo dal vivo prima di decidere.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="service-tile" href="servizi/chatbot.html">
+            <span class="st-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="7" width="30" height="20" rx="4"/><path d="M13 27v6l7-6"/><circle cx="14" cy="17" r="1.3" fill="currentColor" stroke="none"/><circle cx="20" cy="17" r="1.3" fill="currentColor" stroke="none"/><circle cx="26" cy="17" r="1.3" fill="currentColor" stroke="none"/></svg></span>
+            <h4 class="st-title">Chatbot</h4>
+            <div class="st-desc-wrap"><div class="st-desc-inner"><p class="st-desc">Risposte immediate a qualsiasi ora, senza restare bloccati nelle solite domande di sempre.</p></div></div>
+            <svg class="st-arrow arrow-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">09</span><h4>Automazione E-Mail</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="12" width="20" height="15" rx="2"/><path d="M4 13l9 7 9-7"/><circle cx="30" cy="13" r="6.5"/><path d="M30 9v2.2M30 16.8V19M26.4 13h2.2M31.4 13h2.2M27.6 10.1l1.5 1.5M31 14.4l1.5 1.5M27.6 15.9l1.5-1.5M31 11.6l1.5-1.5"/></svg></span>
-            <div class="sr-text"><p>Risposte e solleciti che partono nel momento giusto, anche di domenica sera.</p></div><a class="sr-cta" href="servizi/automazione-email.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
-        </div>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">10</span><h4>Agente Vocale per Chiamate</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 25V15c0-6 4.5-10 11-10s11 4 11 10v10"/><rect x="4" y="24" width="7" height="9" rx="2"/><rect x="29" y="24" width="7" height="9" rx="2"/><path d="M30 33c0 2.2-2 4-6 4"/></svg></span>
-            <div class="sr-text"><p>Nessuna chiamata persa quando nessuno può rispondere, con una demo dal vivo prima di decidere.</p></div><a class="sr-cta" href="servizi/agente-vocale.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
-        </div>
-        <div class="service-row">
-          <button class="sr-head" type="button" aria-expanded="false"><span class="sr-index">11</span><h4>Chatbot</h4><svg class="sr-chevron" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <div class="sr-body-wrap"><div class="sr-body-inner"><div class="sr-body sr-body-content">
-            <span class="sr-icon"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="7" width="30" height="20" rx="4"/><path d="M13 27v6l7-6"/><circle cx="14" cy="17" r="1.3" fill="currentColor" stroke="none"/><circle cx="20" cy="17" r="1.3" fill="currentColor" stroke="none"/><circle cx="26" cy="17" r="1.3" fill="currentColor" stroke="none"/></svg></span>
-            <div class="sr-text"><p>Risposte immediate a qualsiasi ora, senza restare bloccati nelle solite domande di sempre.</p></div><a class="sr-cta" href="servizi/chatbot.html">Scopri il servizio<svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a>
-          </div></div></div>
-        </div>
-        </div>
+      </div>
     </div>
   </div>
+  <sprite-mate class="services-mascot-mobile" state="walk" scale="3" aria-hidden="true"></sprite-mate>
 </section>
 
 <!-- CASI-STUDIO-NASCOSTO — 2026-08-28. Contenuto conservato, non cancellato:
@@ -399,6 +407,10 @@ se però non si parlano, restano cinque cose da gestire invece di un sistema che
   </div>
 </footer>
 <script src="js/main.js"></script>
+<script src="js/hero-shader.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="js/problem-motion.js" defer></script>
 <script src="js/chat.js" defer></script>
 </body>
 </html>

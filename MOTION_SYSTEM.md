@@ -111,6 +111,15 @@ Il loop deve essere **impercettibile**: l'ultimo fotogramma e il primo condivido
 - Niente più di **due elementi in movimento contemporaneamente**. La sequenza è un ragionamento, non un traffico.
 - Niente audio.
 
+**Unica deroga registrata — il campo shader delle hero.** `js/hero-shader.js`
+disegna dietro le hero delle undici pagine servizio e dietro l'hero della home un campo
+che deriva da solo: cioè esattamente ciò che il primo divieto qui sopra vieta. È una
+decisione presa, non una deriva, e vale **solo** per quel file e solo per quelle dodici
+hero, a tre condizioni non negoziabili: deriva sotto la soglia di percezione
+(`TIME_SCALE` 0.10), nessuna reattività al cursore, fotogramma unico con
+`prefers-reduced-motion`. Per ogni altra animazione prodotta secondo questo documento i
+divieti restano interi. Vedi DESIGN.md → Components → Hero Shader Field.
+
 ---
 
 ## 5. Reduced motion e implementazione

@@ -341,34 +341,24 @@
     });
   }
 
-  /* Servizi: accordion a tap/click sull'intestazione (.sr-head, un <button>),
-     stesso pattern single-open della FAQ qui sopra — un solo servizio aperto
-     alla volta, nessun blocco dello scroll. Su desktop l'hover fa la stessa
-     anteprima via CSS puro (nessun JS necessario per quello); questo gestisce
-     tap/click su ogni dispositivo, incluso mouse/trackpad. */
-  document.querySelectorAll(".service-row").forEach(function (row, i) {
-    var head = row.querySelector(".sr-head");
-    if (!head) return;
-    var panel = row.querySelector(".sr-body-wrap");
-    if (panel) {
-      if (!panel.id) panel.id = "service-panel-" + (i + 1);
-      head.setAttribute("aria-controls", panel.id);
-      panel.setAttribute("role", "region");
-      if (!head.id) head.id = "service-head-" + (i + 1);
-      panel.setAttribute("aria-labelledby", head.id);
-    }
-    head.addEventListener("click", function () {
-      var wasOpen = row.classList.contains("is-open");
-      document.querySelectorAll(".service-row.is-open").forEach(function (other) {
-        if (other === row) return;
-        other.classList.remove("is-open");
-        var otherHead = other.querySelector(".sr-head");
-        if (otherHead) otherHead.setAttribute("aria-expanded", "false");
-      });
-      row.classList.toggle("is-open", !wasOpen);
-      head.setAttribute("aria-expanded", wasOpen ? "false" : "true");
+  /* Mascotte nel buco della prima colonna servizi (vedi .services-mascot
+     nel CSS): cammina di default (state="walk" gia' nell'HTML), e al
+     passaggio del cursore si ferma e passa a "idle" — l'antenna che
+     oscilla e il battito di ciglia gia' disegnati in js/chat.js per lo
+     stesso <sprite-mate>, qui letti come "si e' accorta di te". Solo dove
+     l'hover esiste davvero: su touch il CSS la nasconde comunque sotto i
+     980px, ma il listener non ha motivo di esistere se non c'e' un mouse. */
+  var mascot = document.querySelector(".services-mascot");
+  if (mascot && window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    mascot.addEventListener("pointerenter", function () {
+      mascot.state = "idle";
+      mascot.classList.add("is-noticing");
     });
-  });
+    mascot.addEventListener("pointerleave", function () {
+      mascot.state = "walk";
+      mascot.classList.remove("is-noticing");
+    });
+  }
 
   /* Select personalizzata — vedi .select nel CSS.
      La <select> nativa resta la fonte di verita' e l'elemento inviato: qui
@@ -871,7 +861,8 @@
      resta un accenno di profondità e non un effetto che chiede attenzione.
      Portata dal canvas di design "Home - Hero" (valori impostati lì:
      intensity .6, levels 21, revealSize 100). Si attacca a [data-topo]:
-     hero della home e banda CTA finale delle pagine servizio. */
+     solo la banda CTA finale delle pagine servizio — l'hero della home usa
+     ora il campo shader di js/hero-shader.js, mai i due canvas insieme. */
   var topoHosts = document.querySelectorAll("[data-topo]");
   if (topoHosts.length &&
       window.matchMedia("(hover: hover) and (pointer: fine)").matches &&

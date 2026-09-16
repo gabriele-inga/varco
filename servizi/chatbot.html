@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -44,7 +44,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
     </a>
     <div class="nav-cta">
       <nav class="nav-desktop" aria-label="Navigazione principale">
-        <a href="../index.html#servizi" class="active">Servizi</a><a href="../index.html#trasformazione" class="">Trasformazione 360°</a><!-- CASI-STUDIO-NASCOSTO: <a href="../casi-studio/index.html" class="">Casi studio</a> --><a href="../chi-siamo.html" class="">Chi siamo</a>
+        <a href="../index.html#servizi" class="active">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="../casi-studio/index.html" class="">Casi studio</a> --><a href="../chi-siamo.html" class="">Chi siamo</a>
       </nav>
       <a href="../contatti.html" class="btn btn-primary">Prenota audit gratuito</a>
       <button class="nav-toggle" aria-label="Apri il menu" aria-expanded="false">
@@ -55,7 +55,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
 </header>
 <div class="mobile-nav" id="mobile-nav" inert>
   <div class="container">
-    <a href="../contatti.html" class="mobile-nav-cta">Prenota audit gratuito</a><a href="../index.html#servizi">Servizi</a><a href="../index.html#trasformazione">Trasformazione 360°</a><!-- CASI-STUDIO-NASCOSTO: <a href="../casi-studio/index.html">Casi studio</a> --><a href="../chi-siamo.html">Chi siamo</a>
+    <a href="../contatti.html" class="mobile-nav-cta">Prenota audit gratuito</a><a href="../index.html#servizi">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="../casi-studio/index.html">Casi studio</a> --><a href="../chi-siamo.html">Chi siamo</a>
     <div class="mobile-sub">
       <a href="../contatti.html">Contatti</a>
       <a href="tel:+393888648509">+39 388 864 8509</a>
@@ -98,6 +98,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
 
     <!-- foglio superiore: l'hero, opaco, si solleva e scopre il video -->
     <div class="stage-layer stage-layer--hero service-hero service-hero--stage" data-hero-sheet>
+      <canvas class="hero-shader" data-hero-shader aria-hidden="true"></canvas>
       <div class="container hero-parallax" data-hero-parallax>
         <div class="breadcrumb"><a href="../index.html">Home</a> / <a href="../index.html#servizi">Servizi</a> / Chatbot</div>
         <div class="hero-content">
@@ -286,6 +287,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
   </div>
 </footer>
 <script src="../js/main.js"></script>
+<script src="../js/hero-shader.js" defer></script>
 <script src="../js/chat.js" defer></script>
 </body>
 </html>
