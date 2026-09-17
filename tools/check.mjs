@@ -107,6 +107,9 @@ for (const f of pagine) {
     // Apache la serve mantenendo nella barra l'indirizzo sbagliato.
     const target = href.startsWith("/") ? join(ROOT, href) : resolve(base, href);
     if (existsSync(target)) continue;
+    // URL puliti (vercel.json cleanUrls + riscrittura .htaccess): "/pagina"
+    // e "/cartella" sul disco sono ancora "pagina.html" e "cartella/index.html".
+    if (existsSync(target + ".html") || existsSync(join(target, "index.html"))) continue;
     /* assets/servizi/ e' l'unica assenza prevista: sono le immagini laterali
        delle pagine servizio, che il cliente deve ancora fornire. Finche'
        mancano la pagina mostra il pannello "Immagine, in arrivo" e main.js
