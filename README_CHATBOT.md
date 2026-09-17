@@ -13,30 +13,47 @@ scambi, propone l'audit gratuito.
 |---|---|
 | `js/chat.js` | Il widget (vanilla JS, ~7 KB). Nessuna chiave al suo interno. |
 | `css/style.css` | Stili del widget, in coda al foglio (sezione "Chatbot"). |
-| `api/chat.php` | Proxy server-side: aggiunge chiave, system prompt e limiti. |
-| `api/config.example.php` | Modello di configurazione da copiare. |
-| `api/.htaccess` | Blocca l'accesso diretto a `config.php` dal browser. |
+| `api/chat.js` | Proxy server-side per **Vercel** (funzione serverless Node): aggiunge chiave, system prompt e limiti. In uso in produzione. |
+| `api/chat.php` | Stessa logica per hosting **PHP tradizionale** (Apache/cPanel). Vercel non esegue PHP: se sei su Vercel, questo file resta come riferimento/portabilità ma non viene invocato. |
+| `api/config.example.php` | Modello di configurazione per la variante PHP. |
+| `api/config.php` | Chiave per la variante PHP, solo uso locale/hosting tradizionale. Mai committato (è in `.gitignore`). |
+| `api/.htaccess` | Blocca l'accesso diretto a `config.php` dal browser (variante PHP). |
 
-La chiave API **non è mai nel browser**. Il widget chiama solo
-`api/chat.php` sullo stesso dominio; è il PHP a parlare con il provider.
-Mettere la chiave direttamente nel JavaScript la renderebbe leggibile da
-chiunque apra "visualizza sorgente", e in poche ore verrebbe usata da altri.
+La chiave API **non è mai nel browser**. Il widget chiama solo `api/chat`
+sullo stesso dominio; è la funzione serverless (o il PHP, su hosting
+tradizionale) a parlare con il provider. Mettere la chiave direttamente nel
+JavaScript la renderebbe leggibile da chiunque apra "visualizza sorgente", e
+in poche ore verrebbe usata da altri.
 
-## Attivazione (5 minuti)
+## Attivazione su Vercel (in uso)
 
 1. **Chiave gratuita Groq** — crea un account su
    <https://console.groq.com> e genera una key da
    <https://console.groq.com/keys>. Inizia con `gsk_`.
    Il free tier di Groq non richiede carta di credito e con i volumi di un sito
    vetrina è ampiamente sufficiente.
-2. **Configura** — copia `api/config.example.php` in `api/config.php` e
-   incolla la chiave nel campo `api_key`. La chiave va **solo** in
-   `config.php`, mai in `config.example.php`, che è il file destinato a essere
-   condiviso.
-3. **Carica** — via FTP, la cartella `api/` intera, `js/chat.js`,
-   `css/style.css` e tutti gli `.html` aggiornati.
-4. **Prova** — apri il sito, clicca "Parliamo del tuo problema", manda un
-   messaggio. Se leggi *"Chatbot non configurato"* manca `api/config.php`.
+2. **Configura** — su Vercel: Project → Settings → Environment Variables,
+   aggiungi `VARCO_API_KEY` con il valore della chiave, per l'ambiente
+   Production (e Preview se vuoi testare i deploy di anteprima). La chiave
+   **non va mai** in un file committato.
+3. **Deploy** — push su GitHub (o `vercel --prod`); Vercel rileva
+   automaticamente `api/chat.js` come funzione serverless.
+4. **Prova** — apri il sito online, clicca "Parliamo del tuo problema", manda
+   un messaggio. Se leggi *"Chatbot non configurato"* manca la variabile
+   d'ambiente `VARCO_API_KEY` (o non hai rifatto il deploy dopo averla
+   impostata — su Vercel serve un nuovo deploy perché la variabile venga
+   letta).
+
+## Attivazione su hosting PHP tradizionale (Apache/cPanel)
+
+1. Stessa chiave Groq del punto sopra.
+2. Copia `api/config.example.php` in `api/config.php` e incolla la chiave nel
+   campo `api_key`. La chiave va **solo** in `config.php`, mai in
+   `config.example.php`, che è il file destinato a essere condiviso.
+3. Carica via FTP la cartella `api/` intera, `js/chat.js`, `css/style.css` e
+   tutti gli `.html` aggiornati.
+4. Prova come sopra. Se leggi *"Chatbot non configurato"* manca
+   `api/config.php`.
 
 `api/config.php` non va condiviso, mandato via mail o pubblicato su repository.
 

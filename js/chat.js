@@ -1,6 +1,6 @@
 /* Varco — assistente AI. Vanilla JS, nessuna libreria.
-   La chiave API non è qui: il widget parla solo con api/chat.php sullo stesso
-   dominio, che aggiunge chiave e system prompt lato server. */
+   La chiave API non è qui: il widget parla solo con api/chat (funzione
+   serverless) sullo stesso dominio, che aggiunge chiave e system prompt lato server. */
 (function () {
   "use strict";
 
@@ -11,7 +11,7 @@
     return s[s.length - 1];
   })();
   var BASE = self ? self.src.replace(/js\/chat\.js.*$/, "") : "/";
-  var ENDPOINT = BASE + "api/chat.php";
+  var ENDPOINT = BASE + "api/chat";
 
   var OPENER =
     "Ciao, sono l'assistente di Varco. Scrivimi pure cosa ti serve: " +
