@@ -1,4 +1,52 @@
 /* ==========================================================================
+   Font ospitati in locale — 2026-09-17.
+   Prima stavano su fonts.googleapis.com: due connessioni a un'origine esterna
+   e un foglio di stile bloccante in piu' sul percorso dell'LCP, prima ancora
+   che il browser sapesse cosa disegnare. Ora i woff2 arrivano dalla stessa
+   origine del sito, la CSP non ha piu' bisogno di aprire a Google e il primo
+   testo compare un round-trip prima.
+   Sono i file variabili serviti da Google: uno solo per famiglia e stile,
+   non uno per peso. Per aggiornarli: tools/fetch-fonts.mjs.
+   Inter (OFL 1.1) · JetBrains Mono (OFL 1.1) — vedi assets/fonts/LICENSE.txt
+   ========================================================================== */
+
+/* Inter — tondo, pesi 400-600 usati dal sito */
+@font-face{
+  font-family:'Inter'; font-style:normal; font-weight:100 900; font-display:swap;
+  src:url('../assets/fonts/inter-normal-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Inter'; font-style:normal; font-weight:100 900; font-display:swap;
+  src:url('../assets/fonts/inter-normal-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+/* Inter — corsivo, usato dagli accenti in <span class="italic"> */
+@font-face{
+  font-family:'Inter'; font-style:italic; font-weight:100 900; font-display:swap;
+  src:url('../assets/fonts/inter-italic-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Inter'; font-style:italic; font-weight:100 900; font-display:swap;
+  src:url('../assets/fonts/inter-italic-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+/* JetBrains Mono — numeri, dati ed etichette */
+@font-face{
+  font-family:'JetBrains Mono'; font-style:normal; font-weight:100 800; font-display:swap;
+  src:url('../assets/fonts/jetbrains-mono-normal-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'JetBrains Mono'; font-style:normal; font-weight:100 800; font-display:swap;
+  src:url('../assets/fonts/jetbrains-mono-normal-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+/* ==========================================================================
    Varco — design system v2 — LIGHT MODE
    Palette:  Monocromatica sul blu primario #01497C (nessun accento arancione)
    Type:     Inter (unica famiglia UI) · JetBrains Mono (numeri/dati/etichette)
@@ -557,7 +605,12 @@ hr.rule{ border:0; border-top:1px solid var(--line); margin: 0; }
    un'unica griglia); l'hover non disegna più un bordo (rimosso su
    richiesta esplicita), solo lift, sfondo e reveal della descrizione. */
 .route-wrap{ margin: 8px 0 8px; overflow-x:auto; }
-.route{ min-width: 760px; }
+/* Il padding in alto e' lo spazio in cui cammina la mascotte, non aria: il
+   punto piu' alto del tracciato sta a y=13 su un viewBox alto 90, e una
+   <sprite-mate> a scale 2 e' alta 46px. Senza questi 48px la testa uscirebbe
+   sopra il bordo di .route-wrap, che con overflow-x:auto calcola overflow-y
+   ad auto e quindi taglia. Vedi .route-mate piu' sotto. */
+.route{ min-width: 760px; position: relative; padding-top: 48px; }
 .route svg{ width:100%; height:auto; display:block; }
 .route-steps{ display:grid; grid-template-columns: repeat(5,1fr); margin-top: 18px; min-width:760px; }
 .route-step h3{ margin: 8px 0 8px; font-size: var(--fs-title-sm); font-weight: 500; transition: color .25s ease; }
@@ -594,6 +647,95 @@ hr.rule{ border:0; border-top:1px solid var(--line); margin: 0; }
   .route-step{ scroll-snap-align: center; }
   .route-dots{ display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 18px; }
 }
+
+/* ---------- la mascotte che cammina sulla roadmap ----------
+   Seconda deroga registrata al divieto di MOTION_SYSTEM.md 4.4 ("niente
+   camera che si muove da sola"), dopo il campo shader delle hero. Non e' un
+   elemento nuovo che si mette a muoversi: e' la stessa <sprite-mate> che
+   fino a ieri pattugliava in loop il buco della sezione servizi, spostata
+   sulla roadmap quando quella sezione ha lasciato il posto alla FAQ. Il
+   contratto qui e' piu' stretto di quello di prima: si ferma quando il
+   visitatore porta mouse o focus sulla roadmap (il cursore vince sempre), si
+   ferma fuori dallo schermo, e con prefers-reduced-motion non parte mai.
+   La posizione a ogni frame esce da getPointAtLength() sul tracciato vero
+   (js/main.js), non da un'approssimazione: cammina sulla linea, non accanto.
+   Solo desktop, perche' sotto i 760px .route e' display:none. */
+.route-mate{
+  position: absolute; left: 0; top: 0;
+  z-index: 2; pointer-events: none;
+  will-change: transform;
+}
+/* Il verso di marcia sta qui dentro, separato dalla posizione che il JS
+   riscrive a ogni frame: una transizione su transform, se stesse sul
+   contenitore, frenerebbe anche la camminata. Cosi' invece la giravolta ai
+   due capi della fila si anima e la posizione resta esatta. Lo specchio e'
+   attorno a transform-origin 50%, che per questo sprite e' anche il centro
+   del corpo (occupa tutte e 14 le colonne della griglia). */
+.route-mate-sprite{ transition: transform 260ms var(--ease-out); }
+
+/* Lo stato che il passaggio della mascotte accende. Deliberatamente una
+   classe e non :hover: cosi' i due non si contendono lo stesso selettore, e
+   il cursore del visitatore puo' spegnere questa senza combattere. Ripete le
+   dichiarazioni del blocco hover qui sotto, ma fuori dal gate (hover:hover):
+   su un tablet largo con sola interazione touch la mascotte cammina lo
+   stesso, e li' i paragrafi sono gia' tutti visibili. */
+@media (min-width: 761px){
+  .route-step.is-walked{
+    background: var(--bg);
+    transform: translateY(-3px);
+  }
+  .route-step.is-walked h3{ color: var(--traccia); }
+  .route-step.is-walked p{ opacity: 1; }
+}
+
+/* Reduced motion: la mascotte non parte, e siccome e' lei a rivelare i
+   paragrafi il loro contenuto resterebbe irraggiungibile senza mouse. Questa
+   classe li apre tutti e chiude il cerchio — il "poster frame" della regola 5
+   di MOTION_SYSTEM.md applicato a una sezione invece che a un video. */
+.route-steps.is-static .route-step p{ opacity: 1; }
+
+/* Invito a scorrere, su mobile: la fila scivola di 26px e torna, una volta
+   sola, quando la roadmap entra in campo. Non parte se il visitatore ha gia'
+   scorso da solo, e non si ripete: un gesto che si ripete smette di essere un
+   suggerimento e diventa un tic. E' una trasformazione, non uno scroll vero,
+   perche' scrivere scrollLeft mentre scroll-snap e' mandatory significa
+   litigare con lo snap del browser. */
+@keyframes route-swipe-hint{
+  0%{ transform: translateX(0); }
+  40%{ transform: translateX(-26px); }
+  100%{ transform: translateX(0); }
+}
+.route-steps.is-hinting{ animation: route-swipe-hint 1150ms var(--ease-in-out) 1; }
+
+/* ---------- il catalogo: sezione propria fra roadmap e FAQ ----------
+   La roadmap dice come si sceglie; questa sezione dice fra cosa. Da quando
+   la FAQ ha preso il posto della vecchia sezione servizi, e' l'unico rimando
+   contestuale della home all'hub /servizi, e per questo e' una sezione con il
+   suo respiro invece della riga in coda alla roadmap che era prima.
+
+   Resta su bianco di proposito. Il fondo tinto con i filetti sopra e sotto
+   sarebbe stato il modo facile di darle peso, ma e' gia' la firma esatta di
+   .cta-band, che chiude la home tre sezioni piu' giu': due piatti identici a
+   quella distanza si annullano a vicenda. Qui il peso lo fanno tipografia e
+   composizione. */
+/* 880px e' misurato, non scelto: la seconda riga del titolo ("Dal tuo audit
+   ne escono due o tre.") occupa 827px alla taglia display, e a 720px andava
+   a capo lasciando "o tre." orfano su una riga sua. La frase e' il carico
+   della sezione: non si spezza a meta'. */
+.catalogo-inner{ max-width: 880px; margin: 0 auto; text-align: center; }
+/* L'indice canonico 01-11 dei servizi, lo stesso che le pagine foglia
+   portano nell'occhiello e nel blocco "Altri servizi". Dice che dietro c'e'
+   un catalogo numerato senza elencarlo: e' un readout, non una lista — ed e'
+   per questo che sta in mono mentre "Undici" nel titolo resta parola in
+   Inter (Mono Readout Rule: un numero dentro una frase non e' una misura). */
+.catalogo-index{
+  font-family: var(--font-mono);
+  font-size: var(--fs-control); font-weight: 500;
+  letter-spacing: .18em; color: var(--muted);
+  margin-bottom: 26px;
+}
+.catalogo-inner h2{ margin: 0 0 24px; }
+.catalogo-inner .lede{ margin: 0 auto 38px; max-width: 54ch; }
 
 /* Reveal della descrizione al passaggio del mouse: solo su dispositivi con
    hover affidabile — su touch il passaggio resta a contenuto pieno, niente
@@ -879,6 +1021,97 @@ hr.rule{ border:0; border-top:1px solid var(--line); margin: 0; }
   50%{ transform: translateX(calc(-50% + 32px)); }
 }
 
+/* ---------- /servizi: l'hub degli undici servizi ----------
+   La home mostra gli stessi undici servizi dentro .services-table, tre
+   colonne affiancate: li' il blocco e' una tappa fra le altre e deve stare
+   in un solo schermo. Qui e' il contenuto della pagina, e i gruppi sono
+   quattro invece di tre — "chiamate perse" torna separato da "richieste
+   senza risposta", com'e' in llms.txt. Quattro colonne da 3, 4, 3 e 1
+   riquadro lascerebbero l'ultima quasi vuota, quindi ogni problema prende
+   una fascia larga: a sinistra il nome del problema e la frase che lo
+   spiega, a destra la colonna di riquadri gia' usata sulla home.
+   .service-tiles e .service-tile sono ripresi identici (vedi sopra): le
+   loro righe di separazione sono calcolate su una pila verticale, e messi
+   in griglia si accavallerebbero. */
+.hub-group{
+  display:grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 56px; padding: 48px 0; border-top: 1px solid var(--line);
+}
+.hub-group:first-child{ border-top: 0; padding-top: 0; }
+.hub-group:last-child{ padding-bottom: 0; }
+.hub-aside{ align-self:start; }
+/* La colonna di sinistra resta in vista mentre si scorrono i riquadri della
+   fascia: il nome del problema e' il contesto che li tiene insieme, e la
+   fascia piu' alta ("budget senza risultati", quattro riquadri) supera
+   l'altezza della finestra. 120px = header + respiro. */
+@media (min-width: 901px){
+  .hub-aside{ position: sticky; top: 120px; }
+}
+.hub-aside .sg-label{ margin-bottom: 18px; }
+.hub-aside p{ margin: 0; font-size: var(--fs-sm); }
+@media (max-width: 900px){
+  .hub-group{ grid-template-columns: 1fr; gap: 26px; padding: 40px 0; }
+}
+
+/* Il riquadro del servizio, dentro la fascia larga dell'hub.
+   Sulla home .service-tile e' un quadrato (aspect-ratio: 1/1) dentro una
+   colonna da ~300px, e la descrizione compare solo al passaggio del mouse.
+   Qui la colonna e' larga piu' del doppio: lo stesso quadrato verrebbe alto
+   768px, e undici quadrati cosi' sono ottomila pixel di pagina. Si riprende
+   allora la forma a riga gia' disegnata per il mobile (vedi il blocco
+   "servizi: adattamento mobile") e le si restituisce la descrizione, che li'
+   e' nascosta per mancanza di spazio: in una pagina il cui lavoro e' farsi
+   leggere, tenere undici descrizioni dietro un hover equivale a non averle
+   scritte — ne' per chi legge, ne' per chi indicizza. */
+.hub-group .service-tile{
+  display:grid;
+  grid-template-columns: 40px minmax(0, 1fr) 16px;
+  align-items:center; column-gap: 20px; row-gap: 5px;
+  text-align:left;
+  width:auto; aspect-ratio:auto; height:auto;
+  padding: 20px 22px;
+  border-left:0; border-right:0;
+}
+.hub-group .st-icon{ grid-column:1; grid-row:1 / span 2; width:40px; height:40px; }
+.hub-group .st-title{
+  grid-column:2; grid-row:1;
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+}
+/* La riga della descrizione e' aperta da ferma, non da 0fr come sulla home.
+   display:grid serve a riaccenderla sotto i 980px, dove il blocco mobile
+   della home la spegne per far stare undici voci in uno scroll corto: li'
+   e' un indice, qui e' la pagina, e la descrizione e' cio' che si e' venuti
+   a leggere. Vince sulla regola mobile per specificita', non per ordine. */
+.hub-group .st-desc-wrap{ display:grid; grid-column:2; grid-row:2; grid-template-rows: 1fr; }
+.hub-group .st-desc{ opacity:1; color: var(--bone-dim); max-width: 62ch; }
+.hub-group .st-arrow{
+  display:block; grid-column:3; grid-row:1 / span 2;
+  color: var(--muted); opacity:.6;
+}
+@media (hover: hover) and (pointer: fine){
+  /* Lo sfondo blu resta, lo scatto no: sollevare e ingrandire dell'8% un
+     quadrato da 300px e' un dettaglio, farlo a una riga larga 768 la fa
+     sbattere contro le vicine. */
+  .hub-group .service-tile:hover, .hub-group .service-tile:focus-visible{
+    transform:none; box-shadow:none;
+  }
+  .hub-group .service-tile:hover .st-desc,
+  .hub-group .service-tile:focus-visible .st-desc{ color: rgba(255,255,255,.85); }
+  .hub-group .service-tile:hover .st-arrow,
+  .hub-group .service-tile:focus-visible .st-arrow{ color:#fff; opacity:1; }
+}
+@media (max-width: 900px){
+  .hub-group .service-tile{ padding: 18px 4px; column-gap: 16px; }
+  .hub-group .st-icon{ width:32px; height:32px; }
+  .hub-group .st-desc{ font-size: 14px; }
+}
+
+/* Il rimando all'hub /servizi in coda al blocco "Altri servizi" delle pagine
+   foglia. La lista .related-service sopra porta a sei servizi scelti a mano;
+   questa riga porta a tutti e undici, ed e' l'unico link contestuale che le
+   undici pagine hanno verso la pagina che le raccoglie. */
+.related-all{ margin: 22px 0 0; font-size: var(--fs-sm); }
+
 /* ---------- case studies ---------- */
 .cases-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
 .case-card{
@@ -1108,13 +1341,17 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
 .footer-col:last-child{ border-right:0; }
 .footer-col:first-child{ padding-left:0; }
 .footer-col:last-child{ padding-right:0; }
-.footer-col h4{ font-family: var(--font-mono); font-size: var(--fs-data-xs); letter-spacing:.08em; text-transform:uppercase; color: #8a8a8a; font-weight:500; margin-bottom: 20px; }
+/* Le etichette del footer erano h4: un salto h2 -> h4 su tutte le pagine, che
+   per uno screen reader e' un livello mancante nell'indice del documento. Ora
+   sono h2, quindi vanno riportate alla loro misura: l'h2 globale e' un
+   titolone con line-height .95, non un'etichetta mono da 12 px. */
+.footer-col h2.footer-col-title{ font-family: var(--font-mono); font-size: var(--fs-data-xs); line-height:1.2; letter-spacing:.08em; text-transform:uppercase; color: #8a8a8a; font-weight:500; margin: 0 0 20px; }
 /* le icone della prima colonna sono più "piene" del testo nudo delle
    altre colonne: testo e icona partono con un piccolo rientro (in linea
    con l'etichetta SOCIAL) mentre il rettangolo di hover resta a filo
    bordo, cosi' resta un margine visibile tra il bordo dell'evidenziazione
    e l'inizio di icona/testo — non e' un rientro della colonna stessa. */
-.footer-col:first-child h4{ padding-left:8px; }
+.footer-col:first-child h2.footer-col-title{ padding-left:8px; }
 .footer-col p{ display:block; font-size: .93rem; color: #d0d0d0; margin-bottom: 12px; }
 /* I link diventano "pulsanti" a tutta larghezza: il rettangolo di hover
    deve arrivare esattamente ai bordi divisori tra le colonne, quindi il
@@ -1489,6 +1726,12 @@ blockquote.pull cite{ display:block; font-family: var(--font-mono); font-style:n
   position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
   clip:rect(0,0,0,0); white-space:nowrap; border:0;
 }
+/* Un'etichetta .eyebrow che e' anche il titolo della sua sezione, quindi un
+   h2 nel markup. .eyebrow copre gia' font, corpo e spaziatura; l'unica cosa
+   che si porterebbe dietro da h2 e' il line-height stretto da titolone, che
+   qui stringerebbe la riga di qualche pixel e sposterebbe cio' che segue.
+   inherit e' esattamente quello che aveva quando era un div. */
+.eyebrow-as-h2{ line-height: inherit; }
 .stagger > .reveal:nth-child(1){ transition-delay: 0ms; }
 .stagger > .reveal:nth-child(2){ transition-delay: 60ms; }
 .stagger > .reveal:nth-child(3){ transition-delay: 120ms; }

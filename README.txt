@@ -1,18 +1,35 @@
 Varco — SITO WEB — README
 ==========================
 
-Aggiornato: 2026-09-08.
+Aggiornato: 2026-09-17.
 
-Sito statico in HTML/CSS/JS senza framework e senza build. L'unica parte
-dinamica e' il proxy PHP del chatbot in api/.
+Sito statico in HTML/CSS/JS senza framework. L'unica parte dinamica e' il
+proxy del chatbot: api/chat.js come funzione serverless su Vercel, oppure
+hosting-php/chat.php su un hosting Apache con PHP.
+
+Non c'e' un bundler, ma dal 2026-09-17 c'e' UN passo di build, uno solo:
+le pagine caricano css/style.min.css, che si genera da css/style.css con
+tools/build-css.mjs. Se modifichi gli stili e non lo rilanci, il sito serve
+la versione vecchia senza dirlo — per questo check.mjs si rifiuta di dare il
+via libera quando il minificato e' piu' vecchio del sorgente.
 
 Le specifiche di design (palette, tipografia, componenti, regole) stanno in
 DESIGN.md, che e' la fonte autorevole. Se questo README e DESIGN.md dicessero
 cose diverse, vale DESIGN.md.
 
 
-PRIMA DI TUTTO: DUE COMANDI
-----------------------------
+PRIMA DI TUTTO: I COMANDI
+--------------------------
+    node tools/build-css.mjs --scrivi
+        Rigenera css/style.min.css da css/style.css. Da rilanciare DOPO
+        ogni modifica agli stili, ed e' l'unico passo di build del progetto.
+        Senza --scrivi dice solo quanto risparmierebbe. Si ricontrolla da
+        solo: se un costrutto CSS gli sfugge, non scrive il file.
+
+    node tools/fetch-fonts.mjs --scrivi
+        Riscarica i woff2 di Inter e JetBrains Mono in assets/fonts/.
+        Serve solo se cambiano i font o i pesi usati: normalmente mai.
+
     node tools/check.mjs
         Controllo pre-volo. Elenca cosa impedisce ancora la pubblicazione:
         segnaposto rimasti, chiavi API in file tracciati da git, link e
@@ -28,30 +45,51 @@ PRIMA DI TUTTO: DUE COMANDI
 
 STATO ATTUALE — COSA MANCA PER PUBBLICARE
 ------------------------------------------
-Il sito e' completo e funzionante, ma NON e' pubblicabile finche' non
-arrivano tre cose, tutte dati che solo il titolare puo' fornire:
+  1. DOMINIO ed EMAIL — FATTO il 2026-09-17.
+     go-live.mjs e' stato eseguito con varcoagency.it e
+     mrigserviziweb@gmail.com. Canonical, og:url, JSON-LD, sitemap e llms.txt
+     portano il dominio vero; robots.txt e' passato da Disallow: / a Allow: /
+     e 17 pagine da noindex a index, follow. Le 6 pagine casi-studio e la 404
+     restano noindex, come previsto.
 
-  1. DOMINIO ed EMAIL.
-     Oggi sono segnaposto. Per questo tutte le pagine portano
-     <meta name="robots" content="noindex, nofollow"> e robots.txt e' in
-     Disallow: farsi indicizzare con canonical e og:url che puntano a
-     https://[DOMINIO] significa entrare negli indici con URL invalidi e poi
-     doverli far rimuovere. Il comando go-live.mjs qui sopra rimette tutto a
-     posto in un colpo solo, noindex compreso.
+  2. NOME DEL FORNITORE DI HOSTING — FATTO il 2026-09-17.
+     legal/privacy.html, punto 4, dichiara "Vercel Inc. (Stati Uniti)" fra i
+     responsabili del trattamento ex art. 28 GDPR. Se un giorno il sito
+     traslocasse su un hosting Apache, quella riga va riscritta con la
+     ragione sociale del nuovo fornitore: e' una dichiarazione legale, non una
+     stringa di configurazione, e nessuno script la aggiorna.
 
-  2. DATI LEGALI (vedi sezione dedicata piu' sotto).
+  3. CSP DELLA PAGINA AGENTE VOCALE — da provare in produzione.
+     Il widget di Retell e' l'unico pezzo di terze parti del sito. Le origini
+     che contatta a widget fermo sono note e permesse; quelle che apre a
+     conversazione avviata non sono documentate. Prima del lancio: aprire
+     /servizi/agente-vocale, avviare una conversazione vera e guardare la
+     console. Ogni errore di CSP nomina il dominio da aggiungere, e va
+     aggiunto in DUE posti — .htaccess e vercel.json. Se restano disallineati
+     lo dice check.mjs.
 
-  3. IMMAGINI delle sette pagine servizio senza video
+  4. IMMAGINI delle sette pagine servizio senza video
      (vedi assets/servizi/LEGGIMI.txt). Queste non bloccano: finche'
      mancano, la pagina mostra un pannello "Immagine, in arrivo".
+
+  5. DUE FILE PESANTI E NON PIU' USATI — CANCELLATI il 2026-09-17.
+     assets/illustrazioni/home-hero.svg (2,1 MB) e assets/servizi/
+     sfondoServ.webp (1,5 MB): 3,6 MB in meno nel deploy. Il primo non era
+     grafica vettoriale — incorporava due PNG da 2400x1916 in base64 — ed e'
+     stato sostituito da home-hero.webp, 100 KB, la stessa illustrazione. Il
+     secondo non era referenziato da nessuna pagina ne' dal CSS.
+     Se dovessero servire di nuovo, sono nella cronologia git:
+         git checkout bcae66b -- assets/illustrazioni/home-hero.svg
+         git checkout bcae66b -- assets/servizi/sfondoServ.webp
 
 
 DATI LEGALI — DA DECIDERE CON UN COMMERCIALISTA
 ------------------------------------------------
-In legal/privacy.html e legal/termini.html ci sono quattro segnaposto:
-[NOME E COGNOME DEL TITOLARE], [INDIRIZZO], [CODICE FISCALE], [EMAIL].
+I segnaposto anagrafici di legal/privacy.html e legal/termini.html sono stati
+riempiti: titolare Gabriele Ingaramo, codice fiscale e recapiti sono nel testo.
+Resta aperto solo [HOSTING PROVIDER], al punto 4 della privacy (vedi sopra).
 
-C'e' anche una contraddizione aperta, che nessuno script puo' risolvere.
+C'e' invece una contraddizione ancora aperta, che nessuno script puo' risolvere.
 legal/privacy.html, punto 1, dichiara:
 
     "Non e' presente una partita IVA: l'attivita' e' attualmente svolta
@@ -80,11 +118,29 @@ Finche' non e' deciso, tools/check.mjs continua a segnalare errore. E' voluto.
 
 DOVE VIVE LA CHIAVE API DEL CHATBOT
 ------------------------------------
-Scelta di deploy: HOSTING PHP CON APACHE. Il sito NON va su Netlify,
-GitHub Pages o Cloudflare Pages: li' il PHP non gira, il .htaccess viene
-ignorato e api/config.php verrebbe servito in chiaro, chiave compresa.
-(Se un giorno servisse un host statico, l'alternativa e' una Cloudflare
-Worker: vedi README_CHATBOT.md.)
+Ci sono DUE strade, e il progetto le supporta entrambe. Vanno tenute
+allineate a mano, perche' niente lo fa al posto tuo.
+
+  VERCEL (quello che la configurazione attuale si aspetta)
+    Il proxy e' api/chat.js, funzione serverless. La chiave sta in una
+    variabile d'ambiente del progetto Vercel, mai su disco.
+    Routing, redirect www -> apex e intestazioni di sicurezza stanno in
+    vercel.json: il .htaccess qui NON viene letto.
+    .vercelignore tiene fuori dal deploy documentazione, prompt e sorgenti.
+    Senza quel file sarebbero URL pubblici: su Vercel tutto cio' che sta nel
+    repository diventa raggiungibile.
+
+  HOSTING PHP CON APACHE
+    Il proxy e' hosting-php/chat.php, da mettere in api/. Valgono .htaccess
+    e le tre posizioni della chiave descritte qui sotto. Il sito NON va su
+    GitHub Pages o Cloudflare Pages: li' il PHP non gira, il .htaccess viene
+    ignorato e api/config.php verrebbe servito in chiaro, chiave compresa.
+
+ATTENZIONE: .htaccess e vercel.json contengono la stessa Content-Security-
+Policy scritta due volte, piu' l'eccezione per la pagina dell'agente vocale.
+Se ne modifichi una, modifica l'altra: check.mjs avvisa quando divergono.
+
+Per il resto di questa sezione vale la strada Apache.
 
 api/chat.php cerca la chiave in tre posti, in quest'ordine:
 

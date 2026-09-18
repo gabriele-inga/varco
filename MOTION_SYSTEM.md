@@ -120,6 +120,31 @@ hero, a tre condizioni non negoziabili: deriva sotto la soglia di percezione
 `prefers-reduced-motion`. Per ogni altra animazione prodotta secondo questo documento i
 divieti restano interi. Vedi DESIGN.md → Components → Hero Shader Field.
 
+**Seconda deroga registrata — la mascotte sulla roadmap.** `js/main.js` fa camminare
+una `<sprite-mate>` avanti e indietro, in loop, sul tracciato della roadmap della home:
+di nuovo qualcosa che si muove da solo. Non è un elemento nuovo che si mette in moto —
+è la stessa mascotte che pattugliava in loop il buco della sezione servizi, spostata
+quando quella sezione ha lasciato il posto alla FAQ. Il contratto qui è più stretto di
+quello che aveva prima, e le condizioni sono quattro:
+
+- **il cursore vince sempre.** Mouse o focus sulla roadmap fermano la camminata e
+  spengono `.is-walked`. Un'animazione che si riaccende sotto il dito di chi sta
+  leggendo è un difetto, non una firma;
+- **fuori dallo schermo il loop rAF non gira**, e nemmeno sotto i 760px, dove la linea
+  è `display:none`;
+- **con `prefers-reduced-motion` non parte mai**, e `.route-steps.is-static` apre tutti
+  i paragrafi: erano nascosti in attesa di un hover che non arriverà — è il poster frame
+  della regola 5 applicato a una sezione invece che a un video;
+- **due elementi in movimento, non tre**: la mascotte e il passaggio che accende. Il
+  campo shader della hero sta in un'altra sezione e non divide mai il fotogramma con lei.
+
+La posizione a ogni frame esce da `getPointAtLength()` sul `<path>` vero: cammina sulla
+linea, non accanto. Verso destra è specchiata e verso sinistra no, così guarda sempre
+dove sta andando; il verso cambia solo ai due capi della fila, mentre è ferma sul punto,
+e si anima su un elemento separato da quello che porta la posizione — una transizione su
+`transform` sullo stesso elemento frenerebbe anche la camminata. Vedi DESIGN.md →
+Components → Roadmap Walker.
+
 ---
 
 ## 5. Reduced motion e implementazione

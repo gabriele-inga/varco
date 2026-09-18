@@ -1,0 +1,25 @@
+FONT OSPITATI IN LOCALE — LICENZE
+=================================
+
+I file .woff2 in questa cartella non sono opera di Varco. Sono ridistribuiti
+alle condizioni della SIL Open Font License 1.1, che lo consente
+esplicitamente e che richiede che questa nota li accompagni.
+
+  inter-*.woff2
+      Inter — Copyright (c) 2016 The Inter Project Authors
+      https://github.com/rsms/inter
+      SIL Open Font License 1.1
+
+  jetbrains-mono-*.woff2
+      JetBrains Mono — Copyright (c) 2020 JetBrains s.r.o.
+      https://github.com/JetBrains/JetBrainsMono
+      SIL Open Font License 1.1
+
+Il testo completo della licenza:
+https://openfontlicense.org/open-font-license-official-text/
+
+In sintesi, per quello che riguarda questo sito: i font si possono usare,
+incorporare e ridistribuire senza costi, anche in un progetto commerciale.
+Non si possono vendere da soli, e una versione modificata non puo' chiamarsi
+"Inter" o "JetBrains Mono". Qui non sono modificati: sono i file variabili
+serviti da Google Fonts, scaricati da tools/fetch-fonts.mjs.

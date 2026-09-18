@@ -1,0 +1,32 @@
+# File che stanno nel repository ma non devono finire sul sito pubblico.
+#
+# Su Apache ci pensa il .htaccess, che nega .md, .txt, .json e le cartelle di
+# lavoro. Su Vercel quel file viene ignorato: tutto quello che sta nel
+# repository diventa un URL. Senza questo elenco, DESIGN_SYSTEM.md,
+# PRODUCT.md, README.txt e i prompt del chatbot sarebbero leggibili da
+# chiunque — e indicizzabili.
+
+# Documentazione e materiale di progetto
+*.md
+README.txt
+prompts/
+ds-bundle/
+tools/
+
+# La variante PHP del proxy chatbot: su Vercel gira api/chat.js, non serve.
+hosting-php/
+varco-config.example.php
+
+# Cartelle di lavoro
+.impeccable/
+.design-sync/
+.claude/
+.vscode/
+.github/
+
+# Configurazione Apache: su Vercel non ha effetto, ma non va nemmeno servita.
+.htaccess
+
+# NOTA: robots.txt, sitemap.xml e llms.txt NON vanno qui. Sono tre file
+# scritti apposta per essere letti dai crawler: escluderli significa
+# spegnere esattamente cio' che si voleva accendere.

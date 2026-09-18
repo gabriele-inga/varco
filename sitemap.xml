@@ -3,18 +3,40 @@
   <!-- CASI-STUDIO-NASCOSTO — 2026-08-28: le 6 URL di casi-studio/ sono state
        tolte dalla sitemap e le pagine portano un meta robots noindex. I file
        restano nel progetto: rimettere qui le righe quando tornano in linea. -->
-  <url><loc>https://[DOMINIO]/</loc><lastmod>2026-07-23</lastmod></url>
-  <url><loc>https://[DOMINIO]/chi-siamo</loc><lastmod>2026-07-23</lastmod></url>
-  <url><loc>https://[DOMINIO]/contatti</loc><lastmod>2026-07-23</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/web-design</loc><lastmod>2026-08-25</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/web-app</loc><lastmod>2026-08-25</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/social-media-marketing</loc><lastmod>2026-07-23</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/campagne-ads</loc><lastmod>2026-07-23</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/seo</loc><lastmod>2026-07-23</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/email-marketing</loc><lastmod>2026-07-23</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/automazione-email</loc><lastmod>2026-07-23</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/agente-vocale</loc><lastmod>2026-07-23</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/chatbot</loc><lastmod>2026-07-23</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/video-ai</loc><lastmod>2026-08-25</lastmod></url>
-  <url><loc>https://[DOMINIO]/servizi/ottimizzazione-sito</loc><lastmod>2026-07-23</lastmod></url>
+
+  <!-- I lastmod di questa tornata sono 2026-09-17 perche' quel giorno ogni
+       pagina e' stata toccata davvero: title e description riscritti, font
+       passati in locale, intestazioni del footer portate ad h2 e blocco dei
+       servizi correlati riequilibrato. Non e' una data messa per far sembrare
+       il sito fresco: se una pagina non cambia, questa data non va toccata. -->
+  <url><loc>https://varcoagency.it/</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/chi-siamo</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/contatti</loc><lastmod>2026-09-17</lastmod></url>
+  <!-- 2026-09-18: /servizi, la pagina che raccoglie gli undici servizi. Prima
+       il menu puntava a /#servizi, un'ancora sulla home: un frammento non e'
+       una pagina, quindi il cluster non aveva un URL proprio e il gradino
+       centrale del breadcrumb delle undici pagine servizio dichiarava lo
+       stesso documento della posizione 1. I lastmod delle altre righe non
+       sono stati toccati: su quelle pagine e' cambiato solo un href di
+       navigazione, e non e' un motivo per dirle nuove. -->
+  <url><loc>https://varcoagency.it/servizi</loc><lastmod>2026-09-18</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/web-design</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/web-app</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/ottimizzazione-sito</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/social-media-marketing</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/campagne-ads</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/seo</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/video-ai</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/email-marketing</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/automazione-email</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/agente-vocale</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/servizi/chatbot</loc><lastmod>2026-09-17</lastmod></url>
+
+  <!-- Pagine legali. Erano fuori dalla sitemap pur diventando indicizzabili
+       al go-live: 17 pagine riaperte contro 14 elencate. Non e' un danno, ma
+       sono pagine che si vuole far trovare da chi le cerca, e cosi' Search
+       Console smette di segnalare lo scarto fra le due liste. -->
+  <url><loc>https://varcoagency.it/legal/privacy</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/legal/cookie</loc><lastmod>2026-09-17</lastmod></url>
+  <url><loc>https://varcoagency.it/legal/termini</loc><lastmod>2026-08-31</lastmod></url>
 </urlset>

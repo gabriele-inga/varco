@@ -1,0 +1,30 @@
+LIBRERIE DI TERZE PARTI OSPITATE IN LOCALE
+==========================================
+
+  gsap.min.js
+  ScrollTrigger.min.js
+      GSAP 3.12.5 — Copyright 2024, GreenSock
+      https://gsap.com
+      Licenza GSAP "standard, no charge":
+      https://gsap.com/standard-license/
+
+Usati da js/problem-motion.js per l'animazione della sezione "problema"
+nella home, l'unico punto del sito che dipende da GSAP.
+
+Perche' sono qui e non su un CDN: la Content-Security-Policy del sito
+dichiara script-src 'self'. Caricandoli da cdnjs.cloudflare.com il browser
+li bloccava, problem-motion.js trovava window.gsap assente e usciva senza
+errori visibili. Portarli in locale fa funzionare l'animazione, tiene la
+CSP stretta e toglie un'origine di terze parti dal percorso critico e
+dall'elenco dei destinatari nella cookie policy.
+
+La licenza standard GSAP copre l'uso su un sito accessibile a chiunque,
+senza costi, compreso l'uso commerciale. Richiede una licenza a pagamento
+solo per prodotti in cui l'accesso all'animazione e' venduto agli utenti
+finali (per esempio un editor in abbonamento): non e' il caso di questo
+sito. ScrollTrigger fa parte della dotazione gratuita, non dei plugin
+riservati a Club GreenSock.
+
+Per aggiornarli, scaricare la stessa coppia di file dalla versione
+desiderata e allineare il numero di versione qui e nel commento in
+index.html.

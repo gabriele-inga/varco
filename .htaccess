@@ -25,11 +25,65 @@ ErrorDocument 404 /404.html
   # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 
   # Content-Security-Policy. Le origini elencate sono esattamente quelle che
-  # il sito usa: i font di Google e il POST del modulo verso Formspree.
+  # il sito usa: dal 2026-09-17 resta solo il POST del modulo verso Formspree.
+  # I font stavano su fonts.googleapis.com / fonts.gstatic.com; ora sono in
+  # assets/fonts/, quindi le due eccezioni sono state tolte e style-src e
+  # font-src non escono piu' dall'origine del sito.
   # 'unsafe-inline' sugli script serve per lo skeleton di caricamento e per i
   # blocchi JSON-LD, entrambi inline nell'head di ogni pagina.
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
 </IfModule>
+
+# ---- Host e schema canonici -------------------------------------------
+# Senza queste regole http://, https://, www. e non-www rispondono tutti 200:
+# fino a quattro URL per ogni pagina, mentre il canonical ne dichiara uno
+# solo. Crawl budget disperso e segnali diluiti proprio nella finestra in cui
+# Google si forma la prima impressione del dominio.
+#
+# Stanno PRIMA delle regole di percorso: un redirect di percorso eseguito su
+# un host sbagliato finirebbe comunque sull'host sbagliato, e sommerebbe due
+# salti invece di uno.
+#
+# Sono scritte senza nominare varcoagency.it di proposito: valgono anche se
+# il dominio cambia, e non lasciano un segnaposto in piu' da ricordarsi.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # www.esempio.it -> esempio.it, gia' in https: un salto solo anche
+  # partendo da http://www.
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+  # http:// -> https://
+  # La seconda condizione serve dietro un reverse proxy o un CDN che chiude
+  # lui il TLS: li' %{HTTPS} e' "off" anche se il visitatore e' gia' in
+  # HTTPS, e senza il controllo il sito si redirigerebbe all'infinito.
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ---- CSP della sola pagina dell'agente vocale ------------------------------
+# servizi/agente-vocale.html incorpora il widget di Retell, che e' per forza
+# di cose un pezzo di terze parti: carica il proprio script da
+# dashboard.retellai.com, tira dentro i propri caratteri da Google Fonts e
+# apre un canale verso l'API per la conversazione. Con la CSP del sito il
+# browser lo bloccava, e un widget bloccato non protesta: semplicemente non
+# compare.
+#
+# Le eccezioni stanno qui, su un solo file, invece che nella CSP generale:
+# le altre 23 pagine restano su 'self' e non pagano il prezzo di sicurezza di
+# una funzione che non usano.
+#
+# DA VERIFICARE PRIMA DEL LANCIO: aprire la pagina in produzione, avviare una
+# conversazione vera e guardare la console. Se compare un errore di CSP, il
+# dominio che nomina va aggiunto qui — le origini che Retell contatta a
+# conversazione avviata non sono documentate e non si vedono a widget fermo.
+<FilesMatch "^agente-vocale\.html$">
+  <IfModule mod_headers.c>
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://dashboard.retellai.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://dashboard.retellai.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://dashboard.retellai.com; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self' https://formspree.io https://api.retellai.com https://dashboard.retellai.com wss://api.retellai.com; form-action 'self' https://formspree.io; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+  </IfModule>
+</FilesMatch>
 
 # ---- URL puliti --------------------------------------------------------
 # Parita' con vercel.json (cleanUrls: true): i link interni del sito non
@@ -60,8 +114,11 @@ ErrorDocument 404 /404.html
   </IfModule>
 </FilesMatch>
 
-# robots.txt e sitemap.xml sono l'eccezione: devono restare pubblici.
-<FilesMatch "^(robots\.txt|sitemap\.xml)$">
+# robots.txt, sitemap.xml e llms.txt sono l'eccezione: devono restare
+# pubblici. llms.txt e' scritto apposta per i crawler dei modelli
+# linguistici — senza questa riga la regola qui sopra lo nega come
+# qualunque altro .txt, e il file esiste ma risponde 403.
+<FilesMatch "^(robots\.txt|sitemap\.xml|llms\.txt)$">
   <IfModule mod_authz_core.c>
     Require all granted
   </IfModule>
@@ -110,9 +167,13 @@ Options -Indexes
 </IfModule>
 
 # ---- HTTPS ------------------------------------------------------------------
-# Da attivare quando il certificato e' installato sul dominio definitivo.
-# <IfModule mod_rewrite.c>
-#   RewriteEngine On
-#   RewriteCond %{HTTPS} off
-#   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-# </IfModule>
+# Il redirect verso https:// non e' piu' qui: e' salito in cima, insieme alla
+# regola www -> non-www, perche' l'ordine conta e le due cose vanno decise
+# nello stesso punto. Cerca "Host e schema canonici".
+#
+# Resta da fare a mano una cosa sola, e va fatta DOPO: attivare HSTS,
+# decommentando la riga Strict-Transport-Security nel blocco delle
+# intestazioni di sicurezza. Prima serve aprire https://varcoagency.it in un
+# browser e vedere il lucchetto. Attivarlo con il certificato non ancora
+# valido significa chiudere fuori i visitatori per un anno, e il browser non
+# accetta ripensamenti prima della scadenza.

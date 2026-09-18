@@ -7,8 +7,12 @@
 <meta name="robots" content="noindex, follow">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+<!-- Font serviti dalla stessa origine: il blocco @font-face sta in testa a
+     css/style.css. Questi due preload sono i tondi del primo schermo, che
+     altrimenti il browser scoprirebbe solo dopo aver letto tutto il CSS. -->
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/inter-normal-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-mono-normal-latin.woff2" crossorigin>
+<link rel="stylesheet" href="/css/style.min.css">
 <!-- PERCORSI ASSOLUTI, NON RELATIVI.
      Apache serve questo file con ErrorDocument mantenendo nella barra
      l'indirizzo sbagliato: una 404 su /servizi/vecchia-pagina
@@ -27,7 +31,7 @@
     </a>
     <div class="nav-cta">
       <nav class="nav-desktop" aria-label="Navigazione principale">
-        <a href="/" class="">Home</a><a href="/#servizi">Servizi</a><a href="/chi-siamo">Chi siamo</a>
+        <a href="/" class="">Home</a><a href="/servizi">Servizi</a><a href="/chi-siamo">Chi siamo</a>
       </nav>
       <a href="/contatti" class="btn btn-primary">Prenota audit gratuito</a>
       <button class="nav-toggle" aria-label="Apri il menu" aria-expanded="false">
@@ -38,7 +42,7 @@
 </header>
 <div class="mobile-nav" id="mobile-nav" inert>
   <div class="container">
-    <a href="/contatti" class="mobile-nav-cta">Prenota audit gratuito</a><a href="/">Home</a><a href="/#servizi">Servizi</a><a href="/chi-siamo">Chi siamo</a>
+    <a href="/contatti" class="mobile-nav-cta">Prenota audit gratuito</a><a href="/">Home</a><a href="/servizi">Servizi</a><a href="/chi-siamo">Chi siamo</a>
     <div class="mobile-sub">
       <a href="/contatti">Contatti</a>
       <a href="tel:+393888648509">+39 388 864 8509</a>
@@ -73,7 +77,7 @@
       <div class="nf-routes">
         <h2 class="nf-routes-title">Dove stavi andando?</h2>
         <div class="related-services">
-          <a class="related-service" href="/#servizi">
+          <a class="related-service" href="/servizi">
             <span class="relsvc-name">Tutti i servizi</span>
             <svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg>
           </a>
@@ -106,25 +110,25 @@
     </div>
     <div class="footer-grid">
       <div class="footer-col footer-col-social">
-        <h4>Social</h4>
+        <h2 class="footer-col-title">Social</h2>
         <a href="https://www.instagram.com/varcoagency/" target="_blank" rel="noopener">Instagram</a>
         <a href="https://www.facebook.com/profile.php?id=61586528656504" target="_blank" rel="noopener">Facebook</a>
         <a href="https://www.linkedin.com/in/robert-marciuc-a192ab352/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
       <div class="footer-col">
-        <h4>Sito</h4>
+        <h2 class="footer-col-title">Sito</h2>
         <a href="/#trasformazione">Trasformazione 360°</a>
-        <a href="/#servizi">Servizi</a>
+        <a href="/servizi">Servizi</a>
         <a href="/chi-siamo">Chi siamo</a>
       </div>
       <div class="footer-col">
-        <h4>Contatti</h4>
+        <h2 class="footer-col-title">Contatti</h2>
         <a href="tel:+393888648509">+39 388 864 8509</a>
         <a href="https://wa.me/393888648509" target="_blank" rel="noopener">WhatsApp</a>
         <a href="/contatti">Modulo di contatto</a>
       </div>
       <div class="footer-col">
-        <h4>Note legali</h4>
+        <h2 class="footer-col-title">Note legali</h2>
         <a href="/legal/privacy">Privacy policy</a>
         <a href="/legal/cookie">Cookie policy</a>
         <a href="/legal/termini">Termini e condizioni</a>

@@ -5,25 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Automazione Email: flow, CRM e lead scoring | Varco</title>
 <meta name="description" content="Automazioni email per welcome series, carrello abbandonato, post-acquisto e re-engagement, con trigger comportamentali e integrazione CRM.">
-<link rel="canonical" href="https://[DOMINIO]/servizi/automazione-email">
-<!-- SEGNAPOSTO-DOMINIO: noindex finche' canonical e og:url puntano a
-     https://[DOMINIO]. Lo rimette a "index, follow" lo script
-     tools/go-live.mjs quando gli passi il dominio vero. -->
-<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://varcoagency.it/servizi/automazione-email">
+<meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Automazione Email: flow, CRM e lead scoring | Varco">
 <meta property="og:description" content="Automazioni email per welcome series, carrello abbandonato, post-acquisto e re-engagement, con trigger comportamentali e integrazione CRM.">
-<meta property="og:image" content="https://[DOMINIO]/assets/og-image.png">
+<meta property="og:image" content="https://varcoagency.it/assets/og-image.png">
 <meta property="og:image:alt" content="Varco — Agenzia di trasformazione digitale">
-<meta property="og:url" content="https://[DOMINIO]/servizi/automazione-email">
+<meta property="og:url" content="https://varcoagency.it/servizi/automazione-email">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Automazione Email: flow, CRM e lead scoring | Varco">
 <meta name="twitter:description" content="Automazioni email per welcome series, carrello abbandonato, post-acquisto e re-engagement, con trigger comportamentali e integrazione CRM.">
-<meta name="twitter:image" content="https://[DOMINIO]/assets/og-image.png">
+<meta name="twitter:image" content="https://varcoagency.it/assets/og-image.png">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 <link rel="icon" type="image/png" href="../assets/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css">
+<!-- Font serviti dalla stessa origine: il blocco @font-face sta in testa a
+     css/style.css. Questi due preload sono i tondi del primo schermo, che
+     altrimenti il browser scoprirebbe solo dopo aver letto tutto il CSS. -->
+<link rel="preload" as="font" type="font/woff2" href="../assets/fonts/inter-normal-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../assets/fonts/jetbrains-mono-normal-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../css/style.min.css">
 <!-- Skeleton di caricamento: riempie la finestra fra il primo byte e il primo
      paint utile. Inline e senza richieste, non ritarda nulla; su cache calda
      non si vede (entra a 180ms, se la pagina e' pronta prima viene rimosso
@@ -32,8 +33,8 @@
 function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function(){requestAnimationFrame(off)};f&&f.then?f.then(go,go):go()}if(d.readyState!=="loading"){ready()}else{d.addEventListener("DOMContentLoaded",ready)}setTimeout(off,4000)})();</script>
 
 
-<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Organization", "name": "Varco", "url": "https://[DOMINIO]", "logo": "https://[DOMINIO]/assets/logo/logo.svg", "description": "Agenzia italiana di trasformazione digitale: web design, marketing, automazioni AI e ottimizzazione per PMI.", "telephone": "+393888648509", "sameAs": ["https://www.facebook.com/profile.php?id=61586528656504", "https://www.linkedin.com/in/robert-marciuc-a192ab352/"]}, {"@context": "https://schema.org", "@type": "Service", "serviceType": "Automazione E-Mail", "provider": {"@type": "Organization", "name": "Varco", "url": "https://[DOMINIO]"}, "areaServed": "IT", "description": "Automazioni email per welcome series, carrello abbandonato, post-acquisto e re-engagement, con trigger comportamentali e integrazione CRM."}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Un'automazione sostituisce il contatto umano?", "acceptedAnswer": {"@type": "Answer", "text": "No: copre la prima risposta e la qualificazione, poi consegna il contatto caldo a una persona nel momento in cui serve davvero parlarsi."}}, {"@type": "Question", "name": "Serve un CRM per iniziare?", "acceptedAnswer": {"@type": "Answer", "text": "Aiuta, ma non è indispensabile: si parte dalla piattaforma email e il CRM si aggiunge quando i volumi lo giustificano."}}, {"@type": "Question", "name": "Quanto tempo richiede impostare i flow principali?", "acceptedAnswer": {"@type": "Answer", "text": "Le automazioni di base, benvenuto e carrello abbandonato, sono operative in una o due settimane dal via libera sui testi."}}, {"@type": "Question", "name": "Cosa succede se un cliente risponde a un'email automatica?", "acceptedAnswer": {"@type": "Answer", "text": "La risposta arriva a una persona del tuo team: l'automazione gestisce la partenza, non la conversazione una volta che è cominciata."}}]}]</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://[DOMINIO]/"}, {"@type": "ListItem", "position": 2, "name": "Servizi", "item": "https://[DOMINIO]/#servizi"}, {"@type": "ListItem", "position": 3, "name": "Automazione E-Mail", "item": "https://[DOMINIO]/servizi/automazione-email"}]}</script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Organization", "name": "Varco", "url": "https://varcoagency.it", "logo": "https://varcoagency.it/assets/logo/logo.svg", "description": "Agenzia italiana di trasformazione digitale: web design, marketing, automazioni AI e ottimizzazione per PMI.", "telephone": "+393888648509", "email": "mrigserviziweb@gmail.com", "sameAs": ["https://www.instagram.com/varcoagency/", "https://www.facebook.com/profile.php?id=61586528656504"], "areaServed": {"@type": "Country", "name": "IT"}, "founder": {"@type": "Person", "name": "Gabriele Ingaramo"}}, {"@context": "https://schema.org", "@type": "Service", "serviceType": "Automazione E-Mail", "provider": {"@type": "Organization", "name": "Varco", "url": "https://varcoagency.it"}, "areaServed": "IT", "description": "Automazioni email per welcome series, carrello abbandonato, post-acquisto e re-engagement, con trigger comportamentali e integrazione CRM."}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Un'automazione sostituisce il contatto umano?", "acceptedAnswer": {"@type": "Answer", "text": "No: copre la prima risposta e la qualificazione, poi consegna il contatto caldo a una persona nel momento in cui serve davvero parlarsi."}}, {"@type": "Question", "name": "Serve un CRM per iniziare?", "acceptedAnswer": {"@type": "Answer", "text": "Aiuta, ma non è indispensabile: si parte dalla piattaforma email e il CRM si aggiunge quando i volumi lo giustificano."}}, {"@type": "Question", "name": "Quanto tempo richiede impostare i flow principali?", "acceptedAnswer": {"@type": "Answer", "text": "Le automazioni di base, benvenuto e carrello abbandonato, sono operative in una o due settimane dal via libera sui testi."}}, {"@type": "Question", "name": "Cosa succede se un cliente risponde a un'email automatica?", "acceptedAnswer": {"@type": "Answer", "text": "La risposta arriva a una persona del tuo team: l'automazione gestisce la partenza, non la conversazione una volta che è cominciata."}}]}]</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://varcoagency.it/"}, {"@type": "ListItem", "position": 2, "name": "Servizi", "item": "https://varcoagency.it/servizi"}, {"@type": "ListItem", "position": 3, "name": "Automazione E-Mail", "item": "https://varcoagency.it/servizi/automazione-email"}]}</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Vai al contenuto</a>
@@ -44,7 +45,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
     </a>
     <div class="nav-cta">
       <nav class="nav-desktop" aria-label="Navigazione principale">
-        <a href="/" class="">Home</a><a href="/#servizi" class="active">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="/casi-studio" class="">Casi studio</a> --><a href="/chi-siamo" class="">Chi siamo</a>
+        <a href="/" class="">Home</a><a href="/servizi" class="active">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="/casi-studio" class="">Casi studio</a> --><a href="/chi-siamo" class="">Chi siamo</a>
       </nav>
       <a href="/contatti" class="btn btn-primary">Prenota audit gratuito</a>
       <button class="nav-toggle" aria-label="Apri il menu" aria-expanded="false">
@@ -55,7 +56,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
 </header>
 <div class="mobile-nav" id="mobile-nav" inert>
   <div class="container">
-    <a href="/contatti" class="mobile-nav-cta">Prenota audit gratuito</a><a href="/">Home</a><a href="/#servizi">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="/casi-studio">Casi studio</a> --><a href="/chi-siamo">Chi siamo</a>
+    <a href="/contatti" class="mobile-nav-cta">Prenota audit gratuito</a><a href="/">Home</a><a href="/servizi">Servizi</a><!-- CASI-STUDIO-NASCOSTO: <a href="/casi-studio">Casi studio</a> --><a href="/chi-siamo">Chi siamo</a>
     <div class="mobile-sub">
       <a href="/contatti">Contatti</a>
       <a href="tel:+393888648509">+39 388 864 8509</a>
@@ -100,7 +101,7 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
     <div class="stage-layer stage-layer--hero service-hero service-hero--stage" data-hero-sheet>
       <canvas class="hero-shader" data-hero-shader aria-hidden="true"></canvas>
       <div class="container hero-parallax" data-hero-parallax>
-        <div class="breadcrumb"><a href="/">Home</a> / <a href="/#servizi">Servizi</a> / Automazione E-Mail</div>
+        <div class="breadcrumb"><a href="/">Home</a> / <a href="/servizi">Servizi</a> / Automazione E-Mail</div>
         <div class="hero-content">
           <div class="tag-row"><span class="tag">ActiveCampaign</span><span class="tag">Klaviyo</span><span class="tag">HubSpot</span><span class="tag">Zapier</span></div>
           <h1>Automazione E-Mail</h1>
@@ -233,7 +234,8 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
 <section class="section-tight">
   <div class="container reveal">
     <div class="eyebrow">Altri servizi</div>
-    <div class="related-services"><a class="related-service" href="/servizi/web-design"><span class="relsvc-index">01</span><span class="relsvc-name">Web Design</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a><a class="related-service" href="/servizi/social-media-marketing"><span class="relsvc-index">04</span><span class="relsvc-name">Social Media Marketing</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a><a class="related-service" href="/servizi/campagne-ads"><span class="relsvc-index">05</span><span class="relsvc-name">Campagne Ads</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a><a class="related-service" href="/servizi/seo"><span class="relsvc-index">06</span><span class="relsvc-name">Ottimizzazione SEO</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a><a class="related-service" href="/servizi/email-marketing"><span class="relsvc-index">08</span><span class="relsvc-name">Email Marketing</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a><a class="related-service" href="/servizi/agente-vocale"><span class="relsvc-index">10</span><span class="relsvc-name">Agente Vocale per Chiamate</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a></div>
+    <div class="related-services"><a class="related-service" href="/servizi/web-app"><span class="relsvc-index">02</span><span class="relsvc-name">Web App</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a><a class="related-service" href="/servizi/social-media-marketing"><span class="relsvc-index">04</span><span class="relsvc-name">Social Media Marketing</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a><a class="related-service" href="/servizi/campagne-ads"><span class="relsvc-index">05</span><span class="relsvc-name">Campagne Ads</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a><a class="related-service" href="/servizi/email-marketing"><span class="relsvc-index">08</span><span class="relsvc-name">Email Marketing</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a><a class="related-service" href="/servizi/agente-vocale"><span class="relsvc-index">10</span><span class="relsvc-name">Agente Vocale per Chiamate</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a><a class="related-service" href="/servizi/chatbot"><span class="relsvc-index">11</span><span class="relsvc-name">Chatbot</span><svg class="arrow-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.333 8h9.334m0 0L8 3.333M12.667 8L8 12.667"/></svg></a></div>
+    <p class="related-all"><a href="/servizi">Vedi tutti gli undici servizi, raggruppati per problema</a></p>
   </div>
 </section>
 
@@ -257,25 +259,26 @@ function ready(){var f=d.fonts&&d.fonts.ready?d.fonts.ready:null;var go=function
     </div>
     <div class="footer-grid">
       <div class="footer-col footer-col-social">
-        <h4>Social</h4>
+        <h2 class="footer-col-title">Social</h2>
+        <a href="https://www.instagram.com/varcoagency/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/></svg>Instagram</a>
         <a href="https://www.facebook.com/profile.php?id=61586528656504" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M14 9h3V5h-3c-2.2 0-4 1.8-4 4v2H7v4h3v6h4v-6h3l1-4h-4V9c0-.6.4-1 1-1z"/></svg>Facebook</a>
         <a href="https://www.linkedin.com/in/robert-marciuc-a192ab352/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="7.5" y1="10.5" x2="7.5" y2="17"/><circle cx="7.5" cy="7" r="0.9" fill="currentColor" stroke="none"/><path d="M11.5 17v-4c0-1.4 1-2.5 2.5-2.5s2.5 1.1 2.5 2.5v4"/><line x1="11.5" y1="10.5" x2="11.5" y2="17"/></svg>LinkedIn</a>
       </div>
 <div class="footer-col">
-        <h4>Sito</h4>
+        <h2 class="footer-col-title">Sito</h2>
         <a href="/#trasformazione">Trasformazione 360°</a>
-        <a href="/#servizi">Servizi</a>
+        <a href="/servizi">Servizi</a>
         <!-- CASI-STUDIO-NASCOSTO: <a href="/casi-studio">Casi studio</a> -->
         <a href="/chi-siamo">Chi siamo</a>
       </div>
       <div class="footer-col">
-        <h4>Contatti</h4>
+        <h2 class="footer-col-title">Contatti</h2>
         <a href="tel:+393888648509">+39 388 864 8509</a>
         <a href="https://wa.me/393888648509" target="_blank" rel="noopener">WhatsApp</a>
         <a href="/contatti">Modulo di contatto</a>
       </div>
       <div class="footer-col">
-        <h4>Note legali</h4>
+        <h2 class="footer-col-title">Note legali</h2>
         <a href="/legal/privacy">Privacy policy</a>
         <a href="/legal/cookie">Cookie policy</a>
         <a href="/legal/termini">Termini e condizioni</a>

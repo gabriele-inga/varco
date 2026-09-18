@@ -341,23 +341,271 @@
     });
   }
 
-  /* Mascotte nel buco della prima colonna servizi (vedi .services-mascot
-     nel CSS): cammina di default (state="walk" gia' nell'HTML), e al
-     passaggio del cursore si ferma e passa a "idle" — l'antenna che
-     oscilla e il battito di ciglia gia' disegnati in js/chat.js per lo
-     stesso <sprite-mate>, qui letti come "si e' accorta di te". Solo dove
-     l'hover esiste davvero: su touch il CSS la nasconde comunque sotto i
-     980px, ma il listener non ha motivo di esistere se non c'e' un mouse. */
-  var mascot = document.querySelector(".services-mascot");
-  if (mascot && window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    mascot.addEventListener("pointerenter", function () {
-      mascot.state = "idle";
-      mascot.classList.add("is-noticing");
+  /* ============================================================
+     La mascotte che cammina sulla roadmap
+     ============================================================
+     La stessa <sprite-mate> che fino a ieri pattugliava il buco della
+     sezione servizi: quella sezione ha lasciato il posto alla FAQ, e la
+     mascotte si e' spostata sul tracciato della roadmap.
+
+     "Segue la linea" non e' un'approssimazione: la posizione a ogni frame
+     esce da getPointAtLength() sul <path> vero, quindi e' la curva stessa a
+     dire dove sta. Lo stesso vale per i cinque punti — i loro cerchi stanno
+     sul tracciato entro 1.6 unita' utente su un viewBox alto 90 (~1.5px alla
+     scala di render, dentro il raggio 5 del cerchio), quindi non c'e' niente
+     da spostare perche' ci passi sopra davvero.
+
+     La x del tracciato e' monotona crescente su tutta la lunghezza: per ogni
+     cerchio esiste una sola ascissa curvilinea, e la ricerca binaria qui
+     sotto converge senza ambiguita'.
+
+     Ritmo: cammina fra un punto e l'altro, si ferma sul punto e passa a
+     "idle" (antenne che oscillano, battito di ciglia — gia' disegnati in
+     js/chat.js) mentre il passaggio corrispondente resta acceso, poi
+     riparte. Arrivata in fondo torna indietro, in loop.
+
+     Tre modi in cui si ferma, tutti obbligatori:
+       - il cursore vince sempre. Mouse o focus sulla roadmap e la camminata
+         si ferma, .is-walked si spegne e il visitatore resta padrone di cosa
+         sta guardando. Un'animazione che si riaccende sotto il dito di chi
+         legge e' un difetto, non una firma;
+       - fuori dallo schermo il loop rAF non gira;
+       - con prefers-reduced-motion non parte proprio, e .is-static apre tutti
+         i paragrafi: erano nascosti in attesa di un hover che non arrivera'.
+
+     Deroga registrata a MOTION_SYSTEM.md 4.4, la seconda dopo il campo
+     shader delle hero. Vedi .route-mate in css/style.css e DESIGN.md. */
+  var routeEl = document.querySelector(".route");
+  var routePath = routeEl && routeEl.querySelector("path");
+  var routeSvg = routeEl && routeEl.querySelector("svg");
+  var routeStepsEl = document.querySelector(".route-steps");
+  var routeReduce = window.matchMedia
+    ? window.matchMedia("(prefers-reduced-motion: reduce)")
+    : { matches: false };
+
+  if (routeStepsEl && routeReduce.matches) routeStepsEl.classList.add("is-static");
+
+  if (routePath && routeSvg && routeStepsEl && roadmapStepEls.length &&
+      typeof routePath.getPointAtLength === "function" && !routeReduce.matches) {
+
+    var TOTAL = routePath.getTotalLength();
+    var SPEED = 85;      /* unita' utente al secondo */
+    var DWELL = 1500;    /* sosta sul punto, ms */
+    var WINDOW = 95;     /* entro quanto dal punto il passaggio resta acceso */
+
+    /* Ascissa curvilinea di ogni cerchio, per ricerca binaria sulla x. */
+    var stops = [];
+    Array.prototype.forEach.call(routeSvg.querySelectorAll("circle"), function (c) {
+      var targetX = parseFloat(c.getAttribute("cx"));
+      var lo = 0, hi = TOTAL, mid = 0;
+      for (var k = 0; k < 40; k++) {
+        mid = (lo + hi) / 2;
+        if (routePath.getPointAtLength(mid).x < targetX) lo = mid; else hi = mid;
+      }
+      stops.push(mid);
     });
-    mascot.addEventListener("pointerleave", function () {
-      mascot.state = "walk";
-      mascot.classList.remove("is-noticing");
-    });
+
+    if (stops.length >= 2) {
+      /* Due elementi invece di uno. Il contenitore lo sposta il JS a ogni
+         frame; lo sprite dentro porta soltanto il verso di marcia. Serve
+         perche' una transizione CSS su transform, se stesse sullo stesso
+         elemento, frenerebbe anche la posizione: la camminata diventerebbe
+         elastica per poter animare la giravolta. Separati, la giravolta si
+         anima (vedi .route-mate-sprite nel CSS) e la posizione resta esatta. */
+      var walker = document.createElement("span");
+      walker.className = "route-mate";
+      walker.setAttribute("aria-hidden", "true");
+
+      var mate = document.createElement("sprite-mate");
+      mate.className = "route-mate-sprite";
+      /* Nasce ferma sul primo punto, quindi "idle": partire con l'animazione
+         del passo mentre sta immobile e' il dettaglio che fa sembrare finta
+         tutta la sequenza. */
+      mate.setAttribute("state", "idle");
+      mate.setAttribute("scale", "2");
+
+      walker.appendChild(mate);
+      routeEl.appendChild(walker);
+
+      var mateW = 28, mateH = 46;   /* 14x23 della griglia a scale 2; riletti dal canvas */
+      var pos = stops[0];
+      var dir = 1;
+      var current = 0;              /* il punto su cui si trova adesso */
+      var target = 0;               /* il punto verso cui sta camminando */
+      var resting = DWELL;          /* parte da ferma sul primo punto */
+      var lit = -1;
+      var raf = 0, last = 0;
+      var onScreen = false, userBusy = false;
+
+      var place = function () {
+        var m = routeSvg.getScreenCTM();
+        if (!m) return;
+        var p = routePath.getPointAtLength(pos).matrixTransform(m);
+        var box = routeEl.getBoundingClientRect();
+        /* i piedi sul tracciato, non il centro del riquadro */
+        walker.style.transform = "translate3d(" +
+          Math.round(p.x - box.left - mateW / 2) + "px," +
+          Math.round(p.y - box.top - mateH) + "px,0)";
+      };
+
+      /* Il verso di marcia. Verso destra e' specchiata, verso sinistra no:
+         guarda sempre dove sta andando invece di camminare all'indietro per
+         meta' del giro. Lo specchio e' esatto perche' il corpo occupa tutte
+         e 14 le colonne della griglia, senza colonne vuote ai lati: il
+         centro del riquadro e' anche il centro del corpo, quindi ribaltare
+         attorno a transform-origin 50% non la sposta di un pixel.
+         Il verso cambia solo ai due capi della fila, cioe' mentre e' ferma
+         sul punto: si gira sul posto e poi riparte. */
+      var facing = 0;
+      var face = function () {
+        if (facing === dir) return;
+        facing = dir;
+        mate.style.transform = dir > 0 ? "scaleX(-1)" : "scaleX(1)";
+      };
+
+      var light = function (index) {
+        if (index === lit) return;
+        lit = index;
+        Array.prototype.forEach.call(roadmapStepEls, function (step, i) {
+          step.classList.toggle("is-walked", i === index);
+        });
+      };
+
+      var nearestLit = function () {
+        var best = -1, bestD = WINDOW;
+        for (var i = 0; i < stops.length; i++) {
+          var d = Math.abs(pos - stops[i]);
+          if (d < bestD) { bestD = d; best = i; }
+        }
+        return best;
+      };
+
+      var frame = function (now) {
+        var dt = Math.min(64, now - last);
+        last = now;
+
+        if (resting > 0) {
+          resting -= dt;
+          if (resting <= 0) {
+            /* Si riparte verso il punto successivo nella direzione di marcia.
+               In fondo alla fila si gira e si torna indietro: e' da qui che
+               nasce il loop avanti-e-indietro, non da un reset alla partenza. */
+            if (current + dir < 0 || current + dir > stops.length - 1) dir = -dir;
+            target = current + dir;
+            mate.setAttribute("state", "walk");
+          }
+        } else {
+          var goal = stops[target];
+          var step = SPEED * dt / 1000;
+          if (Math.abs(goal - pos) <= step) {
+            pos = goal;
+            current = target;
+            resting = DWELL;
+            mate.setAttribute("state", "idle");
+          } else {
+            pos += (goal > pos ? 1 : -1) * step;
+          }
+        }
+
+        place();
+        face();
+        light(nearestLit());
+        raf = requestAnimationFrame(frame);
+      };
+
+      /* Sotto i 760px .route e' display:none e al suo posto c'e' la striscia
+         che si scorre col dito: li' non c'e' nessuna linea su cui camminare.
+         La condizione sta dentro sync() invece che attorno a tutto il blocco
+         cosi' un ridimensionamento oltre il breakpoint accende e spegne la
+         camminata da solo, senza doverla ricostruire. */
+      var wide = window.matchMedia("(min-width: 761px)");
+
+      var sync = function () {
+        var shouldRun = onScreen && !userBusy && wide.matches;
+        if (shouldRun && !raf) {
+          last = performance.now();
+          raf = requestAnimationFrame(frame);
+        } else if (!shouldRun && raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+          if (!wide.matches) light(-1);
+        }
+      };
+
+      if (wide.addEventListener) wide.addEventListener("change", sync);
+      else if (wide.addListener) wide.addListener(sync);
+
+      /* Il cursore vince sempre: mentre il visitatore e' sulla roadmap la
+         mascotte non tocca niente e non contende a nessuno il passaggio che
+         sta leggendo. */
+      var hold = function () {
+        userBusy = true;
+        light(-1);
+        mate.setAttribute("state", "idle");
+        sync();
+      };
+      var release = function () {
+        userBusy = false;
+        if (resting <= 0) mate.setAttribute("state", "walk");
+        sync();
+      };
+      if (roadmapWrap) {
+        roadmapWrap.addEventListener("pointerenter", hold);
+        roadmapWrap.addEventListener("pointerleave", release);
+        roadmapWrap.addEventListener("focusin", hold);
+        roadmapWrap.addEventListener("focusout", release);
+      }
+
+      if ("IntersectionObserver" in window && roadmapWrap) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { onScreen = e.isIntersecting; });
+          sync();
+        }, { threshold: 0 }).observe(roadmapWrap);
+      } else {
+        onScreen = true;
+      }
+
+      /* Il canvas nasce nel connectedCallback di <sprite-mate>, che chat.js
+         definisce in uno script defer: a questo punto l'elemento non e'
+         ancora stato promosso. Si aspetta la definizione invece di
+         indovinarne le misure. */
+      var ready = function () {
+        var cv = mate.querySelector("canvas");
+        if (cv) { mateW = cv.width; mateH = cv.height; }
+        place();
+        face();   /* parte gia' girata verso destra, che e' dove andra' */
+        sync();
+      };
+      if (window.customElements && customElements.whenDefined) {
+        customElements.whenDefined("sprite-mate").then(ready, ready);
+      } else {
+        ready();
+      }
+    }
+  }
+
+  /* Roadmap su mobile: un solo scivolamento per dire che la fila si trascina.
+     Parte quando la roadmap entra in campo e non si ripete mai — e non parte
+     affatto se il visitatore ha gia' scorso da solo, perche' a quel punto
+     spiegargli il gesto che ha appena fatto e' rumore. */
+  if (roadmapWrap && routeStepsEl && !routeReduce.matches &&
+      window.matchMedia && window.matchMedia("(max-width: 760px)").matches &&
+      "IntersectionObserver" in window) {
+    var hintSpent = false;
+    var spendHint = function () { hintSpent = true; };
+    roadmapWrap.addEventListener("scroll", spendHint, { once: true, passive: true });
+    roadmapWrap.addEventListener("touchstart", spendHint, { once: true, passive: true });
+
+    var hintIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        hintIO.disconnect();
+        if (hintSpent || roadmapWrap.scrollLeft > 4) return;
+        routeStepsEl.classList.add("is-hinting");
+        setTimeout(function () { routeStepsEl.classList.remove("is-hinting"); }, 1300);
+      });
+    }, { threshold: 0.35 });
+    hintIO.observe(roadmapWrap);
   }
 
   /* Select personalizzata — vedi .select nel CSS.

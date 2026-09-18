@@ -53,10 +53,20 @@ const pagine = walk(ROOT, (n) => n.endsWith(".html"));
 const testi = walk(ROOT, (n) => /\.(html|xml|txt|css|js)$/.test(n));
 
 // ---- 1. Segnaposto ---------------------------------------------------------
-const SEGNAPOSTO = ["[DOMINIO]", "[EMAIL]", "[NOME E COGNOME DEL TITOLARE]", "[INDIRIZZO", "[CODICE FISCALE]", "[P.IVA]"];
+// [HOSTING PROVIDER] sta in legal/privacy.html, nell'elenco dei responsabili
+// del trattamento ex art. 28 GDPR: e' il nome di una societa' vera che deve
+// essere dichiarato. Non era in questa lista e nessun controllo lo vedeva.
+const SEGNAPOSTO = ["[DOMINIO]", "[EMAIL]", "[NOME E COGNOME DEL TITOLARE]", "[INDIRIZZO", "[CODICE FISCALE]", "[P.IVA]", "[HOSTING PROVIDER]"];
 const trovati = new Map();
 for (const f of testi) {
-  if (/tools[\\/](check|go-live)\.mjs$/.test(f)) continue; // gli script li nominano di mestiere
+  // Gli script li nominano di mestiere. README.txt pure: la sua sezione DATI
+  // LEGALI esiste apposta per elencare quali segnaposto vanno riempiti a mano,
+  // quindi li contiene per definizione e non smettera' mai di contenerli. Se
+  // restasse in elenco, questo controllo non potrebbe mai passare — e un
+  // controllo che fallisce sempre e' un controllo che si impara a ignorare.
+  // Il file non viene comunque servito: lo negano .htaccess e .vercelignore.
+  if (/tools[\\/](check|go-live)\.mjs$/.test(f)) continue;
+  if (/[\\/]README\.txt$/.test(f)) continue;
   const s = readFileSync(f, "utf8");
   for (const sp of SEGNAPOSTO) {
     if (!s.includes(sp)) continue;
@@ -136,6 +146,81 @@ for (const f of pagine) {
   const imgs = s.match(/<img\b[^>]*>/g) || [];
   const nude = imgs.filter((t) => !/\bwidth=/.test(t) || !/\bheight=/.test(t));
   if (nude.length) avv(`${rel(f)}: ${nude.length} <img> senza width/height (rischio salto di layout)`);
+}
+
+// ---- 7. CSS minificato aggiornato -------------------------------------------
+// Le pagine caricano css/style.min.css, che lo genera tools/build-css.mjs da
+// css/style.css. Chi modifica gli stili tocca il sorgente: se dimentica di
+// rigenerare, il sito continua a servire la versione vecchia senza un errore,
+// senza una pagina rotta e senza niente da notare finche' qualcuno non chiede
+// perche' la modifica "non si vede". Meglio che se ne accorga questo script.
+{
+  const sorgente = join(ROOT, "css", "style.css");
+  const minificato = join(ROOT, "css", "style.min.css");
+  if (!existsSync(minificato)) {
+    err("css/style.min.css non esiste: le pagine lo caricano. Esegui: node tools/build-css.mjs --scrivi");
+  } else if (statSync(minificato).mtimeMs < statSync(sorgente).mtimeMs) {
+    err("css/style.min.css e' piu' vecchio di css/style.css: il sito servirebbe stili vecchi. Esegui: node tools/build-css.mjs --scrivi");
+  }
+}
+
+// ---- 8. Redirect canonici attivi in .htaccess -------------------------------
+// Su hosting Apache queste due regole sono l'unica cosa che impedisce a
+// http://, https://, www. e non-www di rispondere tutti 200 sulla stessa
+// pagina, mentre il canonical ne dichiara una sola. Erano commentate, e
+// go-live.mjs non apre .htaccess perche' filtra html|xml|txt: e' esattamente
+// il tipo di riga che resta spenta senza che nessuno se ne accorga, fino a
+// trovarsi quattro varianti di ogni URL negli indici.
+{
+  const h = join(ROOT, ".htaccess");
+  if (existsSync(h)) {
+    const s = readFileSync(h, "utf8");
+    const attiva = (re) => s.split("\n").some((r) => !r.trim().startsWith("#") && re.test(r));
+    if (!attiva(/RewriteCond\s+%\{HTTPS\}\s+off/)) err(".htaccess: il redirect http -> https e' commentato o assente");
+    if (!attiva(/RewriteCond\s+%\{HTTP_HOST\}\s+\^www\\\./)) err(".htaccess: manca la regola di host canonico www -> non-www");
+    if (!attiva(/llms\\\.txt/)) err(".htaccess: llms.txt non e' fra le eccezioni di FilesMatch, verrebbe servito come 403");
+    if (attiva(/Strict-Transport-Security/)) avv(".htaccess: HSTS e' attivo — verifica che https risponda davvero sul dominio finale");
+  }
+}
+
+// ---- 9. Risorse esterne che la CSP bloccherebbe -----------------------------
+// Il caso reale: index.html caricava GSAP da cdnjs.cloudflare.com mentre la
+// CSP dichiarava script-src 'self'. In produzione il browser bloccava i due
+// file, js/problem-motion.js trovava window.gsap assente e usciva senza
+// errori: l'animazione non partiva e niente lo segnalava. E' il modo in cui
+// una CSP corretta e un <script> sbagliato si nascondono a vicenda.
+{
+  // Le origini permesse le leggo dalle CSP davvero scritte in .htaccess —
+  // quella generale e quella ristretta alla pagina dell'agente vocale — cosi'
+  // il controllo segue la configurazione invece di ripeterla a memoria.
+  const conf = existsSync(join(ROOT, ".htaccess")) ? readFileSync(join(ROOT, ".htaccess"), "utf8") : "";
+  const permesse = new Set();
+  for (const m of conf.matchAll(/Content-Security-Policy\s+"([^"]+)"/g)) {
+    for (const o of m[1].matchAll(/(https?|wss):\/\/[^\s;'"]+/g)) permesse.add(o[0].replace(/\/$/, ""));
+  }
+  // Stessa verifica su vercel.json: e' l'unica configurazione che conta sul
+  // deploy Vercel, e le due possono divergere senza che nulla lo segnali.
+  const vercel = existsSync(join(ROOT, "vercel.json")) ? readFileSync(join(ROOT, "vercel.json"), "utf8") : "";
+  const permesseVercel = new Set();
+  for (const m of vercel.matchAll(/Content-Security-Policy[^}]*?"value":\s*"([^"]+)"/g)) {
+    for (const o of m[1].matchAll(/(https?|wss):\/\/[^\s;'"\\]+/g)) permesseVercel.add(o[0].replace(/\/$/, ""));
+  }
+  for (const o of permesse) if (vercel && !permesseVercel.has(o)) avv(`CSP disallineate: ${o} e' permessa in .htaccess ma non in vercel.json`);
+  for (const o of permesseVercel) if (conf && !permesse.has(o)) avv(`CSP disallineate: ${o} e' permessa in vercel.json ma non in .htaccess`);
+
+  for (const f of pagine) {
+    const s = readFileSync(f, "utf8").replace(/<!--[\s\S]*?-->/g, "");
+    const esterni = [
+      ...[...s.matchAll(/<script\b[^>]*\bsrc="(https?:\/\/[^"]+)"/g)].map((m) => ["script-src", m[1]]),
+      ...[...s.matchAll(/<link\b[^>]*\brel="stylesheet"[^>]*\bhref="(https?:\/\/[^"]+)"/g)].map((m) => ["style-src", m[1]]),
+      ...[...s.matchAll(/<link\b[^>]*\bhref="(https?:\/\/[^"]+)"[^>]*\brel="stylesheet"/g)].map((m) => ["style-src", m[1]]),
+    ];
+    for (const [direttiva, url] of esterni) {
+      const origine = new URL(url).origin;
+      if (permesse.has(origine)) continue;
+      err(`${rel(f)}: carica ${origine} (${direttiva}) ma nessuna CSP lo permette — il browser lo blocca in silenzio, senza pagina rotta e senza errore visibile. Ospitalo in locale, oppure aggiungi l'origine alla CSP in .htaccess E in vercel.json.`);
+    }
+  }
 }
 
 // ---- resoconto --------------------------------------------------------------
